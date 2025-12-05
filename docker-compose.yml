@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: hackathon_postgres
+    environment:
+      POSTGRES_DB: ${HACKATHON_PG__DATABASE:-hackathon}
+      POSTGRES_USER: ${HACKATHON_PG__USERNAME:-hackathon_user}
+      POSTGRES_PASSWORD: ${HACKATHON_PG__PASSWORD:-hackathon_pass}
+    ports:
+      - "${HACKATHON_PG__PORT:-5433}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${HACKATHON_PG__USERNAME:-hackathon_user} -d ${HACKATHON_PG__DATABASE:-hackathon}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: .
+    container_name: hackathon_backend
+    ports:
+      - "${HACKATHON_UVICORN__PORT:-8000}:8000"
+    environment:
+      HACKATHON_PG__HOST: postgres
+      HACKATHON_PG__PORT: 5432
+      HACKATHON_PG__DATABASE: ${HACKATHON_PG__DATABASE:-hackathon}
+      HACKATHON_PG__USERNAME: ${HACKATHON_PG__USERNAME:-hackathon_user}
+      HACKATHON_PG__PASSWORD: ${HACKATHON_PG__PASSWORD:-hackathon_pass}
+      HACKATHON_JWT__SECRET_KEY: ${HACKATHON_JWT__SECRET_KEY:-change-this-in-production}
+      HACKATHON_TELEGRAM__BOT_TOKEN: ${HACKATHON_TELEGRAM__BOT_TOKEN:-}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - .:/app
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+volumes:
+  postgres_data:
