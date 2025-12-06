@@ -6,9 +6,11 @@ import { Login } from './pages/Login/Login';
 import { Form } from './pages/Form/Form';
 import { MyProfile } from './pages/MyProfile/MyProfile';
 import { InsideHack } from './pages/InsideHack/InsideHack';
-import { Users } from './pages/Users';
-import { UserProfile } from './pages/UserProfile';
-import { MyHacks } from './pages/MyHacks';
+import { Users } from './pages/Users/Users';
+import { MyHacks } from './pages/MyHacks/MyHacks';
+import { UserProfile } from './pages/UserProfile/UserProfile';
+import { MyTeam } from './pages/MyTeam/MyTeam';
+import { NotificationPage } from './pages/Notification/Notification';
 import { GoHomeFill } from "react-icons/go";
 import { RiTeamFill } from "react-icons/ri";
 import { PiBellSimpleFill } from "react-icons/pi";
@@ -92,11 +94,16 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<Home onHackathonClick={handleHackathonClick} />} />
           <Route path="/myhacks" element={<MyHacks />} />
-          <Route path="/notifications" element={<div>Уведомления (в разработке)</div>} />
-          <Route path="/profile" element={<MyProfile />} />
+          <Route path="/notifications" element={<NotificationPage />} />
+          <Route path="/profile" element={<MyProfile onLogout={() => {
+            navigate('/');
+            setIsLoginOpen(true);
+            setIsFormOpen(false);
+          }} />} />
           <Route path="/hackathon/:id" element={<InsideHack />} />
           <Route path="/hackathon/:id/users" element={<Users />} />
           <Route path="/hackathon/:id/users/:userId" element={<UserProfile />} />
+          <Route path="/hackathon/:id/team" element={<MyTeam />} />
         </Routes>
       </Layout>
       

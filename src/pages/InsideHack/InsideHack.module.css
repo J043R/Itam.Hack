@@ -11,7 +11,7 @@
   display: flex;
   flex-direction: column; /* Вертикальное расположение */
   justify-content: flex-start; /* Выравнивание по верху */
-  align-items: center; /* Центрируем по горизонтали */
+  align-items: center; /* Центрируем по умолчанию */
   position: relative;
 }
 
@@ -34,7 +34,10 @@
   will-change: backdrop-filter;
   transform: translateZ(0);
   box-shadow: none;
-  margin: 0; /* Убираем margin, центрирование через justify-content */
+  margin-left: auto; /* Центрируем карточку */
+  margin-right: auto;
+  margin-top: 0;
+  margin-bottom: 0;
   flex-shrink: 0; /* Не сжимается */
 }
 
@@ -92,9 +95,12 @@
   display: flex;
   flex-direction: column;
   gap: 14px; /* Расстояние между карточками */
-  width: 100%;
+  width: 335px; /* Фиксированная ширина, как у карточки */
   margin-top: 40px; /* Отступ от главной карточки хакатона */
   align-items: center;
+  margin-left: auto; /* Центрируем по умолчанию */
+  margin-right: auto;
+  box-sizing: border-box;
 }
 
 /* Контейнер для кнопки с изображением */
@@ -114,6 +120,12 @@
   align-items: flex-start !important; /* Выравнивание по верху */
   justify-content: flex-start !important; /* Выравнивание по левому краю */
   overflow: visible !important; /* Позволяем изображениям выходить за границы */
+  z-index: 1 !important; /* Базовый z-index для кнопки */
+}
+
+/* Переопределяем overflow для glass-card-wide */
+.actionButton[style*="overflow"] {
+  overflow: visible !important;
 }
 
 /* Текст в пустой карточке */
@@ -125,18 +137,24 @@
   position: absolute;
   top: 20px; /* Отступ сверху 20px */
   left: 20px; /* Отступ слева 20px */
+  right: 20px; /* Отступ справа для предотвращения переполнения */
   text-align: left;
   box-sizing: border-box;
   margin: 0 !important;
   padding: 0 !important;
   white-space: nowrap; /* Не переносить текст на новую строку */
+  overflow: hidden; /* Скрываем переполнение */
+  text-overflow: ellipsis; /* Многоточие при переполнении */
+  max-width: calc(100% - 40px); /* Учитываем отступы слева и справа */
+  z-index: 5 !important; /* Под изображением (z-index изображения 10) */
+  pointer-events: none; /* Чтобы не мешало кликам */
 }
 
 /* Изображение внутри кнопки, правый край совпадает с правым краем кнопки */
 .buttonImage {
   position: absolute !important;
   right: 0 !important; /* Правый край картинки совпадает с правым краем кнопки */
-  bottom: -17px !important; /* Опускаем изображение на 17px вниз (6 + 5 + 6) */
+  bottom: 0 !important; /* Выравниваем по нижнему краю кнопки */
   width: auto;
   height: auto;
   max-width: 130px !important;
@@ -156,7 +174,7 @@
   margin-right: 10px; /* Отступ справа от картинки */
   margin-top: 0;
   margin-bottom: 0;
-  margin-left: 20px; /* Отступ от левого края поля */
+  margin-left: 15px; /* Отступ от левого края поля */
   align-self: center; /* Выравниваем по центру вертикально */
 }
 
@@ -179,6 +197,9 @@
   padding-right: 20px;
   padding-top: 10px; /* Опускаем текст ниже */
   min-width: 0; /* Позволяет сжиматься */
+  max-width: 100%; /* Ограничиваем максимальную ширину */
+  position: relative;
+  z-index: 2; /* Поверх обводки */
 }
 
 .name {
@@ -188,11 +209,13 @@
   margin: 0;
   margin-bottom: 8px; /* Отступ снизу от названия */
   font-family: 'Inter', sans-serif;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  word-break: break-word;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
   text-align: left;
   width: 100%;
+  display: block;
 }
 
 .date {
@@ -205,6 +228,11 @@
   opacity: 0.8;
   text-align: left;
   width: 100%;
+  white-space: normal;
+  word-break: break-word;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  display: block;
 }
 
 .description {
@@ -214,99 +242,70 @@
   margin: 0;
   font-family: 'Inter', sans-serif;
   opacity: 0.9;
-  white-space: nowrap;
+  white-space: normal;
   overflow: hidden;
-  text-overflow: ellipsis;
+  word-break: break-word;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
 }
 
-/* Адаптивность */
-@media (max-width: 768px) {
+/* Адаптивность для экранов меньше 400px */
+@media (max-width: 400px) {
   .container {
-    padding-top: 0px;
-    padding-left: 20px;
-    padding-right: 20px;
-    margin-top: -10px; /* Поднимаем карточку на 10px вверх */
+    padding-left: 5px !important;
+    padding-right: 0px !important;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    box-sizing: border-box !important;
+    align-items: center !important;
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
   }
   
   .hackathonCard {
-    width: 335px;
-    height: 120px;
-  }
-  
-  .actionButton {
-    width: 335px !important;
-    height: 129px !important;
+    width: calc(100% - 5px) !important; /* Ширина минус padding слева (5px) */
+    max-width: 335px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
   }
   
   .emptyCardsContainer {
-    align-items: flex-start; /* Кнопки выровнены по левому краю, под карточкой */
-    margin-left: calc((100% - 335px) / 2 - 20px); /* Сдвигаем кнопки влево, чтобы выровнять под карточкой */
+    width: calc(100% - 5px) !important; /* Ширина минус padding слева (5px) */
+    max-width: 335px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    margin-top: 40px !important;
   }
   
   .buttonWithImage {
-    position: relative !important;
-    width: 335px !important;
-    height: 129px !important;
+    width: 100% !important;
+    max-width: 335px !important;
   }
   
   .actionButton {
-    position: relative !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: none !important;
-    box-sizing: border-box !important;
-  }
-  
-  /* Используем те же значения, что и на десктопе */
-  .buttonImage {
-    position: absolute !important;
-    right: 0 !important;
-    bottom: -17px !important; /* Опускаем изображение на 17px вниз (6 + 5 + 6) */
-    max-width: 130px !important;
-    max-height: 130px !important;
-    margin: 0 !important;
-    padding: 0 !important;
+    width: 100% !important;
+    max-width: 335px !important;
   }
 }
 
-@media (max-width: 375px) {
+/* Адаптивность для больших экранов */
+@media (min-width: 769px) {
   .container {
-    padding-top: 0px;
+    max-width: 375px;
+    margin-left: auto;
+    margin-right: auto;
     padding-left: 20px;
     padding-right: 20px;
-    margin-top: -10px; /* Поднимаем карточку на 10px вверх */
-  }
-  
-  .hackathonCard {
-    width: 335px;
-    height: 120px;
-  }
-  
-  .actionButton {
-    width: 335px !important;
-    height: 129px !important;
-    position: relative !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    border: none !important;
-    box-sizing: border-box !important;
-  }
-  
-  .buttonWithImage {
-    position: relative !important;
-    width: 335px !important;
-    height: 129px !important;
-  }
-  
-  /* Используем те же значения, что и на десктопе */
-  .buttonImage {
-    position: absolute !important;
-    right: 0 !important;
-    bottom: -17px !important; /* Опускаем изображение на 17px вниз (6 + 5 + 6) */
-    max-width: 130px !important;
-    max-height: 130px !important;
-    margin: 0 !important;
-    padding: 0 !important;
+    box-sizing: border-box;
   }
 }
 

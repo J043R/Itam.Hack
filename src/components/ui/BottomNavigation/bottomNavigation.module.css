@@ -36,6 +36,22 @@
   color: #E7E3D8;
   transition: opacity 0.2s ease;
   flex-shrink: 0;
+  outline: none;
+}
+
+.navButton:active {
+  border: none !important;
+  outline: none !important;
+}
+
+.navButton:focus {
+  border: none !important;
+  outline: none !important;
+}
+
+.navButton:focus-visible {
+  border: none !important;
+  outline: none !important;
 }
 
 .navButton svg,
@@ -51,6 +67,8 @@
 
 .navButton:active {
   opacity: 0.5;
+  border: none !important;
+  outline: none !important;
 }
 
 .navButton.active {

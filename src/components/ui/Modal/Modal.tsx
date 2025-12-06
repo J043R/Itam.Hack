@@ -13,7 +13,7 @@ interface ModalProps {
 export const Modal = ({ 
   isOpen, 
   onClose, 
-  title, 
+  title: _title, 
   children,
   className = '' 
 }: ModalProps) => {

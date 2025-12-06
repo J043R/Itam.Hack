@@ -1,0 +1,87 @@
+.container {
+  padding-top: 0px;
+  padding-left: 5px;
+  padding-right: 0px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 0px;
+}
+
+.contentWrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 800; /* ExtraBold */
+  color: #E7E3D8;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  font-family: 'Inter', sans-serif;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.notificationsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: -5px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.emptyMessage {
+  font-size: 16px;
+  font-weight: 400;
+  color: #E7E3D8;
+  opacity: 0.7;
+  margin-top: 20px;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Адаптивность для экранов больше 400px - центрирование */
+@media (min-width: 401px) {
+  .contentWrapper {
+    align-items: center !important;
+  }
+
+  .title {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 335px;
+  }
+
+  .notificationsList {
+    align-items: center;
+  }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .container {
+    padding-top: 0px;
+    padding-left: 5px;
+    padding-right: 0px;
+  }
+}
+
+/* Адаптивность для экранов меньше 400px */
+@media (max-width: 400px) {
+  .container {
+    padding-left: 5px !important;
+    padding-right: 0px !important;
+    padding-top: 0px !important;
+    box-sizing: border-box !important;
+  }
+
+  .title {
+    width: calc(100% - 5px) !important;
+    max-width: 335px !important;
+  }
+}
+

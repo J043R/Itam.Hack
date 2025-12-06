@@ -1,10 +1,14 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Avatar } from '../../components/ui/Avatar/avatar';
 import { Input } from '../../components/ui/Input/input';
 import { ButtonSimple } from '../../components/ui/Button/button';
 import styles from './MyProfile.module.css';
 
-export const MyProfile = () => {
+interface MyProfileProps {
+  onLogout?: () => void;
+}
+
+export const MyProfile = ({ onLogout }: MyProfileProps) => {
   // Загружаем данные из localStorage или используем значения по умолчанию
   const [profileData, setProfileData] = useState({
     firstName: '',
@@ -13,6 +17,9 @@ export const MyProfile = () => {
     university: '',
     about: ''
   });
+
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Загружаем данные при монтировании компонента
   useEffect(() => {
@@ -24,14 +31,49 @@ export const MyProfile = () => {
           firstName: parsed.firstName || '',
           lastName: parsed.lastName || '',
           role: parsed.role || '',
-          university: '',
-          about: ''
+          university: parsed.university || '',
+          about: parsed.about || ''
         });
       } catch (e) {
         console.error('Ошибка загрузки данных профиля:', e);
       }
     }
+
+    // Загружаем сохраненные данные профиля
+    const savedProfile = localStorage.getItem('profileData');
+    if (savedProfile) {
+      try {
+        const parsed = JSON.parse(savedProfile);
+        setProfileData(prev => ({
+          ...prev,
+          role: parsed.role || prev.role,
+          university: parsed.university || prev.university,
+          about: parsed.about || prev.about
+        }));
+      } catch (e) {
+        console.error('Ошибка загрузки данных профиля:', e);
+      }
+    }
+
+    // Загружаем сохраненный аватар
+    const savedAvatar = localStorage.getItem('profileAvatar');
+    if (savedAvatar) {
+      setAvatarUrl(savedAvatar);
+    }
   }, []);
+
+  // Автосохранение данных профиля
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      localStorage.setItem('profileData', JSON.stringify({
+        role: profileData.role,
+        university: profileData.university,
+        about: profileData.about
+      }));
+    }, 500); // Сохраняем через 500ms после последнего изменения
+
+    return () => clearTimeout(timeoutId);
+  }, [profileData.role, profileData.university, profileData.about]);
 
   const handleInputChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setProfileData(prev => ({
@@ -41,16 +83,49 @@ export const MyProfile = () => {
   };
 
   const handleEdit = () => {
-    // Здесь будет логика редактирования профиля
-    console.log('Редактирование профиля');
+    // Открываем диалог выбора файла для изменения аватара
+    fileInputRef.current?.click();
+  };
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Проверяем тип файла
+      if (!file.type.startsWith('image/')) {
+        alert('Пожалуйста, выберите изображение');
+        return;
+      }
+
+      // Проверяем размер файла (максимум 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert('Размер файла не должен превышать 5MB');
+        return;
+      }
+
+      // Создаем preview изображения
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const result = reader.result as string;
+        setAvatarUrl(result);
+        // Сохраняем в localStorage
+        localStorage.setItem('profileAvatar', result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleLogout = () => {
-    // Здесь будет логика выхода
-    console.log('Выход из аккаунта');
-    // Можно очистить localStorage и перенаправить на страницу входа
-    // localStorage.clear();
-    // window.location.reload();
+    // Очищаем данные пользователя из localStorage
+    localStorage.removeItem('formFilled');
+    localStorage.removeItem('userProfiles');
+    localStorage.removeItem('teamNames');
+    localStorage.removeItem('currentUserId');
+    localStorage.removeItem('teams');
+    
+    // Вызываем функцию выхода, переданную из App
+    if (onLogout) {
+      onLogout();
+    }
   };
 
   // Тестовые данные для достижений
@@ -83,6 +158,7 @@ export const MyProfile = () => {
           <Avatar 
             size="100" 
             name={`${profileData.firstName} ${profileData.lastName}`}
+            src={avatarUrl || undefined}
             className={styles.avatar}
           />
           <div className={styles.nameContainer}>
@@ -90,6 +166,13 @@ export const MyProfile = () => {
             <div className={styles.lastName}>{profileData.lastName || 'Фамилия'}</div>
           </div>
         </div>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleAvatarChange}
+          style={{ display: 'none' }}
+        />
         <ButtonSimple
           type="entry-primary"
           size="S"

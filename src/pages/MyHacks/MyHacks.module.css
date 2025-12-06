@@ -1,9 +1,12 @@
 .container {
   padding-top: 0px;
-  padding-left: 20px;
-  padding-right: 20px;
+  padding-left: 5px;
+  padding-right: 0px;
+  margin-right: -5px;
   width: 100%;
   box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
 .contentWrapper {
@@ -38,7 +41,7 @@
 }
 
 .hackathonCard {
-  width: 335px; /* Фиксированная ширина карточки */
+  width: 325px; /* Фиксированная ширина карточки */
   height: 120px; /* Высота карточки */
   background: rgba(255, 255, 255, 0.05) !important;
   backdrop-filter: blur(20px) saturate(180%) !important;
@@ -57,6 +60,7 @@
   transform: translateZ(0);
   box-shadow: none;
   margin: 0;
+  margin-right: -5px;
   flex-shrink: 0;
   cursor: pointer;
 }
@@ -122,7 +126,7 @@
   align-items: center;
   justify-content: center;
   margin-right: 10px;
-  margin-left: 20px;
+  margin-left: 15px;
   margin-top: 0;
   margin-bottom: 0;
   align-self: center;
@@ -157,6 +161,8 @@
   align-self: center;
   flex: 1;
   min-width: 0;
+  overflow: hidden; /* Скрываем переполнение */
+  max-width: 100%; /* Ограничиваем максимальную ширину */
 }
 
 .name {
@@ -168,9 +174,11 @@
   text-align: left;
   font-family: 'Inter', sans-serif;
   width: 100%;
-  white-space: nowrap;
+  white-space: normal;
   overflow: hidden;
-  text-overflow: ellipsis;
+  word-break: break-word;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .date {
@@ -181,17 +189,20 @@
   text-align: left;
   font-family: 'Inter', sans-serif;
   width: 100%;
-  white-space: nowrap;
+  white-space: normal;
   overflow: hidden;
-  text-overflow: ellipsis;
+  word-break: break-word;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 /* Адаптивность */
 @media (max-width: 768px) {
   .container {
     padding-top: 0px;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 5px;
+    padding-right: 0px;
+    margin-right: -5px;
   }
 
   .title {
@@ -206,8 +217,9 @@
 @media (max-width: 375px) {
   .container {
     padding-top: 0px;
-    padding-left: 20px;
-    padding-right: 20px;
+    padding-left: 5px;
+    padding-right: 0px;
+    margin-right: -5px;
   }
 
   .title {
@@ -222,4 +234,91 @@
     width: 100%;
     max-width: 335px;
   }
+
+  .editButtonContainer {
+    width: 100%;
+    max-width: 335px;
+    margin-right: 0;
+  }
+}
+
+/* Контейнер для кнопки редактировать */
+.editButtonContainer {
+  width: 325px;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 40px;
+  margin-right: -5px;
+}
+
+/* Кнопка редактировать */
+.editButton {
+  width: 154px;
+  height: 35px;
+  border-radius: 10px;
+  background-color: #3B44FA;
+  border: none;
+  outline: none;
+  color: #FFFFFF;
+  font-size: 16px;
+  font-weight: 500; /* Medium */
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  margin: 0;
+  transition: opacity 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.editButton:focus {
+  outline: none;
+  border: none;
+}
+
+.editButton:focus-visible {
+  outline: none;
+  border: none;
+}
+
+.editButton:hover {
+  opacity: 0.9;
+}
+
+/* Кнопка удаления (иконка корзины) */
+.deleteButton {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  background-color: transparent;
+  border: none;
+  color: #E7E3D8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 20;
+  transition: all 0.2s ease;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.deleteButton:hover {
+  color: #E7E3D8;
+  opacity: 0.8;
+  transform: scale(1.1);
+}
+
+.deleteButton:active {
+  color: #E7E3D8;
+  opacity: 0.6;
+  transform: scale(0.95);
+}
+
+.deleteButton svg {
+  width: 16px;
+  height: 16px;
 }

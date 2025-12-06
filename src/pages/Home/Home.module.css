@@ -123,12 +123,11 @@
 /* Переопределяем inline стили из ButtonSimple через :global */
 .hackathonContent :global(h2),
 .hackathonContent :global(p) {
-  white-space: nowrap !important;
+  white-space: normal !important;
   overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  word-break: normal !important;
-  word-wrap: normal !important;
-  overflow-wrap: normal !important;
+  word-break: break-word !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
   display: block !important;
   width: 100% !important;
   max-width: 100% !important;
@@ -162,8 +161,7 @@
 
 .hackathonsList .hackathonDescription {
   white-space: normal !important; /* Разрешаем перенос текста */
-  overflow: visible !important; /* Показываем весь текст */
-  text-overflow: clip !important; /* Убираем многоточие */
+  overflow: hidden !important; /* Скрываем переполнение */
   word-break: break-word !important; /* Разрешаем перенос слов */
   word-wrap: break-word !important; /* Разрешаем перенос слов */
   overflow-wrap: break-word !important; /* Разрешаем перенос слов */
@@ -175,21 +173,20 @@
 
 /* Применяем стили напрямую к элементам */
 .hackathonContent h2 {
-  white-space: nowrap !important;
+  white-space: normal !important;
   overflow: hidden !important;
-  text-overflow: ellipsis !important;
-  word-break: normal !important;
-  word-wrap: normal !important;
-  overflow-wrap: normal !important;
+  word-break: break-word !important;
+  word-wrap: break-word !important;
+  overflow-wrap: break-word !important;
 }
 
 .hackathonContent p.hackathonDescription {
   white-space: normal !important; /* Разрешаем перенос текста для описания */
-  overflow: visible !important; /* Показываем весь текст */
-  text-overflow: clip !important; /* Убираем многоточие */
+  overflow: hidden !important; /* Скрываем переполнение */
   word-break: break-word !important; /* Разрешаем перенос слов */
   word-wrap: break-word !important; /* Разрешаем перенос слов */
   overflow-wrap: break-word !important; /* Разрешаем перенос слов */
+  display: block !important;
 }
 
 .hackathonName {
@@ -198,13 +195,12 @@
   color: #E7E3D8 !important;
   margin: 0 !important;
   font-family: 'Inter', sans-serif !important;
-  white-space: nowrap !important; /* Текст в одну строчку */
+  white-space: normal !important; /* Разрешаем перенос текста */
   overflow: hidden !important; /* Скрываем переполнение */
-  text-overflow: ellipsis !important; /* Многоточие при переполнении */
+  word-break: break-word !important; /* Разрешаем перенос слов */
+  word-wrap: break-word !important; /* Разрешаем перенос слов */
+  overflow-wrap: break-word !important; /* Разрешаем перенос слов */
   width: 100% !important; /* Занимает всю ширину */
-  word-break: normal !important; /* Не переносить слова */
-  word-wrap: normal !important; /* Запрещаем перенос слов */
-  overflow-wrap: normal !important; /* Запрещаем перенос слов */
   display: block !important; /* Блочный элемент */
   max-width: 100% !important; /* Максимальная ширина */
   line-height: 1.2 !important; /* Компактная высота строки */
@@ -219,6 +215,12 @@
   margin: 0;
   opacity: 0.8;
   font-family: 'Inter', sans-serif;
+  white-space: normal;
+  overflow: hidden;
+  word-break: break-word;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  width: 100%;
 }
 
 .hackathonDescription {
@@ -231,15 +233,19 @@
   line-height: 1.4 !important; /* Нормальная высота строки для многострочного текста */
   font-family: 'Inter', sans-serif !important;
   white-space: normal !important; /* Разрешаем перенос текста */
-  overflow: visible !important; /* Показываем весь текст */
-  text-overflow: clip !important; /* Убираем многоточие */
+  overflow: hidden !important; /* Скрываем переполнение */
+  text-overflow: ellipsis !important; /* Многоточие при переполнении */
   width: 100% !important; /* Занимает всю ширину */
   word-break: break-word !important; /* Разрешаем перенос слов */
   word-wrap: break-word !important; /* Разрешаем перенос слов */
   overflow-wrap: break-word !important; /* Разрешаем перенос слов */
-  display: block !important; /* Блочный элемент */
+  display: -webkit-box !important; /* Для многострочного ellipsis */
+  -webkit-line-clamp: 2 !important; /* Максимум 2 строки */
+  line-clamp: 2 !important; /* Стандартное свойство для совместимости */
+  -webkit-box-orient: vertical !important;
   max-width: 100% !important; /* Максимальная ширина */
   min-width: 0 !important; /* Позволяет сжиматься */
+  max-height: calc(1.4em * 2) !important; /* Ограничиваем высоту до 2 строк */
 }
 
 /* Адаптивность */

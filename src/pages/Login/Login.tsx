@@ -58,7 +58,10 @@ export const Login = ({ isOpen, onClose }: LoginProps) => {
           <div className={styles.buttonContainer}>
             <ButtonSimple
               type="entry-primary"
-              onClick={handleSubmit}
+              onClick={() => {
+                const e = { preventDefault: () => {} } as React.FormEvent;
+                handleSubmit(e);
+              }}
               disabled={isButtonDisabled}
               className={styles.submitButton}
             >

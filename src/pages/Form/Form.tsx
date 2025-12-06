@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal } from '../../components/ui/Modal/Modal';
 import { Input } from '../../components/ui/Input/input';
 import { ButtonSimple } from '../../components/ui/Button/button';
@@ -16,6 +16,33 @@ export const Form = ({ isOpen, onClose }: FormProps) => {
     role: '',
     contacts: ''
   });
+
+  // Автосохранение данных формы
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      localStorage.setItem('formData', JSON.stringify(formData));
+    }, 500); // Сохраняем через 500ms после последнего изменения
+
+    return () => clearTimeout(timeoutId);
+  }, [formData]);
+
+  // Загружаем сохраненные данные при открытии формы
+  useEffect(() => {
+    if (isOpen) {
+      const savedData = localStorage.getItem('formData');
+      if (savedData) {
+        try {
+          const parsed = JSON.parse(savedData);
+          setFormData(prev => ({
+            ...prev,
+            ...parsed
+          }));
+        } catch (e) {
+          console.error('Ошибка загрузки данных формы:', e);
+        }
+      }
+    }
+  }, [isOpen]);
 
   const handleInputChange = (field: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData(prev => ({

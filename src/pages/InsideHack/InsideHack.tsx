@@ -1,27 +1,70 @@
+import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ButtonSimple } from '../../components/ui/Button/button';
+import { getHackathonById } from '../../api/api';
+import type { Hackathon } from '../../api/types';
 import styles from './InsideHack.module.css';
 
 export const InsideHack = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  
-  // Временные данные для хакатона (позже будут загружаться с бэкенда)
-  const hackathonData = {
-    id: id || '1',
-    name: 'AI Hackathon 2024',
-    date: '15-17 марта 2024',
-    description: 'Создайте инновационные решения с использованием искусственного интеллекта'
-  };
+  const [hackathonData, setHackathonData] = useState<Hackathon | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Загружаем данные о хакатоне при монтировании компонента
+    const loadHackathon = async () => {
+      if (!id) {
+        setError('ID хакатона не указан');
+        setLoading(false);
+        return;
+      }
+
+      try {
+        setLoading(true);
+        const response = await getHackathonById(id);
+        
+        if (response.success) {
+          setHackathonData(response.data);
+        } else {
+          setError(response.message || 'Не удалось загрузить данные хакатона');
+        }
+      } catch (err) {
+        setError('Произошла ошибка при загрузке данных');
+        console.error('Ошибка загрузки хакатона:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadHackathon();
+  }, [id]);
 
   const handleButtonClick = (text: string) => {
     if (text === 'Создать команду' || text === 'Участники') {
       navigate(`/hackathon/${id}/users`);
     } else if (text === 'Моя команда') {
       // Здесь будет переход на страницу "Моя команда"
-      console.log('Переход на страницу "Моя команда"');
+      navigate(`/hackathon/${id}/team`);
     }
   };
+
+  if (loading) {
+    return (
+      <div className={styles.container}>
+        <p>Загрузка...</p>
+      </div>
+    );
+  }
+
+  if (error || !hackathonData) {
+    return (
+      <div className={styles.container}>
+        <p style={{ color: 'red' }}>{error || 'Хакатон не найден'}</p>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>

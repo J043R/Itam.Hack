@@ -26,7 +26,7 @@ export const ButtonSimple = ({
   children,
   className = '',
   imageUrl,
-  imagePosition = 'center',
+  imagePosition: _imagePosition = 'center',
   icon,
   iconOnly = false,
 }: ButtonProps) => {
@@ -238,7 +238,7 @@ export const ButtonSimple = ({
       styles.WebkitBackdropFilter = 'blur(20px) saturate(180%)'; // Увеличил blur для лучшего отражения фона
       styles.border = 'none'; // Border будет добавлен как отдельный элемент поверх
       styles.position = 'relative';
-      styles.overflow = 'hidden';
+      styles.overflow = 'visible'; // Изменено на visible для отображения абсолютно позиционированного текста
       styles.padding = '0';
       styles.justifyContent = 'flex-start';
       styles.willChange = 'backdrop-filter';
@@ -659,7 +659,24 @@ export const ButtonSimple = ({
           )}
         </div>
       )}
-      {type !== 'glass-card-hackathon' && type !== 'glass-card-large' && type !== 'glass-card-square' && (
+      {type === 'glass-card-wide' && (
+        <div style={{ 
+          position: 'relative', 
+          zIndex: 2,
+          display: 'flex',
+          flexDirection: 'column',
+          width: '100%',
+          height: '100%',
+          justifyContent: 'center',
+          alignItems: 'center',
+          overflow: 'visible',
+          boxSizing: 'border-box'
+        }}>
+          {renderRightImage()}
+          {loading ? 'Загрузка...' : (iconOnly && icon ? icon : children)}
+        </div>
+      )}
+      {type !== 'glass-card-hackathon' && type !== 'glass-card-large' && type !== 'glass-card-square' && type !== 'glass-card-wide' && (
         <div style={{ 
           position: 'relative', 
           zIndex: 2,

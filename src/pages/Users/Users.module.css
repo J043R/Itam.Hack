@@ -110,7 +110,7 @@
   margin-right: 15px;
   margin-top: 0;
   margin-bottom: 0;
-  margin-left: 20px;
+  margin-left: 15px;
   align-self: center; /* Выравниваем по центру вертикально */
 }
 
@@ -132,6 +132,8 @@
   gap: 5px;
   min-width: 0;
   padding-right: 20px;
+  overflow: hidden; /* Скрываем переполнение */
+  max-width: 100%; /* Ограничиваем максимальную ширину */
 }
 
 .name {
@@ -144,8 +146,10 @@
   text-align: left;
   width: 100%;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-word;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .role {
@@ -158,8 +162,10 @@
   text-align: left;
   width: 100%;
   overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  white-space: normal;
+  word-break: break-word;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .description {
@@ -323,6 +329,7 @@
   padding: 0 20px;
   width: 100%;
   box-sizing: border-box;
+  min-width: 0; /* Позволяет сжиматься */
 }
 
 .participantFirstName {

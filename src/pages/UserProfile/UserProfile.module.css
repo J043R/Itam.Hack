@@ -152,7 +152,7 @@
   margin: 0 !important;
   padding: 0 !important; /* Убираем padding карточки, отступ будет на контенте */
   box-sizing: border-box !important;
-  overflow: visible !important; /* Показываем содержимое */
+  overflow: hidden !important; /* Скрываем переполнение */
 }
 
 /* Переопределяем выравнивание внутри кнопки для glass-card-small */
@@ -170,7 +170,7 @@
   align-items: flex-start !important;
   justify-content: flex-start !important;
   z-index: 3 !important;
-  overflow: visible !important; /* Показываем содержимое */
+  overflow: hidden !important; /* Скрываем переполнение */
   pointer-events: none !important; /* Позволяем клики проходить через обертку */
 }
 
@@ -196,6 +196,9 @@
   margin: 0 !important;
   position: relative !important;
   z-index: 10 !important;
+  overflow: hidden !important; /* Скрываем переполнение */
+  min-width: 0 !important; /* Позволяет сжиматься */
+  max-width: 100% !important; /* Ограничиваем максимальную ширину */
 }
 
 .achievementName {
@@ -203,9 +206,11 @@
   font-size: 14px !important;
   font-weight: 500 !important;
   font-family: 'Inter', sans-serif !important;
-  white-space: nowrap !important; /* Текст в одну строчку */
+  white-space: normal !important; /* Разрешаем перенос текста */
   overflow: hidden !important; /* Скрываем переполнение */
-  text-overflow: ellipsis !important; /* Многоточие при переполнении */
+  word-break: break-word !important; /* Разрешаем перенос слов */
+  word-wrap: break-word !important; /* Разрешаем перенос слов */
+  overflow-wrap: break-word !important; /* Разрешаем перенос слов */
   width: 100% !important;
   max-width: 100% !important;
   min-width: 0 !important;
@@ -219,9 +224,11 @@
   font-size: 12px !important;
   font-weight: 400 !important;
   font-family: 'Inter', sans-serif !important;
-  white-space: nowrap !important; /* Текст в одну строчку */
+  white-space: normal !important; /* Разрешаем перенос текста */
   overflow: hidden !important; /* Скрываем переполнение */
-  text-overflow: ellipsis !important; /* Многоточие при переполнении */
+  word-break: break-word !important; /* Разрешаем перенос слов */
+  word-wrap: break-word !important; /* Разрешаем перенос слов */
+  overflow-wrap: break-word !important; /* Разрешаем перенос слов */
   width: 100% !important;
   max-width: 100% !important;
   min-width: 0 !important;
@@ -235,9 +242,11 @@
   font-size: 12px !important;
   font-weight: 400 !important;
   font-family: 'Inter', sans-serif !important;
-  white-space: nowrap !important; /* Текст в одну строчку */
+  white-space: normal !important; /* Разрешаем перенос текста */
   overflow: hidden !important; /* Скрываем переполнение */
-  text-overflow: ellipsis !important; /* Многоточие при переполнении */
+  word-break: break-word !important; /* Разрешаем перенос слов */
+  word-wrap: break-word !important; /* Разрешаем перенос слов */
+  overflow-wrap: break-word !important; /* Разрешаем перенос слов */
   width: 100% !important;
   max-width: 100% !important;
   min-width: 0 !important;
@@ -272,6 +281,10 @@
   font-family: 'Inter', sans-serif !important;
   background-color: #3B44FA !important;
   color: #FFFFFF !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
 }
 
 .hideButton {
@@ -284,6 +297,10 @@
   font-size: 20px !important;
   font-weight: 400 !important; /* Regular */
   font-family: 'Inter', sans-serif !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
 }
 
 @media (min-width: 769px) {

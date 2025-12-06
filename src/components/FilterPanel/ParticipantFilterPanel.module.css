@@ -1,0 +1,220 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9999;
+}
+
+.filterPanel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 335px;
+  max-width: 335px;
+  min-width: 335px;
+  background: #1C1C24;
+  border-radius: 10px;
+  padding: 20px;
+  box-sizing: border-box;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex-shrink: 0;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #E7E3D8;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  text-align: left;
+}
+
+.closeButton {
+  background: transparent;
+  border: none;
+  color: #E7E3D8;
+  font-size: 24px;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s;
+  outline: none;
+}
+
+.closeButton:hover {
+  opacity: 0.7;
+}
+
+.closeButton:focus {
+  outline: none;
+}
+
+.sections {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.section {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 16px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Первая секция (Роль) - полная ширина */
+.sectionFull {
+  width: 100%;
+}
+
+/* Контейнер для второй и третьей секций */
+.bottomSections {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+}
+
+/* Вторая и третья секции - по половине ширины */
+.sectionHalf {
+  flex: 1;
+  min-width: 0;
+}
+
+.sectionTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #E7E3D8;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  text-align: left;
+}
+
+.optionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.optionItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  padding: 0;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+}
+
+.checkbox {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #E7E3D8;
+  border-radius: 4px;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.checkboxChecked {
+  background-color: #3B44FA;
+  border-color: #3B44FA;
+}
+
+.checkmark {
+  width: 6px;
+  height: 10px;
+  border: solid #FFFFFF;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+  margin-top: -2px;
+}
+
+.optionLabel {
+  font-size: 14px;
+  font-weight: 400;
+  color: #E7E3D8;
+  font-family: 'Inter', sans-serif;
+  flex: 1;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.applyButton {
+  width: 100%;
+  height: 40px;
+  border-radius: 10px;
+  background-color: #3B44FA;
+  border: none;
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  outline: none;
+  transition: opacity 0.2s;
+  box-sizing: border-box;
+}
+
+.applyButton:hover {
+  opacity: 0.9;
+}
+
+.applyButton:focus,
+.resetButton:focus {
+  outline: none;
+}
+
+.applyButton:focus-visible,
+.resetButton:focus-visible {
+  outline: none;
+}
+
+/* Адаптивность */
+@media (max-width: 400px) {
+  .filterPanel {
+    width: calc(100% - 40px);
+    max-width: 335px;
+  }
+}
+
