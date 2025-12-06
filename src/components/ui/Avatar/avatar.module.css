@@ -1,0 +1,145 @@
+/* Контейнер для аватара и статуса */
+.avatarContainer {
+  position: relative;
+  display: inline-block;
+}
+
+/* Базовые стили аватара */
+.avatar {
+  border-radius: 50%;
+  object-fit: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: #E7E3D8;
+}
+
+/* Вариант с инициалами */
+.initials {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Для размера 100px - цвет фона #CDC8C8 */
+.size-100.initials {
+  background-color: #CDC8C8;
+  background: #CDC8C8;
+}
+
+.size-100.avatar {
+  background-color: #CDC8C8;
+}
+
+/* Размеры */
+.size-xs {
+  width: 24px;
+  height: 24px;
+  font-size: 10px;
+}
+
+.size-sm {
+  width: 32px;
+  height: 32px;
+  font-size: 12px;
+}
+
+.size-md {
+  width: 48px;
+  height: 48px;
+  font-size: 16px;
+}
+
+.size-lg {
+  width: 64px;
+  height: 64px;
+  font-size: 20px;
+}
+
+.size-xl {
+  width: 96px;
+  height: 96px;
+  font-size: 28px;
+}
+
+.size-100 {
+  width: 100px;
+  height: 100px;
+  font-size: 32px;
+}
+
+/* Адаптивность для размера 100px */
+@media (max-width: 768px) {
+  .size-100 {
+    width: 80px;
+    height: 80px;
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 375px) {
+  .size-100 {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+  }
+}
+
+/* Статус онлайн/оффлайн */
+.status {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+
+.size-xs .status {
+  width: 6px;
+  height: 6px;
+}
+
+.size-sm .status {
+  width: 8px;
+  height: 8px;
+}
+
+.size-md .status {
+  width: 10px;
+  height: 10px;
+}
+
+.size-lg .status {
+  width: 12px;
+  height: 12px;
+}
+
+.size-xl .status {
+  width: 16px;
+  height: 16px;
+}
+
+.size-100 .status {
+  width: 18px;
+  height: 18px;
+}
+
+.online {
+  background-color: #10b981; /* green-500 */
+}
+
+.offline {
+  background-color: #9ca3af; /* gray-400 */
+}
+
+/* Для групп аватаров */
+.group {
+  display: flex;
+}
+
+.group .avatarContainer {
+  margin-right: -8px;
+}
+
+.group .avatarContainer:last-child {
+  margin-right: 0;
+} 

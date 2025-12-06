@@ -1,0 +1,225 @@
+.container {
+  padding-top: 0px;
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.contentWrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Выравниваем заголовок по левому краю */
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 800; /* ExtraBold */
+  color: #E7E3D8;
+  margin: 0;
+  padding-left: 0;
+  text-align: left;
+  font-family: 'Inter', sans-serif;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.hackathonsList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-start; /* Карточки начинаются с левого края, как заголовок */
+  gap: 12px !important; /* Расстояние между карточками */
+  margin-top: 20px; /* Отступ от заголовка */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.hackathonCard {
+  width: 335px; /* Фиксированная ширина карточки */
+  height: 120px; /* Высота карточки */
+  background: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border-radius: 10px;
+  display: flex;
+  align-items: center !important; /* Выравнивание по центру вертикально */
+  justify-content: flex-start;
+  padding: 0;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  border: none;
+  isolation: isolate;
+  will-change: backdrop-filter;
+  transform: translateZ(0);
+  box-shadow: none;
+  margin: 0;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.hackathonCard:hover {
+  background: rgba(255, 255, 255, 0.07) !important;
+}
+
+/* Обводка как у стеклянных кнопок */
+.hackathonCardBorderTop {
+  position: absolute;
+  top: 0;
+  left: 10px;
+  right: 10px;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.18);
+  pointer-events: none;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.hackathonCardBorderRight {
+  position: absolute;
+  top: 10px;
+  right: 0;
+  bottom: 10px;
+  width: 1px;
+  background-color: rgba(255, 255, 255, 0.18);
+  pointer-events: none;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.hackathonCardBorderBottom {
+  position: absolute;
+  bottom: 0;
+  left: 10px;
+  right: 10px;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.18);
+  pointer-events: none;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.hackathonCardBorderLeft {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  bottom: 10px;
+  width: 1px;
+  background-color: rgba(255, 255, 255, 0.18);
+  pointer-events: none;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.imageContainer {
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+  margin-left: 20px;
+  margin-top: 0;
+  margin-bottom: 0;
+  align-self: center;
+  position: relative;
+}
+
+.imagePlaceholder {
+  width: 100px;
+  height: 75px;
+  background-color: #939090;
+  border-radius: 10px;
+  flex-shrink: 0;
+  position: absolute;
+}
+
+.hackathonImage {
+  width: 100px;
+  height: 75px;
+  object-fit: cover;
+  border-radius: 10px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding-right: 20px;
+  align-self: center;
+  flex: 1;
+  min-width: 0;
+}
+
+.name {
+  font-size: 16px;
+  font-weight: 700; /* Bold */
+  color: #E7E3D8;
+  margin: 0;
+  margin-bottom: 4px;
+  text-align: left;
+  font-family: 'Inter', sans-serif;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.date {
+  font-size: 12px;
+  font-weight: 400; /* Regular */
+  color: #E7E3D8;
+  margin: 0;
+  text-align: left;
+  font-family: 'Inter', sans-serif;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .container {
+    padding-top: 0px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+
+  .hackathonsList {
+    gap: 12px !important;
+  }
+}
+
+@media (max-width: 375px) {
+  .container {
+    padding-top: 0px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .hackathonsList {
+    gap: 12px !important;
+  }
+
+  .hackathonCard {
+    width: 100%;
+    max-width: 335px;
+  }
+}

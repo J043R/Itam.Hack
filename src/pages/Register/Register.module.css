@@ -1,0 +1,69 @@
+.registerModal {
+  /* Дополнительные стили для модального окна регистрации, если нужны */
+}
+
+.registerForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.formField {
+  width: 100%;
+}
+
+.formField > div {
+  width: 100%;
+}
+
+.formField input {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box;
+}
+
+.formField > div {
+  width: 100% !important;
+}
+
+.buttonContainer {
+  margin-top: 8px;
+  width: 100%;
+}
+
+.submitButton {
+  width: 100%;
+}
+
+.helperText {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 14px;
+  color: rgba(231, 227, 216, 0.7);
+  font-family: 'Inter', sans-serif;
+}
+
+.link {
+  color: #380EAE;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.link:hover {
+  color: #5A2FC7;
+}
+
+/* Адаптивность */
+@media (max-width: 375px) {
+  .registerForm {
+    gap: 12px;
+  }
+
+  .helperText {
+    font-size: 12px;
+    margin-top: 12px;
+  }
+}
+

@@ -1,0 +1,163 @@
+.loginModal {
+  width: 335px !important;
+  height: 273px !important;
+  max-width: 335px !important;
+  max-height: 273px !important;
+  min-width: 335px !important;
+  min-height: 273px !important;
+}
+
+.modalContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 40px 20px 50px 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.closeButton {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: opacity 0.2s ease;
+}
+
+.closeButton:hover {
+  opacity: 0.7;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 600; /* Semibold */
+  color: #3B44FA;
+  margin: 0;
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+}
+
+.label {
+  margin-top: 16px !important; /* Отступ от "Вход" - 16px */
+  margin-bottom: 0 !important;
+  font-size: 12px;
+  font-weight: 500; /* Medium */
+  color: #E7E3D8;
+  text-align: left; /* Выравнивание по левому краю */
+  width: 100%;
+  font-family: 'Inter', sans-serif;
+}
+
+.inputContainer {
+  margin-top: 8px;
+  width: 100%;
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+/* Переопределяем margin-bottom у контейнера Input из input.module.css */
+.inputContainer > div.inputContainer {
+  margin-bottom: 0 !important;
+}
+
+.inputContainer > div {
+  width: 100%;
+  margin-bottom: 0 !important;
+}
+
+.inputContainer input {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box;
+  margin-bottom: 0 !important;
+}
+
+.buttonContainer {
+  margin-top: 14px !important; /* Отступ от поля ввода - 14px */
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start; /* Выравнивание по левому краю, как поле ввода */
+  align-items: flex-start;
+}
+
+.submitButton {
+  width: 100% !important;
+  max-width: 100% !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  background-color: rgba(59, 68, 250, 0.35) !important; /* #3B44FA 35% прозрачности */
+  color: #E7E3D8 !important;
+}
+
+.submitButton:hover:not(:disabled) {
+  background-color: #3B44FA !important; /* Активное состояние */
+}
+
+.submitButton:active:not(:disabled) {
+  background-color: #3B44FA !important; /* Активное состояние */
+}
+
+.submitButton:disabled {
+  background-color: rgba(59, 68, 250, 0.35) !important;
+  opacity: 0.5;
+}
+
+.helperText {
+  margin-top: 12px; /* Отступ от кнопки */
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500; /* Medium */
+  color: #E7E3D8;
+  font-family: 'Inter', sans-serif;
+  margin-bottom: 0;
+}
+
+.botLink {
+  color: #3B44FA; /* Цвет для @itam_bot */
+}
+
+/* Адаптивность */
+@media (max-width: 375px) {
+  .loginModal {
+    width: 90% !important;
+    max-width: 90% !important;
+    min-width: auto !important;
+  }
+
+  .modalContainer {
+    padding: 30px 16px 40px 16px;
+  }
+
+  .title {
+    font-size: 18px;
+  }
+
+  .label,
+  .helperText {
+    font-size: 11px;
+  }
+}

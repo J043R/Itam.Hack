@@ -1,0 +1,43 @@
+.layout {
+  position: relative;
+  min-height: 100vh;
+  background-color: transparent; /* Прозрачный, чтобы видеть эллипсы */
+  color: #E7E3D8;
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  flex-direction: column;
+  z-index: 1; /* Над фоном */
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.main {
+  flex: 1;
+  padding: 40px;
+  padding-top: 120px; /* Отступ для фиксированного Header */
+  padding-bottom: 80px; /* Отступ для фиксированной BottomNavigation */
+  box-sizing: border-box;
+  position: relative;
+  z-index: 2; /* Над фоном */
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .main {
+    padding: 20px;
+    padding-top: 100px;
+    padding-bottom: 70px;
+  }
+}
+
+@media (max-width: 375px) {
+  .main {
+    padding: 16px;
+    padding-top: 90px;
+    padding-bottom: 70px;
+  }
+}
+

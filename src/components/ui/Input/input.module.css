@@ -1,0 +1,291 @@
+/* Контейнер */
+.inputContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+  width: auto;
+}
+
+/* Label */
+.inputLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: #374151;
+  display: block;
+}
+
+/* Основное поле ввода */
+.input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: white;
+  transition: all 0.2s;
+  box-sizing: border-box;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.input:hover:not(:focus):not(:disabled) {
+  border-color: #9ca3af;
+}
+
+.input:disabled {
+  background-color: #f9fafb;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.input::placeholder {
+  color: #9ca3af;
+}
+
+/* Ошибка */
+.inputError {
+  border-color: #ef4444 !important;
+}
+
+.inputError:focus {
+  border-color: #ef4444 !important;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1) !important;
+}
+
+/* Сообщения */
+.inputMessage {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 20px;
+}
+
+.inputErrorText {
+  color: #ef4444;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.inputHelperText {
+  color: #6b7280;
+  font-size: 12px;
+}
+
+/* Особые типы */
+.input[type="search"] {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%239ca3af'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z' /%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: 12px center;
+  background-size: 20px;
+  padding-left: 40px;
+}
+
+.input[type="password"] {
+  letter-spacing: 1px;
+  font-family: monospace;
+}
+
+/* Размеры XS */
+.inputXS20 {
+  padding: 10px !important;
+  height: 30px !important;
+  width: 299px !important;
+  border-radius: 10px !important;
+  color: #E7E3D8 !important;
+  background-color: rgba(255, 255, 255, 0.2) !important;
+  border: none !important;
+  box-sizing: border-box !important;
+  font-size: 14px !important;
+}
+
+.inputXS30 {
+  padding: 10px !important;
+  height: 30px !important;
+  width: 299px !important;
+  border-radius: 10px !important;
+  color: #E7E3D8 !important;
+  background-color: rgba(255, 255, 255, 0.3) !important;
+  border: none !important;
+  box-sizing: border-box !important;
+  font-size: 14px !important;
+}
+
+/* Размеры M */
+.inputM20 {
+  padding: 10px !important;
+  height: 75px !important;
+  width: 335px !important;
+  border-radius: 10px !important;
+  color: #E7E3D8 !important;
+  background-color: rgba(255, 255, 255, 0.2) !important;
+  border: none !important;
+  box-sizing: border-box !important;
+  font-size: 14px !important;
+}
+
+.inputM30 {
+  padding: 10px !important;
+  height: 75px !important;
+  width: 335px !important;
+  border-radius: 10px !important;
+  color: #E7E3D8 !important;
+  background-color: rgba(255, 255, 255, 0.3) !important;
+  border: none !important;
+  box-sizing: border-box !important;
+  font-size: 14px !important;
+}
+
+/* Размеры S */
+.inputS20 {
+  padding: 10px !important;
+  height: 40px !important;
+  width: 335px !important;
+  border-radius: 10px !important;
+  color: #E7E3D8 !important;
+  background-color: rgba(255, 255, 255, 0.2) !important;
+  border: none !important;
+  box-sizing: border-box !important;
+  font-size: 14px !important;
+}
+
+.inputS30 {
+  padding: 10px !important;
+  height: 40px !important;
+  width: 335px !important;
+  border-radius: 10px !important;
+  color: #E7E3D8 !important;
+  background-color: rgba(255, 255, 255, 0.3) !important;
+  border: none !important;
+  box-sizing: border-box !important;
+  font-size: 14px !important;
+}
+
+/* Поле для регистрации */
+.inputRegister {
+  padding: 10px !important;
+  height: 39px !important;
+  width: 279px !important;
+  max-width: 100% !important; /* Для адаптивности в модальном окне */
+  border-radius: 8px !important;
+  border: 1px solid #380EAE !important;
+  color: #E7E3D8 !important; /* Цвет текста */
+  background-color: transparent !important;
+  box-sizing: border-box !important;
+  font-size: 14px !important;
+}
+
+.inputRegister::placeholder {
+  color: rgba(166, 166, 166, 0.46) !important;
+}
+
+.inputRegister:focus {
+  outline: none !important;
+  border-color: #380EAE !important;
+  box-shadow: none !important;
+}
+
+/* Поле для анкеты */
+.inputForm {
+  padding: 12px 16px !important;
+  height: auto !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  border-radius: 10px !important;
+  border: none !important;
+  color: #E7E3D8 !important;
+  background-color: rgba(101, 98, 109, 0.5) !important; /* Более прозрачный фон */
+  box-sizing: border-box !important;
+  font-size: 14px !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+/* Контейнер для поля формы - уменьшаем gap */
+.inputContainer:has(.inputForm) {
+  gap: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.inputForm::placeholder {
+  color: rgba(231, 227, 216, 0.5) !important;
+}
+
+.inputForm:focus {
+  outline: none !important;
+  background-color: rgba(101, 98, 109, 0.7) !important;
+  box-shadow: none !important;
+}
+
+/* Placeholder для специальных размеров */
+.inputXS20::placeholder,
+.inputXS30::placeholder,
+.inputS20::placeholder,
+.inputS30::placeholder,
+.inputM20::placeholder,
+.inputM30::placeholder {
+  color: rgba(231, 227, 216, 0.5) !important;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+  .inputXS20,
+  .inputXS30 {
+    width: 100%;
+    max-width: 299px;
+  }
+
+  .inputS20,
+  .inputS30 {
+    width: 100%;
+    max-width: 335px;
+  }
+
+  .inputM20,
+  .inputM30 {
+    width: 100%;
+    max-width: 335px;
+  }
+
+  .inputRegister {
+    width: 100%;
+    max-width: 279px;
+  }
+}
+
+@media (max-width: 375px) {
+  .inputXS20,
+  .inputXS30 {
+    width: 100%;
+    max-width: 280px;
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .inputS20,
+  .inputS30 {
+    width: 100%;
+    max-width: 300px;
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .inputM20,
+  .inputM30 {
+    width: 100%;
+    max-width: 300px;
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .inputRegister {
+    width: 100%;
+    max-width: 260px;
+    padding: 8px;
+    font-size: 14px;
+  }
+}

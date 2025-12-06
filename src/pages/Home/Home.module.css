@@ -1,0 +1,306 @@
+.container {
+  padding-top: 0px; /* Приподнято к хедеру */
+  padding-left: 20px;
+  padding-right: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 800; /* ExtraBold */
+  color: #E7E3D8;
+  margin: 0;
+  padding-left: 0; /* Убираем отступ слева */
+  text-align: left;
+  font-family: 'Inter', sans-serif;
+}
+
+.searchSection {
+  display: flex;
+  align-items: flex-start; /* Выравнивание по верху */
+  gap: 14px; /* Расстояние между кнопкой фильтров и полем поиска */
+  margin-top: 10px; /* Расстояние между "Хакатоны" и компонентом (фильтр + поле) */
+  margin-left: 0 !important; /* Убираем отступ слева */
+  padding-left: 0 !important; /* Убираем отступ слева */
+  padding-right: 0 !important; /* Убираем отступ справа */
+  justify-content: flex-start; /* Выравнивание по левому краю */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.searchSection button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important; /* Выравнивание иконки по левому краю */
+  height: 30px !important; /* Высота поля XS = 30px */
+  width: auto !important;
+  min-width: auto !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  flex-shrink: 0; /* Не сжимается */
+  background: transparent !important; /* Убираем фон */
+  background-color: transparent !important; /* Убираем фон */
+  border: none !important; /* Убираем border */
+  box-shadow: none !important; /* Убираем тени */
+  line-height: 1 !important;
+  vertical-align: top !important;
+}
+
+.searchSection > div {
+  margin: 0 !important; /* Убираем margin у контейнера Input */
+  margin-bottom: 0 !important; /* Убираем margin-bottom */
+  margin-left: 0 !important; /* Убираем margin-left */
+  padding: 0 !important;
+  flex: 1 !important; /* Поле поиска растягивается */
+  min-width: 0 !important; /* Позволяет сжиматься */
+  max-width: 100% !important;
+}
+
+.searchSection input {
+  margin: 0 !important;
+  padding-left: 10px !important; /* Сохраняем padding внутри поля */
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  box-sizing: border-box !important;
+}
+
+/* Переопределяем фиксированную ширину для поля поиска в searchSection */
+.searchSection .inputXS30,
+.searchSection .inputXS20 {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.searchSection button svg,
+.searchSection button > * {
+  margin: 0 !important;
+  padding: 0 !important;
+  display: block !important;
+}
+
+/* Убрал конфликтующие стили для .searchSection > * */
+
+.hackathonsList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center; /* Центрируем карточки */
+  gap: 14px !important; /* Расстояние между карточками хакатонов */
+  margin-top: 30px; /* Отступ от поиска */
+  width: 100%;
+}
+
+.hackathonsList > * {
+  width: 295px !important; /* Фиксированная ширина карточки */
+  max-width: 295px !important;
+  margin: 0 !important; /* Убираем все margin у кнопок */
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  flex-shrink: 0;
+}
+
+.hackathonContent {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important; /* Расстояние между элементами */
+  color: #E7E3D8 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important; /* Позволяет сжиматься */
+  text-align: left !important; /* Выравнивание текста по левому краю */
+  align-items: flex-start !important; /* Выравнивание элементов по левому краю */
+  word-wrap: normal !important; /* Запрещаем перенос слов */
+  overflow-wrap: normal !important; /* Запрещаем перенос слов */
+  box-sizing: border-box !important;
+  overflow: hidden !important; /* Скрываем переполнение */
+}
+
+/* Переопределяем inline стили из ButtonSimple через :global */
+.hackathonContent :global(h2),
+.hackathonContent :global(p) {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  word-break: normal !important;
+  word-wrap: normal !important;
+  overflow-wrap: normal !important;
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+}
+
+/* Переопределяем обертку из ButtonSimple - используем селектор для родительского div */
+/* Переопределяем обертку из ButtonSimple */
+.hackathonsList button[style*="width"] > div > div {
+  min-width: 0 !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Применяем стили ко всем h2 и p внутри карточек */
+.hackathonsList h2,
+.hackathonsList .hackathonName {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  word-break: normal !important;
+  word-wrap: normal !important;
+  overflow-wrap: normal !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  display: block !important;
+}
+
+.hackathonsList .hackathonDescription {
+  white-space: normal !important; /* Разрешаем перенос текста */
+  overflow: visible !important; /* Показываем весь текст */
+  text-overflow: clip !important; /* Убираем многоточие */
+  word-break: break-word !important; /* Разрешаем перенос слов */
+  word-wrap: break-word !important; /* Разрешаем перенос слов */
+  overflow-wrap: break-word !important; /* Разрешаем перенос слов */
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  display: block !important;
+}
+
+/* Применяем стили напрямую к элементам */
+.hackathonContent h2 {
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  word-break: normal !important;
+  word-wrap: normal !important;
+  overflow-wrap: normal !important;
+}
+
+.hackathonContent p.hackathonDescription {
+  white-space: normal !important; /* Разрешаем перенос текста для описания */
+  overflow: visible !important; /* Показываем весь текст */
+  text-overflow: clip !important; /* Убираем многоточие */
+  word-break: break-word !important; /* Разрешаем перенос слов */
+  word-wrap: break-word !important; /* Разрешаем перенос слов */
+  overflow-wrap: break-word !important; /* Разрешаем перенос слов */
+}
+
+.hackathonName {
+  font-size: 20px !important;
+  font-weight: 600 !important; /* Semibold */
+  color: #E7E3D8 !important;
+  margin: 0 !important;
+  font-family: 'Inter', sans-serif !important;
+  white-space: nowrap !important; /* Текст в одну строчку */
+  overflow: hidden !important; /* Скрываем переполнение */
+  text-overflow: ellipsis !important; /* Многоточие при переполнении */
+  width: 100% !important; /* Занимает всю ширину */
+  word-break: normal !important; /* Не переносить слова */
+  word-wrap: normal !important; /* Запрещаем перенос слов */
+  overflow-wrap: normal !important; /* Запрещаем перенос слов */
+  display: block !important; /* Блочный элемент */
+  max-width: 100% !important; /* Максимальная ширина */
+  line-height: 1.2 !important; /* Компактная высота строки */
+  min-width: 0 !important; /* Позволяет сжиматься */
+  flex-shrink: 1 !important; /* Может сжиматься */
+}
+
+.hackathonDate {
+  font-size: 12px;
+  font-weight: 400; /* Regular */
+  color: #E7E3D8;
+  margin: 0;
+  opacity: 0.8;
+  font-family: 'Inter', sans-serif;
+}
+
+.hackathonDescription {
+  font-size: 14px !important;
+  font-weight: 400 !important; /* Regular */
+  color: #E7E3D8 !important;
+  margin: 0 !important;
+  margin-top: 2px !important; /* Отступ от даты */
+  opacity: 0.9 !important;
+  line-height: 1.4 !important; /* Нормальная высота строки для многострочного текста */
+  font-family: 'Inter', sans-serif !important;
+  white-space: normal !important; /* Разрешаем перенос текста */
+  overflow: visible !important; /* Показываем весь текст */
+  text-overflow: clip !important; /* Убираем многоточие */
+  width: 100% !important; /* Занимает всю ширину */
+  word-break: break-word !important; /* Разрешаем перенос слов */
+  word-wrap: break-word !important; /* Разрешаем перенос слов */
+  overflow-wrap: break-word !important; /* Разрешаем перенос слов */
+  display: block !important; /* Блочный элемент */
+  max-width: 100% !important; /* Максимальная ширина */
+  min-width: 0 !important; /* Позволяет сжиматься */
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .container {
+    padding-top: 0px; /* Приподнято к хедеру */
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+
+  .searchSection {
+    width: 100%;
+  }
+
+
+  .hackathonName {
+    font-size: 18px;
+  }
+
+  .hackathonDescription {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 375px) {
+  .container {
+    padding-top: 0px; /* Приподнято к хедеру */
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .searchSection {
+    width: 100%;
+  }
+
+  .hackathonName {
+    font-size: 16px;
+  }
+
+  .hackathonDate {
+    font-size: 11px;
+  }
+
+  .hackathonDescription {
+    font-size: 12px;
+  }
+
+  .hackathonsList {
+    gap: 14px !important; /* Расстояние между карточками хакатонов */
+  }
+
+  .hackathonsList > * {
+    max-width: 100%; /* На мобилке карточки занимают всю ширину */
+  }
+}
+

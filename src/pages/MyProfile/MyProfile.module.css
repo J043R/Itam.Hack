@@ -1,0 +1,338 @@
+.container {
+  padding: 28.5px 10px 100px 10px; /* Отступ сверху 28.5px, слева и справа 10px, снизу 100px для навигации */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Профиль с аватаром */
+.profileHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.profileInfo {
+  display: flex;
+  align-items: center; /* Вертикальное центрирование */
+  gap: 32px !important; /* Расстояние от аватарки до текста */
+  flex: 1;
+}
+
+/* Контейнер аватара - className применяется к внутреннему div */
+.avatar {
+  flex-shrink: 0;
+  width: 100px !important;
+  height: 100px !important;
+  min-width: 100px !important;
+  min-height: 100px !important;
+  max-width: 100px !important;
+  max-height: 100px !important;
+}
+
+.nameContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 5px !important; /* Расстояние между именем и фамилией */
+  text-align: left; /* Выравнивание текста по левому краю */
+  justify-content: center; /* Вертикальное центрирование содержимого */
+  align-items: flex-start; /* Горизонтальное выравнивание по левому краю */
+}
+
+.firstName,
+.lastName {
+  color: #E7E3D8;
+  font-size: 20px;
+  font-weight: 800; /* ExtraBold */
+  font-family: 'Inter', sans-serif;
+  text-align: left;
+}
+
+.editButton {
+  flex-shrink: 0;
+  margin: 0 !important;
+  border-radius: 10px !important;
+  background-color: #3B44FA !important;
+}
+
+.editButton:hover:not(:disabled) {
+  background-color: #3B44FA !important;
+  opacity: 0.9;
+}
+
+.editButton:active:not(:disabled) {
+  background-color: #3B44FA !important;
+  opacity: 0.8;
+}
+
+/* Секция формы */
+.formSection {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 20px; /* Уменьшили отступ до достижений */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.formField {
+  width: 100%;
+}
+
+.formField label {
+  color: #E7E3D8 !important;
+  font-size: 20px !important;
+  font-weight: 600 !important; /* SemiBold */
+  margin-bottom: 6px !important; /* Расстояние до поля ввода */
+  display: block !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+/* Переопределяем gap в inputContainer для полей формы */
+.formField :global(.inputContainer) {
+  gap: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.input {
+  width: 100% !important;
+}
+
+.label {
+  color: #E7E3D8 !important;
+  font-size: 20px !important;
+  font-weight: 600 !important; /* SemiBold */
+  margin-bottom: 8px !important; /* Расстояние до поля ввода */
+  display: block !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+.textarea {
+  width: 100% !important;
+  height: 75px !important;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: none;
+  color: #E7E3D8;
+  background-color: rgba(101, 98, 109, 0.5); /* Более прозрачный фон */
+  box-sizing: border-box;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  resize: none;
+  min-height: 75px !important;
+  max-height: 75px !important;
+}
+
+.textarea::placeholder {
+  color: rgba(231, 227, 216, 0.5);
+}
+
+.textarea:focus {
+  outline: none;
+  background-color: rgba(101, 98, 109, 0.7);
+}
+
+/* Секция достижений */
+.achievementsSection {
+  width: 100%;
+  margin-bottom: 24px;
+  box-sizing: border-box;
+}
+
+.achievementsTitle {
+  color: #E7E3D8;
+  font-size: 20px;
+  font-weight: 800; /* ExtraBold */
+  margin: 0;
+  margin-bottom: 8px; /* Уменьшил отступ для приближения карточек */
+  text-align: left;
+  font-family: 'Inter', sans-serif;
+}
+
+.achievementsList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 12px;
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.achievementCard {
+  flex: 1 1 150px !important; /* Растягивается, минимальная ширина 150px */
+  min-width: 150px !important;
+  max-width: none !important; /* Может растягиваться */
+  width: auto !important; /* Переопределяем фиксированную ширину из ButtonSimple */
+  height: 108px !important; /* Фиксированная высота карточки */
+  margin: 0 !important;
+  padding: 0 !important; /* Убираем padding карточки, отступ будет на контенте */
+  box-sizing: border-box !important;
+  overflow: visible !important; /* Показываем содержимое */
+}
+
+/* Переопределяем выравнивание внутри кнопки для glass-card-small */
+.achievementCard {
+  justify-content: flex-start !important;
+  align-items: flex-start !important;
+}
+
+/* Обертка для контента */
+.achievementContentWrapper {
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  z-index: 3 !important;
+  overflow: visible !important; /* Показываем содержимое */
+  pointer-events: none !important; /* Позволяем клики проходить через обертку */
+}
+
+.achievementContentWrapper > * {
+  pointer-events: auto !important; /* Включаем клики для контента */
+}
+
+.achievementContent {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important; /* Расстояние между строчками */
+  width: 100% !important;
+  height: 100% !important;
+  text-align: left !important;
+  color: #E7E3D8 !important;
+  padding-left: 10px !important; /* Отступ текста от левой границы */
+  padding-top: 15px !important; /* Отступ верхней строчки от верха */
+  padding-right: 10px !important; /* Отступ справа для предотвращения обрезания */
+  padding-bottom: 10px !important; /* Отступ снизу */
+  box-sizing: border-box !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  margin: 0 !important;
+  position: relative !important;
+  z-index: 10 !important;
+}
+
+.achievementName {
+  color: #E7E3D8 !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  font-family: 'Inter', sans-serif !important;
+  white-space: nowrap !important; /* Текст в одну строчку */
+  overflow: hidden !important; /* Скрываем переполнение */
+  text-overflow: ellipsis !important; /* Многоточие при переполнении */
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  display: block !important;
+  visibility: visible !important; /* Гарантируем видимость */
+  opacity: 1 !important; /* Гарантируем непрозрачность */
+}
+
+.achievementDate {
+  color: #E7E3D8 !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  font-family: 'Inter', sans-serif !important;
+  white-space: nowrap !important; /* Текст в одну строчку */
+  overflow: hidden !important; /* Скрываем переполнение */
+  text-overflow: ellipsis !important; /* Многоточие при переполнении */
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  display: block !important;
+  visibility: visible !important; /* Гарантируем видимость */
+  opacity: 1 !important; /* Гарантируем непрозрачность */
+}
+
+.achievementDescription {
+  color: #E7E3D8 !important;
+  font-size: 12px !important;
+  font-weight: 400 !important;
+  font-family: 'Inter', sans-serif !important;
+  white-space: nowrap !important; /* Текст в одну строчку */
+  overflow: hidden !important; /* Скрываем переполнение */
+  text-overflow: ellipsis !important; /* Многоточие при переполнении */
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  display: block !important;
+  visibility: visible !important; /* Гарантируем видимость */
+  opacity: 1 !important; /* Гарантируем непрозрачность */
+}
+
+/* Кнопка выхода */
+.logoutContainer {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  margin-top: 20px;
+  box-sizing: border-box;
+}
+
+.logoutButton {
+  margin: 0 !important;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .container {
+    padding: 12px;
+    padding-bottom: 100px;
+  }
+
+  .profileHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .editButton {
+    align-self: flex-end;
+  }
+
+  .achievementsList {
+    gap: 8px !important; /* Уменьшаем gap для мобилки */
+  }
+
+  .achievementCard {
+    flex: 1 1 150px !important; /* Растягивается, минимальная ширина 150px */
+    min-width: 150px !important;
+    max-width: none !important; /* Может растягиваться */
+    width: auto !important; /* Переопределяем фиксированную ширину из ButtonSimple */
+  }
+}
+
+/* Медиа-запрос для 375px должен быть после 768px, чтобы иметь приоритет */
+@media (max-width: 375px) {
+  .container {
+    padding: 12px;
+    padding-bottom: 100px;
+  }
+
+  .profileInfo {
+    gap: 32px !important;
+  }
+
+  .nameContainer {
+    gap: 5px !important;
+  }
+
+  .formSection {
+    gap: 16px;
+  }
+
+  .achievementsList {
+    gap: 8px !important; /* Расстояние между карточками */
+  }
+
+  .achievementCard {
+    flex: 1 1 150px !important; /* Растягивается, минимальная ширина 150px */
+    min-width: 150px !important;
+    max-width: none !important; /* Может растягиваться */
+    width: auto !important; /* Переопределяем фиксированную ширину из ButtonSimple */
+  }
+}
+
