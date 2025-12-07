@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Modal } from '../../components/ui/Modal/Modal';
 import { Input } from '../../components/ui/Input/input';
 import { ButtonSimple } from '../../components/ui/Button/button';
+import { useAuth } from '../../contexts/AuthContext';
+import { login } from '../../api/api';
 import { IoMdClose } from "react-icons/io";
 import styles from './Login.module.css';
 
@@ -12,18 +14,50 @@ interface LoginProps {
 
 export const Login = ({ isOpen, onClose }: LoginProps) => {
   const [code, setCode] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const { login: authLogin } = useAuth();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCode(e.target.value);
+    setError(null); // Сбрасываем ошибку при вводе
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Здесь будет логика входа
-    console.log('Вход с кодом:', code);
+    
+    if (!code || code.trim() === '') {
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await login(code.trim());
+      
+      if (response.success && response.data) {
+        // Сохраняем пользователя в контекст
+        authLogin(response.data);
+        
+        // Закрываем модальное окно
+        onClose();
+        setCode('');
+        
+        // Обычный пользователь остается на текущей странице
+        // Админы должны входить через /admin/login
+      } else {
+        setError(response.message || 'Неверный код доступа');
+      }
+    } catch (err) {
+      setError('Произошла ошибка при входе. Попробуйте еще раз.');
+      console.error('Ошибка входа:', err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const isButtonDisabled = !code || code.trim() === '';
+  const isButtonDisabled = !code || code.trim() === '' || isLoading;
 
   return (
     <Modal 
@@ -55,6 +89,12 @@ export const Login = ({ isOpen, onClose }: LoginProps) => {
             />
           </div>
 
+          {error && (
+            <div className={styles.errorMessage}>
+              {error}
+            </div>
+          )}
+
           <div className={styles.buttonContainer}>
             <ButtonSimple
               type="entry-primary"
@@ -65,7 +105,7 @@ export const Login = ({ isOpen, onClose }: LoginProps) => {
               disabled={isButtonDisabled}
               className={styles.submitButton}
             >
-              Войти
+              {isLoading ? 'Вход...' : 'Войти'}
             </ButtonSimple>
           </div>
 

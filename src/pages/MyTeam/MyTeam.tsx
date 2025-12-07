@@ -36,23 +36,37 @@ export const MyTeam = () => {
         setLoading(true);
         
         // Загружаем данные о хакатоне и команде параллельно
-        const [hackathonResponse, teamResponse] = await Promise.all([
+        // Используем Promise.allSettled для более надежной обработки ошибок
+        const [hackathonResult, teamResult] = await Promise.allSettled([
           getHackathonById(id),
           getTeamByHackathonId(id)
         ]);
         
-        if (hackathonResponse.success) {
-          setHackathonData(hackathonResponse.data);
+        // Обрабатываем результат загрузки хакатона
+        if (hackathonResult.status === 'fulfilled') {
+          const hackathonResponse = hackathonResult.value;
+          if (hackathonResponse.success) {
+            setHackathonData(hackathonResponse.data);
+          } else {
+            setError(hackathonResponse.message || 'Не удалось загрузить данные хакатона');
+          }
         } else {
-          setError(hackathonResponse.message || 'Не удалось загрузить данные хакатона');
+          setError('Произошла ошибка при загрузке данных хакатона');
+          console.error('Ошибка загрузки хакатона:', hackathonResult.reason);
         }
 
-        if (teamResponse.success && teamResponse.data) {
-          setTeam(teamResponse.data);
-          // Проверяем, есть ли сохраненное название команды в localStorage
-          const savedTeams = localStorage.getItem('teamNames');
-          const teams = savedTeams ? JSON.parse(savedTeams) : {};
-          setTeamName(teams[id] || teamResponse.data.name);
+        // Обрабатываем результат загрузки команды
+        if (teamResult.status === 'fulfilled') {
+          const teamResponse = teamResult.value;
+          if (teamResponse.success && teamResponse.data) {
+            setTeam(teamResponse.data);
+            // Проверяем, есть ли сохраненное название команды в localStorage
+            const savedTeams = localStorage.getItem('teamNames');
+            const teams = savedTeams ? JSON.parse(savedTeams) : {};
+            setTeamName(teams[id] || teamResponse.data.name);
+          }
+        } else {
+          console.error('Ошибка загрузки команды:', teamResult.reason);
         }
       } catch (err) {
         setError('Произошла ошибка при загрузке данных');

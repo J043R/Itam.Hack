@@ -5,6 +5,7 @@ interface HeaderProps {
 }
 
 export const Header = ({ className = '' }: HeaderProps) => {
+  
   return (
     <header className={`${styles.header} ${className}`}>
       <div className={styles.container}>

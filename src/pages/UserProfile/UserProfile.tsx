@@ -29,29 +29,45 @@ export const UserProfile = () => {
         setLoading(true);
         
         // Загружаем данные о пользователе и достижениях параллельно
-        const [userResponse, achievementsResponse] = await Promise.all([
+        // Используем Promise.allSettled для более надежной обработки ошибок
+        const [userResult, achievementsResult] = await Promise.allSettled([
           getUserById(userId),
           getUserAchievements(userId)
         ]);
         
-        if (userResponse.success) {
-          // Проверяем, есть ли сохраненные данные в localStorage
-          const savedProfiles = localStorage.getItem('userProfiles');
-          const profiles = savedProfiles ? JSON.parse(savedProfiles) : {};
-          const savedProfile = profiles[userId];
-          
-          setParticipantData({
-            ...userResponse.data,
-            role: savedProfile?.role || userResponse.data.role,
-            university: savedProfile?.university || userResponse.data.university,
-            about: savedProfile?.about || userResponse.data.about
-          });
+        // Обрабатываем результат загрузки пользователя
+        if (userResult.status === 'fulfilled') {
+          const userResponse = userResult.value;
+          if (userResponse.success) {
+            // Проверяем, есть ли сохраненные данные в localStorage
+            const savedProfiles = localStorage.getItem('userProfiles');
+            const profiles = savedProfiles ? JSON.parse(savedProfiles) : {};
+            const savedProfile = profiles[userId];
+            
+            setParticipantData({
+              ...userResponse.data,
+              role: savedProfile?.role || userResponse.data.role,
+              university: savedProfile?.university || userResponse.data.university,
+              about: savedProfile?.about || userResponse.data.about
+            });
+          } else {
+            setError(userResponse.message || 'Не удалось загрузить данные пользователя');
+          }
         } else {
-          setError(userResponse.message || 'Не удалось загрузить данные пользователя');
+          setError('Произошла ошибка при загрузке данных пользователя');
+          console.error('Ошибка загрузки пользователя:', userResult.reason);
         }
 
-        if (achievementsResponse.success) {
-          setAchievements(achievementsResponse.data);
+        // Обрабатываем результат загрузки достижений
+        if (achievementsResult.status === 'fulfilled') {
+          const achievementsResponse = achievementsResult.value;
+          if (achievementsResponse.success) {
+            setAchievements(achievementsResponse.data);
+          } else {
+            console.error('Ошибка загрузки достижений:', achievementsResponse.message);
+          }
+        } else {
+          console.error('Ошибка загрузки достижений:', achievementsResult.reason);
         }
       } catch (err) {
         setError('Произошла ошибка при загрузке данных');

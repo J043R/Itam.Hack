@@ -1,0 +1,223 @@
+/* Убрали .loginPage, так как модальное окно теперь поверх страницы */
+
+.loginModal {
+  width: 564px !important;
+  height: 419px !important;
+  max-width: 564px !important;
+  max-height: 419px !important;
+  min-width: 564px !important;
+  min-height: 419px !important;
+}
+
+.modalContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 40px 20px 60px 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.closeButton {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: opacity 0.2s ease;
+}
+
+.closeButton:hover {
+  opacity: 0.7;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.title {
+  font-size: 36px;
+  font-weight: 600; /* SemiBold */
+  color: #3B44FA;
+  margin: 0;
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+  text-align: center;
+  font-family: 'Inter', sans-serif;
+}
+
+.inputContainer {
+  margin-top: 10px;
+  width: 100%;
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.inputContainer:first-of-type {
+  margin-top: 20px;
+}
+
+/* Переопределяем margin-bottom у контейнера Input из input.module.css */
+.inputContainer > div.inputContainer {
+  margin-bottom: 0 !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.inputContainer > div {
+  width: auto !important;
+  margin: 0 auto !important;
+  margin-bottom: 0 !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.inputContainer input {
+  width: 444px !important;
+  height: 60px !important;
+  max-width: 444px !important;
+  min-width: 444px !important;
+  box-sizing: border-box;
+  margin: 0 auto !important;
+  margin-bottom: 0 !important;
+  font-size: 20px !important;
+  font-weight: 400 !important; /* Regular */
+}
+
+/* Отключаем белый фон автозаполнения */
+.inputContainer input:-webkit-autofill,
+.inputContainer input:-webkit-autofill:hover,
+.inputContainer input:-webkit-autofill:focus,
+.inputContainer input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px transparent inset !important;
+  -webkit-text-fill-color: #E7E3D8 !important;
+  box-shadow: 0 0 0 30px transparent inset !important;
+  background-color: transparent !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+.inputContainer input::placeholder {
+  font-size: 20px !important;
+  font-weight: 400 !important; /* Regular */
+}
+
+.errorMessage {
+  margin-top: 12px;
+  margin-bottom: 0 !important;
+  padding: 8px 12px;
+  background-color: rgba(255, 0, 0, 0.1);
+  border: 1px solid rgba(255, 0, 0, 0.3);
+  border-radius: 6px;
+  color: #ff6b6b;
+  font-size: 12px;
+  text-align: left;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Расстояние между полем пароля и кнопкой - 40px */
+/* Если есть errorMessage, он должен быть внутри этого пространства */
+.buttonContainer {
+  margin-top: 40px !important;
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Убеждаемся, что последнее поле не имеет дополнительных отступов */
+.inputContainer:last-of-type {
+  margin-bottom: 0 !important;
+}
+
+.submitButton {
+  width: 444px !important;
+  height: 60px !important;
+  max-width: 444px !important;
+  min-width: 444px !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+  background-color: rgba(59, 68, 250, 0.35) !important; /* #3B44FA 35% прозрачности */
+  color: #E7E3D8 !important;
+  font-size: 20px !important;
+  font-weight: 600 !important; /* SemiBold */
+}
+
+.submitButton:hover:not(:disabled) {
+  background-color: #3B44FA !important; /* Активное состояние */
+}
+
+.submitButton:active:not(:disabled) {
+  background-color: #3B44FA !important; /* Активное состояние */
+}
+
+.submitButton:disabled {
+  background-color: rgba(59, 68, 250, 0.35) !important;
+  opacity: 0.5;
+}
+
+.helperText {
+  margin-top: 16px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500; /* Medium */
+  color: #E7E3D8;
+  font-family: 'Inter', sans-serif;
+  margin-bottom: 0;
+}
+
+.link {
+  color: #3B44FA;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.link:hover {
+  color: #5A7AFF;
+}
+
+/* Адаптивность */
+@media (max-width: 375px) {
+  .loginModal {
+    width: 90% !important;
+    max-width: 90% !important;
+    min-width: auto !important;
+    height: auto !important;
+    min-height: auto !important;
+  }
+
+  .modalContainer {
+    padding: 30px 16px 40px 16px;
+  }
+
+  .title {
+    font-size: 18px;
+  }
+
+  .helperText {
+    font-size: 11px;
+  }
+}
+

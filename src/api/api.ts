@@ -6,7 +6,10 @@ import type {
   Participant, 
   Achievement,
   Notification,
-  ApiResponse 
+  AnalyticsData,
+  FilterOption,
+  ApiResponse,
+  Organizer
 } from './types';
 import {
   mockUsers,
@@ -15,7 +18,10 @@ import {
   mockTeams,
   mockParticipants,
   mockAchievements,
-  mockNotifications
+  mockNotifications,
+  mockOrganizers,
+  mockRoles,
+  mockStacks
 } from './mockData';
 
 // Базовый URL API (для будущего подключения к бэкенду)
@@ -28,28 +34,31 @@ const delay = (ms: number = 500) => new Promise(resolve => setTimeout(resolve, m
 // Базовая функция для выполнения fetch запросов
 // Сейчас возвращает моковые данные, но структура готова для подключения к бэкенду
 // Для подключения к бэкенду: раскомментировать код ниже и закомментировать блок с моковыми данными
-// @ts-ignore - функция будет использована при подключении к бэкенду
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function _fetchAPI<T>(
+async function fetchAPI<T>(
   _endpoint: string,
   _options: RequestInit = {}
 ): Promise<ApiResponse<T>> {
-  // Имитация задержки сети (убрать при подключении к бэкенду)
-  await delay(300 + Math.random() * 500);
-
   // TODO: Когда будет готов бэкенд, раскомментировать код ниже и закомментировать блок с моковыми данными
   /*
   try {
     // Получаем токен авторизации из localStorage (если есть)
     const token = localStorage.getItem('authToken');
     
-    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+    // Подготавливаем body для POST/PUT/PATCH запросов
+    let body = _options.body;
+    if (body && typeof body === 'object' && !(body instanceof FormData)) {
+      body = JSON.stringify(body);
+    }
+    
+    const response = await fetch(`${_API_BASE_URL}${_endpoint}`, {
+      method: _options.method || 'GET',
       headers: {
         'Content-Type': 'application/json',
         ...(token && { 'Authorization': `Bearer ${token}` }),
-        ...options.headers,
+        ..._options.headers,
       },
-      ...options,
+      ...(body ? { body } : {}),
     });
 
     if (!response.ok) {
@@ -71,6 +80,9 @@ async function _fetchAPI<T>(
   }
   */
 
+  // Временная заглушка - имитация задержки сети (убрать при подключении к бэкенду)
+  await delay(300 + Math.random() * 500);
+  
   // Временная заглушка - возвращаем моковые данные (убрать при подключении к бэкенду)
   return {
     data: {} as T,
@@ -120,6 +132,141 @@ export async function getMyHackathons(): Promise<ApiResponse<MyHackathon[]>> {
   return {
     data: mockMyHackathons,
     success: true,
+  };
+}
+
+// API функции для аутентификации
+
+/**
+ * Вход по коду от телеграм-бота (только для обычных пользователей)
+ * @param code - Код от телеграм-бота
+ * 
+ * ВАЖНО: При подключении к бэкенду:
+ * 1. Заменить на: return await fetchAPI<User>('/auth/login', { method: 'POST', body: { code } });
+ * 2. Бэкенд должен возвращать { user: User, token: string }
+ * 3. После успешного ответа сохранить токен: localStorage.setItem('authToken', response.data.token);
+ */
+export async function login(code: string): Promise<ApiResponse<User>> {
+  await delay();
+  
+  // Временная логика для моковых данных
+  // В реальном API здесь будет запрос к бэкенду с проверкой code
+  // return await fetchAPI<User>('/auth/login', { method: 'POST', body: { code } });
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  void code; // Будет использовано при подключении к бэкенду
+  
+  // Для обычных пользователей берем первого из моковых данных
+  // В реальном API здесь будет проверка кода и получение пользователя
+  const user = mockUsers[0];
+  
+  if (!user) {
+    return {
+      data: {} as User,
+      success: false,
+      message: 'Неверный код доступа',
+    };
+  }
+  
+  // Убеждаемся, что у пользователя роль 'user'
+  const userWithRole: User = {
+    ...user,
+    userRole: 'user',
+  };
+  
+  return {
+    data: userWithRole,
+    success: true,
+  };
+}
+
+/**
+ * Вход администратора по email и паролю
+ * @param email - Email администратора
+ * @param password - Пароль администратора
+ * 
+ * ВАЖНО: При подключении к бэкенду:
+ * 1. Заменить на: return await fetchAPI<User>('/admin/login', { method: 'POST', body: { email, password } });
+ * 2. Бэкенд должен возвращать { user: User, token: string }
+ * 3. После успешного ответа сохранить токен: localStorage.setItem('authToken', response.data.token);
+ */
+export async function adminLogin(email: string, password: string): Promise<ApiResponse<User>> {
+  await delay();
+  
+  // Временная логика для моковых данных
+  // В реальном API здесь будет запрос к бэкенду
+  // return await fetchAPI<User>('/admin/login', { method: 'POST', body: { email, password } });
+  
+  // Для тестирования: email "admin@admin.com" или "admin" и пароль "admin"
+  if ((email === 'admin@admin.com' || email === 'admin') && password === 'admin') {
+    const adminUser: User = {
+      id: 'admin-1',
+      name: 'Администратор',
+      surname: 'Системы',
+      telegramId: '@admin',
+      role: 'Admin',
+      userRole: 'admin',
+      skills: [],
+    };
+    
+    return {
+      data: adminUser,
+      success: true,
+    };
+  }
+  
+  return {
+    data: {} as User,
+    success: false,
+    message: 'Неверный email или пароль',
+  };
+}
+
+/**
+ * Регистрация администратора по email и паролю
+ * @param email - Email администратора
+ * @param password - Пароль администратора
+ */
+export async function adminRegister(email: string, password: string): Promise<ApiResponse<User>> {
+  await delay();
+  
+  // Временная логика для моковых данных
+  // В реальном API здесь будет запрос к бэкенду
+  
+  // Валидация email
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return {
+      data: {} as User,
+      success: false,
+      message: 'Неверный формат email',
+    };
+  }
+  
+  // Валидация пароля
+  if (password.length < 6) {
+    return {
+      data: {} as User,
+      success: false,
+      message: 'Пароль должен содержать минимум 6 символов',
+    };
+  }
+  
+  // Для тестирования: создаем нового админа
+  // В реальном API здесь будет создание пользователя в базе данных
+  const adminUser: User = {
+    id: `admin-${Date.now()}`,
+    name: 'Администратор',
+    surname: email.split('@')[0],
+    telegramId: `@${email.split('@')[0]}`,
+    role: 'Admin',
+    userRole: 'admin',
+    skills: [],
+  };
+  
+  return {
+    data: adminUser,
+    success: true,
+    message: 'Регистрация успешна',
   };
 }
 
@@ -200,8 +347,58 @@ export async function getTeamByHackathonId(hackathonId: string): Promise<ApiResp
   await delay();
   const team = mockTeams.find(t => t.hackathonId === hackathonId);
   
+  // Возвращаем копию команды, чтобы избежать мутаций
+  if (team) {
+    return {
+      data: {
+        ...team,
+        members: team.members.map(m => ({ ...m }))
+      },
+      success: true,
+    };
+  }
+  
   return {
-    data: team || null,
+    data: null,
+    success: true,
+  };
+}
+
+/**
+ * Получить все команды
+ */
+export async function getAllTeams(): Promise<ApiResponse<Team[]>> {
+  await delay();
+  // Возвращаем копию массива команд, чтобы избежать мутаций
+  return {
+    data: mockTeams.map(team => ({
+      ...team,
+      members: team.members.map(m => ({ ...m }))
+    })),
+    success: true,
+  };
+}
+
+/**
+ * Получить команды пользователя по его ID
+ */
+export async function getUserTeams(userId: string): Promise<ApiResponse<Array<Team & { registrationDate: string }>>> {
+  await delay();
+  // Находим все команды, в которых состоит пользователь
+  const userTeams = mockTeams
+    .filter(team => team.members.some(member => member.id === userId))
+    .map(team => {
+      const hackathon = mockHackathons.find(h => h.id === team.hackathonId);
+      return {
+        ...team,
+        members: team.members.map(m => ({ ...m })),
+        // Для моковых данных используем дату хакатона как дату регистрации
+        registrationDate: hackathon?.date || 'Дата не указана'
+      };
+    });
+  
+  return {
+    data: userTeams,
     success: true,
   };
 }
@@ -242,6 +439,73 @@ export async function updateTeamName(teamId: string, name: string): Promise<ApiR
   
   return {
     data: updatedTeam,
+    success: true,
+  };
+}
+
+/**
+ * Добавить участника в команду
+ */
+export async function addMemberToTeam(teamId: string, userId: string): Promise<ApiResponse<Team>> {
+  await delay();
+  const team = mockTeams.find(t => t.id === teamId);
+  
+  if (!team) {
+    return {
+      data: {} as Team,
+      success: false,
+      message: `Команда с ID ${teamId} не найдена`,
+    };
+  }
+
+  // Проверяем, не состоит ли уже участник в команде
+  const isAlreadyMember = team.members.some(m => m.id === userId);
+  if (isAlreadyMember) {
+    return {
+      data: team,
+      success: false,
+      message: 'Участник уже состоит в команде',
+    };
+  }
+
+  // Находим пользователя
+  const user = mockUsers.find(u => u.id === userId);
+  if (!user) {
+    return {
+      data: {} as Team,
+      success: false,
+      message: `Пользователь с ID ${userId} не найден`,
+    };
+  }
+
+  // Добавляем пользователя в команду (создаем новый объект, чтобы избежать мутаций)
+  const updatedTeam = {
+    ...team,
+    members: [...team.members.map(m => ({ ...m })), { ...user }]
+  };
+
+  // Обновляем моковые данные
+  const teamIndex = mockTeams.findIndex(t => t.id === teamId);
+  if (teamIndex !== -1) {
+    mockTeams[teamIndex] = {
+      ...updatedTeam,
+      members: updatedTeam.members.map(m => ({ ...m }))
+    };
+  }
+
+  // Сохраняем в localStorage для персистентности
+  const savedTeams = localStorage.getItem('teams');
+  const teams = savedTeams ? JSON.parse(savedTeams) : {};
+  teams[teamId] = updatedTeam;
+  localStorage.setItem('teams', JSON.stringify(teams));
+  
+  console.log('Участник добавлен в команду. Обновленная команда:', updatedTeam);
+  
+  return {
+    data: {
+      ...updatedTeam,
+      members: updatedTeam.members.map(m => ({ ...m }))
+    },
     success: true,
   };
 }
@@ -392,5 +656,148 @@ export async function rejectInvitation(notificationId: string): Promise<ApiRespo
     data: { success: true },
     success: true,
   };
+}
+
+// API функции для аналитики
+
+/**
+ * Получить аналитические данные за указанный период
+ * @param datePeriod - Период в формате "месяц, год г." (например, "май, 2025 г.")
+ */
+export async function getAnalytics(datePeriod: string): Promise<ApiResponse<AnalyticsData>> {
+  await delay();
+  
+  // В реальном API здесь будет запрос к бэкенду с параметром datePeriod
+  // const response = await fetchAPI<AnalyticsData>(`/analytics?period=${encodeURIComponent(datePeriod)}`);
+  
+  // Моковые данные - в реальном API будут подсчитываться из БД на основе datePeriod
+  // Участники - количество всех пользователей за указанный период
+  // Распределение ролей - количество уникальных ролей за указанный период
+  // Команды - количество команд за указанный период
+  // Без команды - количество пользователей без команды за указанный период
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  void datePeriod; // Будет использовано при подключении к бэкенду
+  
+  // Вычисляем количество участников в командах
+  const totalMembersInTeams = mockTeams.reduce((sum, team) => sum + team.members.length, 0);
+  // Убеждаемся, что withoutTeam не может быть отрицательным
+  const withoutTeam = Math.max(0, mockUsers.length - totalMembersInTeams);
+  
+  const mockAnalytics: AnalyticsData = {
+    participants: Math.max(0, mockUsers.length),
+    roleDistribution: Math.max(0, new Set(mockUsers.map(u => u.role)).size),
+    teams: Math.max(0, mockTeams.length),
+    withoutTeam: withoutTeam
+  };
+  
+  return {
+    data: mockAnalytics,
+    success: true,
+  };
+}
+
+/**
+ * Получить список всех доступных ролей участников
+ */
+export async function getRoles(): Promise<ApiResponse<FilterOption[]>> {
+  await delay();
+  // В реальном API здесь будет запрос к бэкенду
+  // return await fetchAPI<FilterOption[]>('/roles');
+  
+  return {
+    data: mockRoles,
+    success: true,
+  };
+}
+
+/**
+ * Получить список всех доступных стеков (навыков)
+ */
+export async function getStacks(): Promise<ApiResponse<FilterOption[]>> {
+  await delay();
+  // В реальном API здесь будет запрос к бэкенду
+  // return await fetchAPI<FilterOption[]>('/stacks');
+  
+  return {
+    data: mockStacks,
+    success: true,
+  };
+}
+
+// API функции для организаторов
+export async function getOrganizers(): Promise<ApiResponse<Organizer[]>> {
+  await delay();
+  // В реальном API здесь будет запрос к бэкенду
+  // return await fetchAPI<Organizer[]>('/organizers');
+  
+  try {
+    // Загружаем из localStorage или используем mock данные
+    const savedOrganizers = localStorage.getItem('organizers');
+    let organizers: Organizer[] = mockOrganizers;
+    
+    if (savedOrganizers) {
+      try {
+        organizers = JSON.parse(savedOrganizers);
+      } catch (parseError) {
+        console.error('Ошибка парсинга данных организаторов из localStorage:', parseError);
+        // Используем mock данные при ошибке парсинга
+        organizers = mockOrganizers;
+      }
+    }
+    
+    return {
+      data: organizers,
+      success: true,
+    };
+  } catch (error) {
+    console.error('Ошибка загрузки организаторов:', error);
+    return {
+      data: mockOrganizers,
+      success: false,
+      message: 'Не удалось загрузить организаторов'
+    };
+  }
+}
+
+export async function addOrganizer(organizerData: Omit<Organizer, 'id'>): Promise<ApiResponse<Organizer>> {
+  await delay();
+  // В реальном API здесь будет запрос к бэкенду
+  // return await fetchAPI<Organizer>('/organizers', { method: 'POST', body: JSON.stringify(organizerData) });
+  
+  try {
+    // Сохраняем в localStorage
+    const savedOrganizers = localStorage.getItem('organizers');
+    let organizers: Organizer[] = mockOrganizers;
+    
+    if (savedOrganizers) {
+      try {
+        organizers = JSON.parse(savedOrganizers);
+      } catch (parseError) {
+        console.error('Ошибка парсинга данных организаторов из localStorage:', parseError);
+        // Используем mock данные при ошибке парсинга
+        organizers = mockOrganizers;
+      }
+    }
+    
+    const newOrganizer: Organizer = {
+      id: `organizer-${Date.now()}`,
+      ...organizerData
+    };
+    
+    const updatedOrganizers = [...organizers, newOrganizer];
+    localStorage.setItem('organizers', JSON.stringify(updatedOrganizers));
+    
+    return {
+      data: newOrganizer,
+      success: true,
+    };
+  } catch (error) {
+    console.error('Ошибка добавления организатора:', error);
+    return {
+      data: {} as Organizer,
+      success: false,
+      message: 'Не удалось добавить организатора'
+    };
+  }
 }
 

@@ -1,4 +1,4 @@
-import type { User, Hackathon, Team, MyHackathon, Participant, Achievement, Notification } from './types';
+import type { User, Hackathon, Team, MyHackathon, Participant, Achievement, Notification, FilterOption, Organizer } from './types';
 
 // Моковые данные для разработки
 
@@ -93,6 +93,62 @@ export const mockHackathons: Hackathon[] = [
     date: '12-14 апреля 2024',
     description: 'Исследуйте возможности блокчейна для решения реальных проблем',
     imageUrl: '/images/hackathon4.jpg'
+  },
+  {
+    id: '5',
+    name: 'GameDev Marathon',
+    date: '20-22 апреля 2024',
+    description: 'Создайте увлекательную игру за 48 часов',
+    imageUrl: '/images/hackathon5.jpg'
+  },
+  {
+    id: '6',
+    name: 'FinTech Solutions',
+    date: '1-3 мая 2024',
+    description: 'Разработайте инновационные финансовые технологии',
+    imageUrl: '/images/hackathon6.jpg'
+  },
+  {
+    id: '7',
+    name: 'HealthTech Hack',
+    date: '10-12 мая 2024',
+    description: 'Создайте решения для улучшения здравоохранения',
+    imageUrl: '/images/hackathon7.jpg'
+  },
+  {
+    id: '8',
+    name: 'EdTech Innovation',
+    date: '18-20 мая 2024',
+    description: 'Разработайте образовательные технологии будущего',
+    imageUrl: '/images/hackathon8.jpg'
+  },
+  {
+    id: '9',
+    name: 'GreenTech Challenge',
+    date: '25-27 мая 2024',
+    description: 'Создайте экологичные технологические решения',
+    imageUrl: '/images/hackathon9.jpg'
+  },
+  {
+    id: '10',
+    name: 'Cybersecurity Battle',
+    date: '2-4 июня 2024',
+    description: 'Защитите системы от киберугроз',
+    imageUrl: '/images/hackathon10.jpg'
+  },
+  {
+    id: '11',
+    name: 'IoT Development',
+    date: '9-11 июня 2024',
+    description: 'Разработайте решения для интернета вещей',
+    imageUrl: '/images/hackathon11.jpg'
+  },
+  {
+    id: '12',
+    name: 'AR/VR Experience',
+    date: '16-18 июня 2024',
+    description: 'Создайте захватывающие AR/VR приложения',
+    imageUrl: '/images/hackathon12.jpg'
   }
 ];
 
@@ -149,6 +205,64 @@ export const mockTeams: Team[] = [
     members: [
       mockUsers[3],
       mockUsers[4]
+    ]
+  },
+  {
+    id: '3',
+    name: 'Команда Гамма',
+    hackathonId: '3',
+    members: [
+      mockUsers[0],
+      mockUsers[5]
+    ]
+  },
+  {
+    id: '4',
+    name: 'Команда Дельта',
+    hackathonId: '4',
+    members: [
+      mockUsers[1],
+      mockUsers[2],
+      mockUsers[3]
+    ]
+  },
+  {
+    id: '5',
+    name: 'Команда Эпсилон',
+    hackathonId: '5',
+    members: [
+      mockUsers[4],
+      mockUsers[5]
+    ]
+  },
+  {
+    id: '6',
+    name: 'Команда Зета',
+    hackathonId: '6',
+    members: [
+      mockUsers[0],
+      mockUsers[1],
+      mockUsers[4]
+    ]
+  },
+  {
+    id: '7',
+    name: 'Команда Эта',
+    hackathonId: '7',
+    members: [
+      mockUsers[2],
+      mockUsers[3],
+      mockUsers[5]
+    ]
+  },
+  {
+    id: '8',
+    name: 'Команда Тета',
+    hackathonId: '8',
+    members: [
+      mockUsers[0],
+      mockUsers[4],
+      mockUsers[5]
     ]
   }
 ];
@@ -264,5 +378,48 @@ export const mockNotifications: Notification[] = [
     createdAt: '2024-03-07T09:00:00Z',
     read: false
   }
+];
+
+// Моковые данные для ролей участников
+export const mockRoles: FilterOption[] = [
+  { id: '1', label: 'Frontend', value: 'Frontend' },
+  { id: '2', label: 'Backend', value: 'Backend' },
+  { id: '3', label: 'Designer', value: 'Designer' },
+  { id: '4', label: 'Product manager', value: 'Product manager' },
+  { id: '5', label: 'Fullstack', value: 'Fullstack' },
+  { id: '6', label: 'DevOps', value: 'DevOps' },
+  { id: '7', label: 'QA', value: 'QA' }
+];
+
+// Моковые данные для стеков (навыков)
+export const mockStacks: FilterOption[] = [
+  { id: '1', label: 'Figma', value: 'Figma' },
+  { id: '2', label: 'React', value: 'React' },
+  { id: '3', label: 'Node.js', value: 'Node.js' },
+  { id: '4', label: 'Python', value: 'Python' },
+  { id: '5', label: 'TypeScript', value: 'TypeScript' },
+  { id: '6', label: 'CSS', value: 'CSS' },
+  { id: '7', label: 'PostgreSQL', value: 'PostgreSQL' },
+  { id: '8', label: 'MongoDB', value: 'MongoDB' },
+  { id: '9', label: 'Docker', value: 'Docker' },
+  { id: '10', label: 'Kubernetes', value: 'Kubernetes' },
+  { id: '11', label: 'AWS', value: 'AWS' },
+  { id: '12', label: 'UI/UX', value: 'UI/UX' },
+  { id: '13', label: 'Illustrator', value: 'Illustrator' },
+  { id: '14', label: 'Testing', value: 'Testing' },
+  { id: '15', label: 'Automation', value: 'Automation' },
+  { id: '16', label: 'Selenium', value: 'Selenium' }
+];
+
+// Mock данные для организаторов
+export const mockOrganizers: Organizer[] = [
+  { id: '1', name: 'Имя', surname: 'Фамилия', company: 'Компания', email: 'email@example.com' },
+  { id: '2', name: 'Имя', surname: 'Фамилия', company: 'Компания', email: 'email@example.com' },
+  { id: '3', name: 'Имя', surname: 'Фамилия', company: 'Компания', email: 'email@example.com' },
+  { id: '4', name: 'Имя', surname: 'Фамилия', company: 'Компания', email: 'email@example.com' },
+  { id: '5', name: 'Имя', surname: 'Фамилия', company: 'Компания', email: 'email@example.com' },
+  { id: '6', name: 'Имя', surname: 'Фамилия', company: 'Компания', email: 'email@example.com' },
+  { id: '7', name: 'Имя', surname: 'Фамилия', company: 'Компания', email: 'email@example.com' },
+  { id: '8', name: 'Имя', surname: 'Фамилия', company: 'Компания', email: 'email@example.com' },
 ];
 

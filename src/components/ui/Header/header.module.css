@@ -22,6 +22,7 @@
   padding: 0 20px;
   box-sizing: border-box;
   margin-bottom: 0;
+  position: relative;
 }
 
 .logo {
@@ -31,6 +32,28 @@
   margin: 0;
   font-family: 'Inter', sans-serif;
   text-align: center;
+}
+
+.adminLink {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(59, 68, 250, 0.2);
+  border: 1px solid rgba(59, 68, 250, 0.4);
+  border-radius: 6px;
+  padding: 6px 12px;
+  color: #E7E3D8;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.2s ease;
+}
+
+.adminLink:hover {
+  background: rgba(59, 68, 250, 0.3);
+  border-color: rgba(59, 68, 250, 0.6);
 }
 
 /* Адаптивность для мобильных устройств */

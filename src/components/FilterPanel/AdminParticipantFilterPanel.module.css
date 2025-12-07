@@ -1,0 +1,168 @@
+.filterPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 100%;
+  margin-top: 65px;
+}
+
+.filterTitle {
+  font-size: 40px;
+  font-weight: 800;
+  color: #E7E3D8;
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  margin-bottom: 10px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.sectionTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: #E7E3D8;
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+}
+
+.hackathonsButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 8px;
+  min-height: 0;
+}
+
+/* Стили для скроллбара */
+.hackathonsButtons::-webkit-scrollbar {
+  width: 6px;
+}
+
+.hackathonsButtons::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+.hackathonsButtons::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
+.hackathonsButtons::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.hackathonButton {
+  width: 100%;
+  height: 40px;
+  min-height: 40px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  color: #E7E3D8;
+  background-color: rgba(101, 98, 109, 0.5);
+  font-size: 16px;
+  font-weight: 400;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  text-align: left;
+  padding: 0 15px;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+}
+
+.hackathonButton:hover {
+  background-color: rgba(101, 98, 109, 0.7);
+  outline: none;
+}
+
+.hackathonButton:active {
+  background-color: rgba(101, 98, 109, 0.8);
+  outline: none;
+}
+
+.hackathonButton:focus {
+  outline: none;
+}
+
+.hackathonButtonActive {
+  background-color: rgba(59, 68, 250, 0.3) !important;
+  color: #E7E3D8;
+  outline: none;
+}
+
+.hackathonButtonActive:hover {
+  background-color: rgba(59, 68, 250, 0.4) !important;
+  outline: none;
+}
+
+.hackathonButtonActive:active {
+  background-color: rgba(59, 68, 250, 0.5) !important;
+  outline: none;
+}
+
+.hackathonButtonActive:focus {
+  outline: none;
+}
+
+.optionsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.optionItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.checkbox {
+  width: 20px;
+  height: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.checkbox:hover {
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.checkboxChecked {
+  background: rgba(59, 68, 250, 0.3);
+  border-color: rgba(59, 68, 250, 0.6);
+}
+
+.checkmark {
+  width: 12px;
+  height: 12px;
+  background: #3B44FA;
+  border-radius: 2px;
+}
+
+.optionLabel {
+  font-size: 16px;
+  font-weight: 400;
+  color: #E7E3D8;
+  font-family: 'Inter', sans-serif;
+}
+

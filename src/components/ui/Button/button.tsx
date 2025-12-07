@@ -42,7 +42,7 @@ export const ButtonSimple = ({
                           type === 'glass-card-square' || 
                           type === 'glass-card-hackathon';
     
-    let styles: React.CSSProperties & { [key: string]: any } = {
+    let styles: React.CSSProperties = {
       fontFamily: "'Inter', sans-serif",
       cursor: disabled || loading ? 'not-allowed' : 'pointer',
       display: 'inline-flex',
@@ -325,14 +325,15 @@ export const ButtonSimple = ({
       return (
         <div 
           style={{
-            width: '263px',
+            width: '100%',
             height: '136px',
             backgroundColor: '#939090',
             borderRadius: '10px',
             cursor: 'pointer',
             flexShrink: 0,
             position: 'relative',
-            zIndex: 1
+            zIndex: 1,
+            margin: '0 auto' // Выравнивание по центру
           }}
           onClick={handleImageClick}
         >
@@ -519,63 +520,6 @@ export const ButtonSimple = ({
             bottom: '10px',
             width: '1px',
             backgroundColor: 'rgba(255, 255, 255, 0.18)',
-            pointerEvents: 'none',
-            zIndex: 10,
-            boxSizing: 'border-box'
-          }} />
-          {/* Уголки - маленькие border элементы в углах, одинаковой ширины */}
-          {/* Левый верхний угол */}
-          <div style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '10px',
-            height: '10px',
-            borderTop: '1px solid rgba(255, 255, 255, 0.18)',
-            borderLeft: '1px solid rgba(255, 255, 255, 0.18)',
-            borderTopLeftRadius: '10px',
-            pointerEvents: 'none',
-            zIndex: 10,
-            boxSizing: 'border-box'
-          }} />
-          {/* Правый верхний угол */}
-          <div style={{
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            width: '10px',
-            height: '10px',
-            borderTop: '1px solid rgba(255, 255, 255, 0.18)',
-            borderRight: '1px solid rgba(255, 255, 255, 0.18)',
-            borderTopRightRadius: '10px',
-            pointerEvents: 'none',
-            zIndex: 10,
-            boxSizing: 'border-box'
-          }} />
-          {/* Правый нижний угол */}
-          <div style={{
-            position: 'absolute',
-            bottom: 0,
-            right: 0,
-            width: '10px',
-            height: '10px',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.18)',
-            borderRight: '1px solid rgba(255, 255, 255, 0.18)',
-            borderBottomRightRadius: '10px',
-            pointerEvents: 'none',
-            zIndex: 10,
-            boxSizing: 'border-box'
-          }} />
-          {/* Левый нижний угол */}
-          <div style={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            width: '10px',
-            height: '10px',
-            borderBottom: '1px solid rgba(255, 255, 255, 0.18)',
-            borderLeft: '1px solid rgba(255, 255, 255, 0.18)',
-            borderBottomLeftRadius: '10px',
             pointerEvents: 'none',
             zIndex: 10,
             boxSizing: 'border-box'

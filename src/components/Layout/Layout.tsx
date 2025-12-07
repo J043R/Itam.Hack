@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import { Header } from '../ui/Header/header';
 import { BottomNavigation } from '../ui/BottomNavigation/bottomNavigation';
-import { Background } from '../Background/Background';
+import { AdminBackground } from '../Background/AdminBackground';
 import styles from './Layout.module.css';
 
 interface LayoutProps {
@@ -17,7 +17,7 @@ interface LayoutProps {
 export const Layout = ({ children, bottomNavItems }: LayoutProps) => {
   return (
     <div className={styles.layout}>
-      <Background />
+      <AdminBackground />
       <Header />
       <main className={styles.main}>
         {children}

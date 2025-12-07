@@ -1,0 +1,145 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: transparent;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.modal {
+  position: fixed;
+  top: 120px;
+  right: 60px;
+  width: 317px;
+  height: 318px;
+  min-width: 317px;
+  min-height: 318px;
+  max-width: 317px;
+  max-height: 318px;
+  background-color: #1C1C24;
+  border-radius: 10px;
+  padding: 40px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  z-index: 10000;
+  pointer-events: auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+
+.formFields {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  width: 100%;
+  margin-bottom: 64px;
+}
+
+.formField {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.formField :global(.inputContainer) {
+  width: 100% !important;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  margin: 0 !important;
+  padding: 0 !important;
+  gap: 0 !important;
+}
+
+.modal .formField :global(.inputContainer) :global(.inputForm),
+.modal .formField :global(.inputContainer) input.inputForm,
+.modal .formField :global(input.inputForm),
+.modal .formField input[type="text"],
+.modal .formField input[type="email"],
+.formField :global(.inputContainer) :global(.inputForm),
+.formField :global(.inputContainer) input.inputForm,
+.formField :global(input.inputForm),
+.formField input[type="text"],
+.formField input[type="email"] {
+  width: 100% !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
+  padding: 0 16px !important;
+  margin: 0 !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  color: #E7E3D8 !important;
+  background-color: rgba(101, 98, 109, 0.5) !important;
+  border: none !important;
+  border-radius: 10px !important;
+  box-sizing: border-box !important;
+  line-height: 40px !important;
+}
+
+.formField :global(.inputForm::placeholder) {
+  color: rgba(231, 227, 216, 0.5) !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+}
+
+.logoutButton {
+  width: 163px !important;
+  min-width: 163px !important;
+  max-width: 163px !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  max-height: 40px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 10px !important;
+  font-size: 20px !important;
+  font-weight: 500 !important;
+  font-family: 'Inter', sans-serif !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-sizing: border-box !important;
+  background-color: #3B44FA !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  cursor: pointer !important;
+}
+
+.logoutButton:hover {
+  background-color: #2B34E0 !important;
+}
+
+.logoutButton:active {
+  background-color: #1B24C0 !important;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .modal {
+    top: 90px;
+    right: 40px;
+    width: 280px;
+    height: auto;
+    min-height: 300px;
+    padding: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal {
+    top: 80px;
+    right: 20px;
+    width: calc(100% - 40px);
+    max-width: 300px;
+    padding: 20px;
+  }
+}

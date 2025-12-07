@@ -36,8 +36,8 @@ export const IconButton = ({
   };
   
   // Стили для разных вариантов
-  const getVariantStyles = () => {
-    const baseStyles: any = {
+  const getVariantStyles = (): React.CSSProperties => {
+    const baseStyles: React.CSSProperties = {
       display: 'inline-flex',
       alignItems: 'center',
       justifyContent: 'center',
