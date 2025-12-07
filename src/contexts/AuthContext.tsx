@@ -49,6 +49,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     setUser(null);
     localStorage.removeItem('currentUser');
     localStorage.removeItem('formFilled');
+    localStorage.removeItem('authToken'); // Очищаем токен авторизации
   };
 
   const updateUser = (userData: Partial<User>) => {

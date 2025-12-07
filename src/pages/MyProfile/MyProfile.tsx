@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Avatar } from '../../components/ui/Avatar/avatar';
 import { Input } from '../../components/ui/Input/input';
 import { ButtonSimple } from '../../components/ui/Button/button';
+import { useAuth } from '../../contexts/AuthContext';
 import styles from './MyProfile.module.css';
 
 interface MyProfileProps {
@@ -9,6 +11,8 @@ interface MyProfileProps {
 }
 
 export const MyProfile = ({ onLogout }: MyProfileProps) => {
+  const navigate = useNavigate();
+  const { logout } = useAuth();
   // Загружаем данные из localStorage или используем значения по умолчанию
   const [profileData, setProfileData] = useState({
     firstName: '',
@@ -115,14 +119,24 @@ export const MyProfile = ({ onLogout }: MyProfileProps) => {
   };
 
   const handleLogout = () => {
+    // Очищаем токен авторизации
+    localStorage.removeItem('authToken');
+    
     // Очищаем данные пользователя из localStorage
     localStorage.removeItem('formFilled');
     localStorage.removeItem('userProfiles');
     localStorage.removeItem('teamNames');
     localStorage.removeItem('currentUserId');
     localStorage.removeItem('teams');
+    localStorage.removeItem('currentUser');
     
-    // Вызываем функцию выхода, переданную из App
+    // Вызываем logout из AuthContext (устанавливает isAuthenticated = false)
+    logout();
+    
+    // Переходим на главную страницу, где автоматически покажется Login
+    navigate('/');
+    
+    // Вызываем функцию выхода, переданную из App (если есть)
     if (onLogout) {
       onLogout();
     }

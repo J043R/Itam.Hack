@@ -37,13 +37,20 @@ export const Login = ({ isOpen, onClose }: LoginProps) => {
       const response = await login(code.trim());
       
       if (response.success && response.data) {
+        // response.data теперь содержит { user, hasProfile }
+        const { user } = response.data;
+        
         // Сохраняем пользователя в контекст
-        authLogin(response.data);
+        authLogin(user);
+        
+        // Флаг hasProfile уже сохранен в localStorage в функции login
+        // Если анкета не существует (hasProfile === false), UserApp автоматически покажет форму
         
         // Закрываем модальное окно
         onClose();
         setCode('');
         
+        // Анкета откроется автоматически в UserApp, если hasProfile === false
         // Обычный пользователь остается на текущей странице
         // Админы должны входить через /admin/login
       } else {
@@ -110,7 +117,7 @@ export const Login = ({ isOpen, onClose }: LoginProps) => {
           </div>
 
           <p className={styles.helperText}>
-            Напишите <span className={styles.botLink}>@itam_bot</span>, чтоб получить код
+            Напишите <a href="https://t.me/meethack_auth_bot" target="_blank" rel="noopener noreferrer" className={styles.botLink}>@meethack_auth_bot</a>, чтоб получить код
           </p>
         </div>
       </div>

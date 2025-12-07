@@ -8,6 +8,7 @@ interface ModalProps {
   title?: string;
   children: ReactNode;
   className?: string;
+  canClose?: boolean; // Можно ли закрыть модальное окно
 }
 
 export const Modal = ({ 
@@ -15,12 +16,13 @@ export const Modal = ({
   onClose, 
   title: _title, 
   children,
-  className = '' 
+  className = '',
+  canClose = true
 }: ModalProps) => {
   // Закрытие по Escape
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === 'Escape' && canClose) {
         onClose();
       }
     };
@@ -35,7 +37,7 @@ export const Modal = ({
       document.removeEventListener('keydown', handleEscape);
       document.body.style.overflow = 'unset';
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, onClose, canClose]);
 
   console.log('Modal render, isOpen:', isOpen, 'className:', className);
   
@@ -52,8 +54,8 @@ export const Modal = ({
   return (
     <div 
       className={styles.overlay} 
-      onClick={onClose}
-      style={{ zIndex: overlayZIndex }}
+      onClick={canClose ? onClose : undefined}
+      style={{ zIndex: overlayZIndex, cursor: canClose ? 'pointer' : 'default' }}
     >
       <div 
         className={`${styles.modal} ${className}`}

@@ -2,20 +2,24 @@ import { useState, useEffect } from 'react';
 import { Modal } from '../../components/ui/Modal/Modal';
 import { Input } from '../../components/ui/Input/input';
 import { ButtonSimple } from '../../components/ui/Button/button';
+import { createOrUpdateProfile } from '../../api/api';
 import styles from './Form.module.css';
 
 interface FormProps {
   isOpen: boolean;
   onClose: () => void;
+  canClose?: boolean; // Можно ли закрыть анкету без заполнения
 }
 
-export const Form = ({ isOpen, onClose }: FormProps) => {
+export const Form = ({ isOpen, onClose, canClose = true }: FormProps) => {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
+    name: '',
+    last_name: '',
     role: '',
     contacts: ''
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   // Автосохранение данных формы
   useEffect(() => {
@@ -51,40 +55,78 @@ export const Form = ({ isOpen, onClose }: FormProps) => {
     }));
   };
 
-  const handleSubmit = () => {
-    // Здесь будет логика сохранения
-    console.log('Сохранение анкеты:', formData);
-    // Сохраняем в localStorage, что анкета заполнена (единожды)
-    localStorage.setItem('formFilled', 'true');
-    localStorage.setItem('formData', JSON.stringify(formData));
-    // Закрываем модальное окно после сохранения
-    onClose();
+  const handleSubmit = async (e?: React.FormEvent) => {
+    if (e) {
+      e.preventDefault();
+    }
+    
+    if (!formData.name || !formData.last_name || !formData.role) {
+      setError('Заполните все обязательные поля');
+      return;
+    }
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await createOrUpdateProfile(formData);
+      
+      if (response.success) {
+        // Сохраняем в localStorage, что анкета заполнена
+        localStorage.setItem('formFilled', 'true');
+        localStorage.setItem('hasProfile', 'true'); // Обновляем флаг из бэкенда
+        localStorage.setItem('formData', JSON.stringify(formData));
+        // Закрываем модальное окно после сохранения
+        onClose();
+      } else {
+        setError(response.message || 'Ошибка при сохранении анкеты');
+      }
+    } catch (err) {
+      setError('Произошла ошибка при сохранении анкеты. Попробуйте еще раз.');
+      console.error('Ошибка сохранения анкеты:', err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  console.log('Form render, isOpen:', isOpen);
+  console.log('=== FORM COMPONENT RENDER ===');
+  console.log('Form isOpen:', isOpen);
+  console.log('Form canClose:', canClose);
   
   if (!isOpen) {
-    console.log('Form не открыт, возвращаем null');
+    console.log('❌ Form не открыт, возвращаем null');
     return null;
   }
   
+  console.log('✅ Form is open, rendering Modal');
+  
+  // Функция для закрытия с проверкой
+  const handleClose = () => {
+    if (canClose) {
+      onClose();
+    } else {
+      console.log('Form cannot be closed (canClose=false)');
+    }
+  };
+
   return (
     <Modal 
       isOpen={isOpen} 
-      onClose={onClose}
+      onClose={handleClose}
       className={styles.formModal}
+      canClose={canClose}
     >
       <div className={styles.modalContainer}>
         <h1 className={styles.title}>Анкета</h1>
         
-        <form className={styles.form}>
+        <form className={styles.form} onSubmit={handleSubmit}>
           <div className={styles.formField}>
             <Input
               label="Имя"
               variant="form"
               type="text"
-              value={formData.firstName}
-              onChange={handleInputChange('firstName')}
+              value={formData.name}
+              onChange={handleInputChange('name')}
               className={styles.input}
             />
           </div>
@@ -94,8 +136,8 @@ export const Form = ({ isOpen, onClose }: FormProps) => {
               label="Фамилия"
               variant="form"
               type="text"
-              value={formData.lastName}
-              onChange={handleInputChange('lastName')}
+              value={formData.last_name}
+              onChange={handleInputChange('last_name')}
               className={styles.input}
             />
           </div>
@@ -122,13 +164,28 @@ export const Form = ({ isOpen, onClose }: FormProps) => {
             />
           </div>
 
+          {error && (
+            <div style={{ 
+              marginTop: '12px', 
+              padding: '8px 12px', 
+              backgroundColor: 'rgba(255, 0, 0, 0.1)', 
+              border: '1px solid rgba(255, 0, 0, 0.3)', 
+              borderRadius: '6px', 
+              color: '#ff6b6b', 
+              fontSize: '12px' 
+            }}>
+              {error}
+            </div>
+          )}
+
           <div className={styles.buttonContainer}>
             <ButtonSimple
               type="entry-primary"
               onClick={handleSubmit}
+              disabled={isLoading}
               className={styles.submitButton}
             >
-              Сохранить
+              {isLoading ? 'Сохранение...' : 'Сохранить'}
             </ButtonSimple>
           </div>
         </form>

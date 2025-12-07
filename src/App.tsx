@@ -38,32 +38,174 @@ function UserApp() {
   const [isLoginOpen, setIsLoginOpen] = useState(!isAuthenticated);
   const [isFormOpen, setIsFormOpen] = useState(false);
   
+  // Флаг для отслеживания, была ли это первая авторизация в этой сессии
+  const [isFirstAuth, setIsFirstAuth] = useState(true);
+  
+  // Проверяем, заполнена ли анкета (реактивное состояние)
+  // Используем флаг hasProfile из ответа бэкенда при авторизации
+  const [formFilled, setFormFilled] = useState(() => {
+    const hasProfile = localStorage.getItem('hasProfile') === 'true';
+    const formFilledLegacy = localStorage.getItem('formFilled') === 'true';
+    // Используем hasProfile, если он есть, иначе fallback на formFilled
+    const filled = hasProfile || formFilledLegacy;
+    console.log('Initial formFilled check:', filled, 'hasProfile:', hasProfile, 'formFilledLegacy:', formFilledLegacy);
+    return filled;
+  });
+  
+  // Отслеживаем изменения в localStorage
+  useEffect(() => {
+    const checkFormFilled = () => {
+      const hasProfile = localStorage.getItem('hasProfile') === 'true';
+      const formFilledLegacy = localStorage.getItem('formFilled') === 'true';
+      const filled = hasProfile || formFilledLegacy;
+      console.log('Checking formFilled:', filled, 'hasProfile:', hasProfile, 'formFilledLegacy:', formFilledLegacy);
+      setFormFilled(filled);
+    };
+    
+    // Проверяем при монтировании
+    checkFormFilled();
+    
+    // Отслеживаем изменения в localStorage через событие storage
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'formFilled' || e.key === 'hasProfile') {
+        checkFormFilled();
+      }
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    
+    // Также проверяем периодически (на случай, если изменения происходят в том же окне)
+    const interval = setInterval(checkFormFilled, 100);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      clearInterval(interval);
+    };
+  }, []);
+  
   // Обновляем состояние Login при изменении авторизации
   useEffect(() => {
     setIsLoginOpen(!isAuthenticated);
   }, [isAuthenticated]);
   
+  // Проверяем, был ли пользователь уже авторизован при загрузке страницы
+  useEffect(() => {
+    // Если при загрузке страницы уже есть токен и пользователь, значит это не первая авторизация
+    const hasTokenOnLoad = !!localStorage.getItem('authToken');
+    const hasUserOnLoad = !!localStorage.getItem('currentUser');
+    
+    if (hasTokenOnLoad && hasUserOnLoad) {
+      console.log('User already authenticated on page load, not first auth');
+      setIsFirstAuth(false);
+    }
+  }, []);
+  
+  // После авторизации проверяем анкету и обновляем состояние
+  useEffect(() => {
+    if (isAuthenticated) {
+      // Проверяем флаг hasProfile из ответа бэкенда (приоритет)
+      const hasProfile = localStorage.getItem('hasProfile') === 'true';
+      const formFilledLegacy = localStorage.getItem('formFilled') === 'true';
+      const filled = hasProfile || formFilledLegacy;
+      
+      console.log('User authenticated, checking form. hasProfile:', hasProfile, 'formFilledLegacy:', formFilledLegacy, 'filled:', filled, 'isFirstAuth:', isFirstAuth);
+      setFormFilled(filled);
+      
+      // Если это не первая авторизация (пользователь уже был авторизован), не показываем форму
+      if (!isFirstAuth) {
+        console.log('User already authenticated, not showing form automatically');
+        setIsFormOpen(false);
+        setIsLoginOpen(false);
+        setIsFirstAuth(false); // Сбрасываем флаг после первой проверки
+      }
+    }
+  }, [isAuthenticated, isFirstAuth]);
+  
+  // После авторизации автоматически открываем анкету, если она не существует
+  // НО только если это первая авторизация в этой сессии
+  useEffect(() => {
+    // Проверяем флаг hasProfile из ответа бэкенда
+    const hasProfile = localStorage.getItem('hasProfile') === 'true';
+    const formFilledLegacy = localStorage.getItem('formFilled') === 'true';
+    const profileExists = hasProfile || formFilledLegacy;
+    
+    if (isAuthenticated && !profileExists && isFirstAuth) {
+      console.log('Opening form after first authentication (profile does not exist)');
+      setIsFormOpen(true);
+      setIsLoginOpen(false);
+      setIsFirstAuth(false); // Сбрасываем флаг после открытия формы
+    } else if (isAuthenticated && !profileExists && !isFirstAuth) {
+      // Если это не первая авторизация, не показываем форму автоматически
+      console.log('User already authenticated, not showing form automatically');
+      setIsFormOpen(false);
+      setIsLoginOpen(false);
+    }
+  }, [isAuthenticated, formFilled, isFirstAuth]);
+  
+  // Если пользователь не авторизован, показываем только модальное окно входа
+  if (!isAuthenticated) {
+    return (
+      <>
+        <Login 
+          isOpen={true} 
+          onClose={() => {}} 
+        />
+      </>
+    );
+  }
+  
+  // Если пользователь авторизован, но анкета не заполнена, показываем только анкету
+  // НО только если это первая авторизация (пользователь только что вошел)
+  // Проверяем напрямую из localStorage для надежности
+  const hasProfileValue = localStorage.getItem('hasProfile');
+  const formFilledValue = localStorage.getItem('formFilled');
+  const hasProfileDirect = hasProfileValue === 'true';
+  const formFilledDirect = formFilledValue === 'true';
+  const profileExists = hasProfileDirect || formFilledDirect;
+  
+  console.log('=== FORM CHECK ===');
+  console.log('isAuthenticated:', isAuthenticated);
+  console.log('formFilled state:', formFilled);
+  console.log('hasProfile from localStorage:', hasProfileValue);
+  console.log('formFilledValue from localStorage:', formFilledValue);
+  console.log('profileExists:', profileExists);
+  console.log('isFirstAuth:', isFirstAuth);
+  console.log('Should show form?', isAuthenticated && !profileExists && isFirstAuth);
+  
+  // Если пользователь авторизован, но анкета не существует, показываем только анкету
+  // НО только если это первая авторизация (пользователь только что вошел)
+  if (isAuthenticated && !profileExists && isFirstAuth) {
+    console.log('✅ SHOWING FORM - User authenticated but profile does not exist (first auth)');
+    return (
+      <Form 
+        isOpen={true} 
+        onClose={() => {}} 
+        canClose={false} // Нельзя закрыть анкету без заполнения
+      />
+    );
+  }
+  
+  // Если пользователь уже был авторизован (не первая авторизация), не показываем форму
+  if (isAuthenticated && !profileExists && !isFirstAuth) {
+    console.log('✅ User already authenticated, not showing form automatically');
+  }
+  
+  console.log('✅ Rendering main app (form is filled or user not authenticated)');
+  
   const handleHackathonClick = (hackathonId?: string) => {
     console.log('handleHackathonClick вызван, hackathonId:', hackathonId);
-    // Проверяем, заполнена ли уже анкета
-    const formFilled = localStorage.getItem('formFilled');
-    console.log('formFilled из localStorage:', formFilled);
     
-    if (formFilled === 'true') {
-      // Если анкета уже заполнена, переходим на страницу хакатона
-      console.log('Анкета уже заполнена, переходим на страницу хакатона');
-      navigate(`/hackathon/${hackathonId || '1'}`);
-    } else {
-      // Если анкета не заполнена, закрываем Login и открываем анкету
-      console.log('Анкета не заполнена, открываем анкету');
-      // Сначала закрываем Login
-      setIsLoginOpen(false);
-      // Затем открываем анкету с небольшой задержкой, чтобы Login успел закрыться
-      setTimeout(() => {
-        console.log('Открываем Form, isFormOpen будет:', true);
-        setIsFormOpen(true);
-      }, 300);
-    }
+    // Проверяем, существует ли анкета (используем флаг из бэкенда)
+    const hasProfile = localStorage.getItem('hasProfile') === 'true';
+    const formFilled = localStorage.getItem('formFilled') === 'true';
+    const profileExists = hasProfile || formFilled;
+    
+    console.log('hasProfile:', hasProfile, 'formFilled:', formFilled, 'profileExists:', profileExists);
+    
+    // Всегда переходим на страницу хакатона, независимо от статуса анкеты
+    // Анкета должна показываться только сразу после авторизации, а не при клике на хакатон
+    console.log('Переходим на страницу хакатона');
+    navigate(`/hackathon/${hackathonId || '1'}`);
   };
 
   // Определяем активную страницу на основе текущего пути
@@ -117,9 +259,8 @@ function UserApp() {
           <Route path="/myhacks" element={<MyHacks />} />
           <Route path="/notifications" element={<NotificationPage />} />
           <Route path="/profile" element={<MyProfile onLogout={() => {
-            navigate('/');
-            setIsLoginOpen(true);
-            setIsFormOpen(false);
+            // Дополнительная очистка при необходимости
+            // Основная логика выхода уже в handleLogout компонента MyProfile
           }} />} />
           <Route path="/hackathon/:id" element={<InsideHack />} />
           <Route path="/hackathon/:id/users" element={<Users />} />

@@ -1,10 +1,11 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { IoFilterSharp } from "react-icons/io5";
-import { getHackathonById, getHackathonParticipants, getTeamByHackathonId, addMemberToTeam, getAllTeams, getRoles } from '../../api/api';
+import { getHackathonById, addMemberToTeam } from '../../api/api';
 import type { Hackathon, Participant, Team, FilterOption } from '../../api/types';
 import { ParticipantFilterPanel, type FilterSection } from '../../components/FilterPanel/ParticipantFilterPanel';
 import { useAuth } from '../../contexts/AuthContext';
+import { formatDateToRussian } from '../../utils/dateFormat';
 import styles from './Users.module.css';
 
 // Статические фильтры (курс и опыт) - пока оставляем захардкоженными
@@ -38,7 +39,6 @@ export const Users = () => {
   const [hackathonData, setHackathonData] = useState<Hackathon | null>(null);
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [team, setTeam] = useState<Team | null>(null);
-  const [allTeams, setAllTeams] = useState<Team[]>([]);
   const [roles, setRoles] = useState<FilterOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -61,69 +61,101 @@ export const Users = () => {
       try {
         setLoading(true);
         
-        // Загружаем данные о хакатоне, участниках, команде, всех командах и ролях параллельно
-        // Используем Promise.allSettled для более надежной обработки ошибок
-        const [hackathonResult, participantsResult, teamResult, allTeamsResult, rolesResult] = await Promise.allSettled([
-          getHackathonById(id),
-          getHackathonParticipants(id),
-          getTeamByHackathonId(id),
-          getAllTeams(),
-          getRoles()
-        ]);
+        // Загружаем данные о хакатоне - вся информация приходит в одном запросе
+        const hackathonResult = await Promise.allSettled([
+          getHackathonById(id)
+        ]).then(results => results[0]);
         
-        // Обрабатываем результат загрузки хакатона
+        // Обрабатываем результат загрузки хакатона - вся информация в одном ответе
         if (hackathonResult.status === 'fulfilled') {
           const hackathonResponse = hackathonResult.value;
           if (hackathonResponse.success) {
-            setHackathonData(hackathonResponse.data);
+            const hackathonData = hackathonResponse.data as any;
+            console.log('📋 Full hackathon data:', hackathonData);
+            
+            // Преобразуем данные хакатона в нужный формат
+            const formattedHackathon: Hackathon = {
+              id: hackathonData.id,
+              name: hackathonData.name,
+              date: formatDateToRussian(hackathonData.date_starts || hackathonData.date || ''),
+              description: hackathonData.describe || hackathonData.description || '',
+              imageUrl: hackathonData.imageUrl || hackathonData.image_url
+            };
+            setHackathonData(formattedHackathon);
+            
+            // Преобразуем участников из ответа в нужный формат
+            if (hackathonData.participants && Array.isArray(hackathonData.participants)) {
+              console.log('👥 Participants from hackathon data:', hackathonData.participants);
+              
+              const formattedParticipants: Participant[] = hackathonData.participants.map((p: any) => ({
+                id: p.user_id,
+                name: p.first_name || '',
+                role: p.role || '',
+                firstName: p.first_name || '',
+                lastName: p.last_name || ''
+              }));
+              
+              setParticipants(formattedParticipants);
+              
+              // Определяем команду пользователя из данных участников
+              // Ищем участника, который является капитаном или имеет team_name
+              const currentUser = user;
+              if (currentUser) {
+                const userParticipant = hackathonData.participants.find((p: any) => 
+                  p.user_id === currentUser.id || p.telegram_username === currentUser.telegramId
+                );
+                
+                if (userParticipant && userParticipant.team_name) {
+                  // Пользователь в команде - создаем объект команды
+                  const teamMembers = hackathonData.participants
+                    .filter((p: any) => p.team_name === userParticipant.team_name)
+                    .map((p: any) => ({
+                      id: p.user_id,
+                      name: p.first_name || '',
+                      surname: p.last_name || '',
+                      telegramId: p.telegram_username || '',
+                      role: p.role || '',
+                      userRole: 'user' as const,
+                      skills: [],
+                      university: p.university || undefined,
+                      avatar: undefined,
+                      email: undefined
+                    }));
+                  
+                  const team: Team = {
+                    id: userParticipant.team_name, // Используем team_name как ID
+                    name: userParticipant.team_name,
+                    members: teamMembers,
+                    hackathonId: hackathonData.id
+                  };
+                  
+                  console.log('👥 Team from participants data:', team);
+                  setTeam(team);
+                } else {
+                  // Пользователь не в команде
+                  setTeam(null);
+                }
+              }
+              
+              // Извлекаем уникальные роли из участников
+              const rolesArray: string[] = hackathonData.participants
+                .map((p: any) => p.role)
+                .filter((role: any): role is string => role && typeof role === 'string' && role.trim() !== '');
+              const uniqueRoles = Array.from(new Set(rolesArray)).map((role: string) => ({
+                id: role,
+                label: role,
+                value: role
+              }));
+              
+              console.log('📋 Roles extracted from participants:', uniqueRoles);
+              setRoles(uniqueRoles);
+            }
           } else {
             setError(hackathonResponse.message || 'Не удалось загрузить данные хакатона');
           }
         } else {
           setError('Произошла ошибка при загрузке данных хакатона');
           console.error('Ошибка загрузки хакатона:', hackathonResult.reason);
-        }
-
-        // Обрабатываем результат загрузки участников
-        if (participantsResult.status === 'fulfilled') {
-          const participantsResponse = participantsResult.value;
-          if (participantsResponse.success) {
-            setParticipants(participantsResponse.data);
-          } else {
-            console.error('Ошибка загрузки участников:', participantsResponse.message);
-          }
-        } else {
-          console.error('Ошибка загрузки участников:', participantsResult.reason);
-        }
-
-        // Обрабатываем результат загрузки команды
-        if (teamResult.status === 'fulfilled') {
-          const teamResponse = teamResult.value;
-          if (teamResponse.success && teamResponse.data) {
-            setTeam(teamResponse.data);
-          }
-        } else {
-          console.error('Ошибка загрузки команды:', teamResult.reason);
-        }
-
-        // Обрабатываем результат загрузки всех команд
-        if (allTeamsResult.status === 'fulfilled') {
-          const allTeamsResponse = allTeamsResult.value;
-          if (allTeamsResponse.success) {
-            setAllTeams(allTeamsResponse.data);
-          }
-        } else {
-          console.error('Ошибка загрузки всех команд:', allTeamsResult.reason);
-        }
-
-        // Обрабатываем результат загрузки ролей
-        if (rolesResult.status === 'fulfilled') {
-          const rolesResponse = rolesResult.value;
-          if (rolesResponse.success) {
-            setRoles(rolesResponse.data);
-          }
-        } else {
-          console.error('Ошибка загрузки ролей:', rolesResult.reason);
         }
       } catch (err) {
         setError('Произошла ошибка при загрузке данных');
@@ -138,22 +170,21 @@ export const Users = () => {
 
   // Определяем, какие участники свободны (не в команде для этого хакатона)
   const freeParticipants = useMemo(() => {
-    // Получаем все ID участников, которые уже в командах для этого хакатона
-    const participantsInTeams = new Set<string>();
-    allTeams
-      .filter(t => t.hackathonId === id)
-      .forEach(team => {
-        team.members.forEach(member => {
-          participantsInTeams.add(member.id);
-        });
+    // Получаем ID участников, которые уже в команде для этого хакатона
+    const participantsInTeam = new Set<string>();
+    
+    // Используем только данные текущей команды
+    if (team && team.members) {
+      team.members.forEach(member => {
+        participantsInTeam.add(member.id);
       });
+    }
 
-    // Фильтруем участников, которые не в командах
-    // В моковых данных ID участника совпадает с ID пользователя
+    // Фильтруем участников, которые не в команде
     return participants.filter(participant => {
-      return !participantsInTeams.has(participant.id);
+      return !participantsInTeam.has(participant.id);
     });
-  }, [participants, allTeams, id]);
+  }, [participants, team]);
 
   // Фильтрация участников
   const filteredParticipants = useMemo(() => {
@@ -242,10 +273,12 @@ export const Users = () => {
         // Обновляем команду
         setTeam(response.data);
         alert(`${participant.name} добавлен в команду`);
-        // Обновляем список всех команд для пересчета свободных участников
-        const allTeamsResponse = await getAllTeams();
-        if (allTeamsResponse.success) {
-          setAllTeams(allTeamsResponse.data);
+        // Обновляем данные хакатона для пересчета свободных участников
+        if (id) {
+          const hackathonResponse = await getHackathonById(id);
+          if (hackathonResponse.success) {
+            setHackathonData(hackathonResponse.data);
+          }
         }
       } else {
         console.error('Ошибка добавления участника:', response.message);

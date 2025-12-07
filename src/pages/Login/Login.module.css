@@ -149,7 +149,15 @@
 }
 
 .botLink {
-  color: #3B44FA; /* Цвет для @itam_bot */
+  color: #3B44FA;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.botLink:hover {
+  opacity: 0.8;
+  text-decoration: underline;
 }
 
 /* Адаптивность */

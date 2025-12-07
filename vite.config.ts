@@ -7,5 +7,13 @@ export default defineConfig({
   server: {
     host: '0.0.0.0', // Доступен из локальной сети
     port: 5173,
+    proxy: {
+      '/api': {
+        // В Docker используем имя сервиса, локально - IP или localhost
+        target: process.env.VITE_API_URL || 'http://192.168.0.103:8000',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
   },
 })

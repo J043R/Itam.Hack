@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { GoTrash } from 'react-icons/go';
 import { getMyHackathons, deleteMyHackathon } from '../../api/api';
 import type { MyHackathon } from '../../api/types';
+import { formatDateToRussian } from '../../utils/dateFormat';
 import styles from './MyHacks.module.css';
 
 export const MyHacks = () => {
@@ -41,7 +42,12 @@ export const MyHacks = () => {
         const response = await getMyHackathons();
         
         if (response.success) {
-          setMyHackathons(response.data);
+          // Форматируем даты в российский формат
+          const formattedHackathons = response.data.map(hackathon => ({
+            ...hackathon,
+            date: formatDateToRussian(hackathon.date)
+          }));
+          setMyHackathons(formattedHackathons);
         } else {
           setError(response.message || 'Не удалось загрузить мои хакатоны');
         }
@@ -119,7 +125,7 @@ export const MyHacks = () => {
             </div>
             <div className={styles.content}>
               <h1 className={styles.name}>{hackathon.name}</h1>
-              <p className={styles.date}>{hackathon.date}</p>
+              <p className={styles.date}>{formatDateToRussian(hackathon.date)}</p>
             </div>
 
             {/* Иконка корзины в правом нижнем углу (только в режиме редактирования) */}

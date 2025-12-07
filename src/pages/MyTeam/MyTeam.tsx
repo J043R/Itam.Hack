@@ -1,15 +1,17 @@
-import { useState, useEffect } from 'react';
-import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams, useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 import { GoTrash } from 'react-icons/go';
 import { Input } from '../../components/ui/Input/input';
-import { getHackathonById, getTeamByHackathonId, leaveTeam } from '../../api/api';
-import type { Hackathon, Team, User } from '../../api/types';
+import { getHackathonById, getMyTeam, leaveTeam } from '../../api/api';
+import type { Hackathon, Team } from '../../api/types';
+import { formatDateToRussian } from '../../utils/dateFormat';
 import styles from './MyTeam.module.css';
 
 export const MyTeam = () => {
   const { id } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const location = useLocation();
   
   // Получаем роль из query параметров
   const role = searchParams.get('role') || 'member'; // По умолчанию участник
@@ -22,8 +24,14 @@ export const MyTeam = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
+  const [dataLoaded, setDataLoaded] = useState(false);
 
   useEffect(() => {
+    // Предотвращаем повторную загрузку данных
+    if (dataLoaded) {
+      return;
+    }
+
     // Загружаем данные о хакатоне и команде при монтировании компонента
     const loadData = async () => {
       if (!id) {
@@ -34,40 +42,116 @@ export const MyTeam = () => {
 
       try {
         setLoading(true);
+        setDataLoaded(true); // Помечаем, что данные загружаются
+        
+        // Проверяем, есть ли данные команды в state (переданные при навигации)
+        const hasTeamInState = location.state?.team;
+        
+        // Проверяем, есть ли данные хакатона в state (переданные при навигации)
+        const hasHackathonInState = location.state?.hackathon;
         
         // Загружаем данные о хакатоне и команде параллельно
-        // Используем Promise.allSettled для более надежной обработки ошибок
-        const [hackathonResult, teamResult] = await Promise.allSettled([
-          getHackathonById(id),
-          getTeamByHackathonId(id)
-        ]);
+        // Если данные уже есть в state, не делаем повторный запрос
+        const promises: Promise<any>[] = [];
         
-        // Обрабатываем результат загрузки хакатона
-        if (hackathonResult.status === 'fulfilled') {
-          const hackathonResponse = hackathonResult.value;
-          if (hackathonResponse.success) {
-            setHackathonData(hackathonResponse.data);
-          } else {
-            setError(hackathonResponse.message || 'Не удалось загрузить данные хакатона');
-          }
-        } else {
-          setError('Произошла ошибка при загрузке данных хакатона');
-          console.error('Ошибка загрузки хакатона:', hackathonResult.reason);
+        if (!hasHackathonInState) {
+          promises.push(getHackathonById(id));
         }
+        
+        if (!hasTeamInState) {
+          // Запрашиваем команду только если её нет в state
+          promises.push(getMyTeam());
+        }
+        
+        // Если все данные есть в state, используем их
+        if (hasHackathonInState) {
+          console.log('📥 Using hackathon data from navigation state:', location.state.hackathon);
+          // Форматируем дату в российский формат
+          const hackathonData = {
+            ...location.state.hackathon,
+            date: formatDateToRussian(location.state.hackathon.date)
+          };
+          setHackathonData(hackathonData);
+        }
+        
+        if (hasTeamInState) {
+          console.log('📥 Using team data from navigation state:', location.state.team);
+          const teamFromState = location.state.team;
+          setTeam(teamFromState);
+          const savedTeams = localStorage.getItem('teamNames');
+          const teams = savedTeams ? JSON.parse(savedTeams) : {};
+          setTeamName(teams[id] || teamFromState.name || '');
+          console.log('✅ Team set from state:', {
+            team: teamFromState,
+            members: teamFromState.members,
+            membersCount: teamFromState.members?.length || 0
+          });
+        }
+        
+        // Если есть запросы для выполнения
+        if (promises.length > 0) {
+          // Используем Promise.allSettled для более надежной обработки ошибок
+          const results = await Promise.allSettled(promises);
+          
+          let resultIndex = 0;
+          const hackathonResult = !hasHackathonInState ? results[resultIndex++] : null;
+          const teamResult = !hasTeamInState && results.length > 0 ? results[resultIndex] : null;
+        
+          // Обрабатываем результат загрузки хакатона
+          if (hackathonResult && hackathonResult.status === 'fulfilled') {
+            const hackathonResponse = hackathonResult.value;
+            if (hackathonResponse.success) {
+              // Форматируем дату в российский формат
+              const hackathonData = {
+                ...hackathonResponse.data,
+                date: formatDateToRussian(hackathonResponse.data.date)
+              };
+              setHackathonData(hackathonData);
+            } else {
+              setError(hackathonResponse.message || 'Не удалось загрузить данные хакатона');
+            }
+          } else if (hackathonResult) {
+            setError('Произошла ошибка при загрузке данных хакатона');
+            console.error('Ошибка загрузки хакатона:', hackathonResult.reason);
+          }
 
-        // Обрабатываем результат загрузки команды
-        if (teamResult.status === 'fulfilled') {
-          const teamResponse = teamResult.value;
-          if (teamResponse.success && teamResponse.data) {
-            setTeam(teamResponse.data);
-            // Проверяем, есть ли сохраненное название команды в localStorage
-            const savedTeams = localStorage.getItem('teamNames');
-            const teams = savedTeams ? JSON.parse(savedTeams) : {};
-            setTeamName(teams[id] || teamResponse.data.name);
+          // Обрабатываем данные команды из запроса
+          if (teamResult && teamResult.status === 'fulfilled') {
+            const teamResponse = teamResult.value;
+            console.log('📥 Team response:', teamResponse);
+            console.log('📥 Team response success:', teamResponse.success);
+            console.log('📥 Team response data:', teamResponse.data);
+            console.log('📥 Team response message:', teamResponse.message);
+            
+            if (teamResponse.success && teamResponse.data) {
+              console.log('✅ Setting team data:', teamResponse.data);
+              console.log('✅ Team data type:', typeof teamResponse.data);
+              console.log('✅ Team data keys:', Object.keys(teamResponse.data));
+              console.log('✅ Team members:', teamResponse.data.members);
+              console.log('✅ Team members type:', typeof teamResponse.data.members);
+              console.log('✅ Team members is array:', Array.isArray(teamResponse.data.members));
+              console.log('✅ Team members length:', teamResponse.data.members?.length);
+              
+              setTeam(teamResponse.data);
+              // Проверяем, есть ли сохраненное название команды в localStorage
+              const savedTeams = localStorage.getItem('teamNames');
+              const teams = savedTeams ? JSON.parse(savedTeams) : {};
+              setTeamName(teams[id] || teamResponse.data.name || '');
+            } else {
+              console.warn('⚠️ Team response unsuccessful or no data:', {
+                success: teamResponse.success,
+                data: teamResponse.data,
+                message: teamResponse.message
+              });
+              // Если команда не найдена, это нормально - пользователь может не быть в команде
+              setTeam(null);
+            }
+          } else if (teamResult) {
+            console.error('❌ Ошибка загрузки команды:', teamResult.reason);
+            console.error('❌ Team result status:', teamResult.status);
+            setTeam(null);
           }
-        } else {
-          console.error('Ошибка загрузки команды:', teamResult.reason);
-        }
+        } // Закрываем блок if (promises.length > 0)
       } catch (err) {
         setError('Произошла ошибка при загрузке данных');
         console.error('Ошибка загрузки данных:', err);
@@ -77,7 +161,7 @@ export const MyTeam = () => {
     };
 
     loadData();
-  }, [id]);
+  }, [id, location.state, dataLoaded]);
 
   // Автосохранение названия команды
   useEffect(() => {
@@ -98,14 +182,68 @@ export const MyTeam = () => {
   }, [teamName, id, team?.id]);
 
   // Преобразуем участников команды в нужный формат
-  const teamMembers = team?.members.map((member: User, index: number) => ({
-    id: member.id,
-    firstName: member.name,
-    lastName: member.surname,
-    role: index === 0 ? 'Капитан' : 'Участник',
-    avatar: member.avatar || '',
-    isCaptain: index === 0
-  })) || [];
+  const teamMembers = React.useMemo(() => {
+    if (!team) {
+      console.log('👥 No team data');
+      return [];
+    }
+    
+    console.log('👥 Processing team members, team:', team);
+    console.log('👥 Team.members:', team.members);
+    console.log('👥 Team.members type:', typeof team.members);
+    console.log('👥 Team.members is array:', Array.isArray(team.members));
+    
+    if (!team.members) {
+      console.warn('⚠️ Team.members is undefined or null');
+      return [];
+    }
+    
+    if (!Array.isArray(team.members)) {
+      console.warn('⚠️ Team.members is not an array:', team.members);
+      return [];
+    }
+    
+    if (team.members.length === 0) {
+      console.warn('⚠️ Team.members is empty array');
+      return [];
+    }
+    
+    const formatted = team.members.map((member: any, index: number) => {
+      console.log(`👥 Processing member ${index}:`, member);
+      console.log(`👥 Member keys:`, Object.keys(member));
+      console.log(`👥 Member name field:`, member.name, member.firstName, member.first_name);
+      console.log(`👥 Member surname field:`, member.surname, member.lastName, member.last_name);
+      console.log(`👥 Member role field:`, member.role);
+      
+      // Пробуем разные варианты имен полей
+      const firstName = member.name || member.firstName || member.first_name || '';
+      const lastName = member.surname || member.lastName || member.last_name || '';
+      const memberRole = member.role || (index === 0 ? 'Капитан' : 'Участник');
+      
+      return {
+        id: member.id,
+        firstName: firstName,
+        lastName: lastName,
+        role: memberRole,
+        avatar: member.avatar || '',
+        isCaptain: index === 0
+      };
+    });
+    
+    console.log('👥 Formatted members:', formatted);
+    return formatted;
+  }, [team]);
+  
+  // Логируем данные команды для отладки
+  useEffect(() => {
+    if (team) {
+      console.log('👥 Team data in useEffect:', team);
+      console.log('👥 Team members:', team.members);
+      console.log('👥 Team members count:', team.members?.length || 0);
+      console.log('👥 Team members formatted:', teamMembers);
+      console.log('👥 Team members length:', teamMembers.length);
+    }
+  }, [team, teamMembers]);
 
   // Обработчик выхода из команды
   const handleLeaveTeam = async () => {
@@ -200,29 +338,47 @@ export const MyTeam = () => {
           </div>
           <div className={styles.hackathonContent}>
             <h1 className={styles.hackathonName}>{hackathonData.name}</h1>
-            <p className={styles.hackathonDate}>{hackathonData.date}</p>
+            <p className={styles.hackathonDate}>{formatDateToRussian(hackathonData.date)}</p>
           </div>
         </div>
         
-        {/* Поле ввода названия команды */}
-        <div className={styles.teamNameInput}>
-          <Input
-            size="S"
-            opacity={20}
-            placeholder="Название команды"
-            className={styles.teamNameInputField}
-            value={teamName}
-            onChange={(e) => setTeamName(e.target.value)}
-            disabled={!isCaptain}
-          />
-        </div>
+        {/* Поле ввода названия команды (только если команда найдена) */}
+        {team && (
+          <div className={styles.teamNameInput}>
+            <Input
+              size="S"
+              opacity={20}
+              placeholder="Название команды"
+              className={styles.teamNameInputField}
+              value={teamName}
+              onChange={(e) => setTeamName(e.target.value)}
+              disabled={!isCaptain}
+            />
+          </div>
+        )}
 
         {/* Заголовок "Моя команда" */}
         <h2 className={styles.teamTitle}>Моя команда</h2>
 
-        {/* Список участников команды */}
-        <div className={styles.teamMembersList}>
-          {teamMembers.map((member) => (
+        {/* Сообщение, если команда не найдена */}
+        {!team && !loading && (
+          <div style={{ 
+            padding: '20px', 
+            textAlign: 'center', 
+            color: '#E7E3D8',
+            fontFamily: "'Inter', sans-serif"
+          }}>
+            <p>Вы не состоите в команде для этого хакатона</p>
+          </div>
+        )}
+
+        {/* Информация о команде, если она найдена */}
+        {team && (
+          <>
+            {/* Список участников команды */}
+            {teamMembers.length > 0 ? (
+              <div className={styles.teamMembersList}>
+                {teamMembers.map((member) => (
             <div key={member.id} className={styles.memberCard}>
               {/* Обводка как у стеклянных кнопок */}
               <div className={styles.memberCardBorderTop}></div>
@@ -237,9 +393,9 @@ export const MyTeam = () => {
               
               {/* Информация об участнике */}
               <div className={styles.memberInfo}>
-                <p className={styles.memberFirstName}>{member.firstName}</p>
-                <p className={styles.memberLastName}>{member.lastName}</p>
-                <p className={styles.memberRole}>{member.role}</p>
+                <p className={styles.memberFirstName}>{member.firstName || 'Имя не указано'}</p>
+                <p className={styles.memberLastName}>{member.lastName || 'Фамилия не указана'}</p>
+                <p className={styles.memberRole}>{member.role || 'Роль не указана'}</p>
               </div>
 
               {/* Иконка корзины в правом нижнем углу (только для капитана в режиме редактирования, не для капитана команды) */}
@@ -257,7 +413,19 @@ export const MyTeam = () => {
               )}
             </div>
           ))}
-        </div>
+              </div>
+            ) : (
+              <div style={{ 
+                padding: '20px', 
+                textAlign: 'center', 
+                color: '#E7E3D8',
+                fontFamily: "'Inter', sans-serif"
+              }}>
+                <p>В команде пока нет участников</p>
+              </div>
+            )}
+          </>
+        )}
 
         {/* Кнопка "Покинуть" для обычных участников */}
         {!isCaptain && (

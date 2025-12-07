@@ -1,11 +1,13 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useLocation } from 'react-router-dom';
 import { ButtonSimple } from '../../components/ui/Button/button';
 import { Input } from '../../components/ui/Input/input';
 import { IconButton } from '../../components/ui/IconButton/iconButton';
 import { IoFilterSharp } from "react-icons/io5";
-import { getHackathons } from '../../api/api';
+import { getHackathons, getHackathonById } from '../../api/api';
 import type { Hackathon } from '../../api/types';
 import { FilterPanel, type FilterOption } from '../../components/FilterPanel/FilterPanel';
+import { formatDateToRussian } from '../../utils/dateFormat';
 import styles from './Home.module.css';
 
 interface HomeProps {
@@ -19,6 +21,7 @@ const filterOptions: FilterOption[] = [
 ];
 
 export const Home = ({ onHackathonClick }: HomeProps) => {
+  const location = useLocation();
   const [hackathons, setHackathons] = useState<Hackathon[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -26,27 +29,41 @@ export const Home = ({ onHackathonClick }: HomeProps) => {
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
 
   useEffect(() => {
-    // Загружаем данные о хакатонах при монтировании компонента
+    // Загружаем данные о хакатонах при монтировании и при переходе на главную
     const loadHackathons = async () => {
       try {
         setLoading(true);
+        setError(null);
+        console.log('🔄 Loading hackathons from /api/v1/hackathons');
         const response = await getHackathons();
         
-        if (response.success) {
-          setHackathons(response.data);
+        if (response.success && response.data) {
+          console.log('✅ Hackathons loaded:', response.data.length, 'items');
+          // Форматируем даты в российский формат
+          const formattedHackathons = response.data.map(hackathon => ({
+            ...hackathon,
+            date: formatDateToRussian(hackathon.date)
+          }));
+          setHackathons(formattedHackathons);
         } else {
-          setError(response.message || 'Не удалось загрузить хакатоны');
+          const errorMessage = response.message || 'Не удалось загрузить хакатоны';
+          console.error('❌ Failed to load hackathons:', errorMessage);
+          setError(errorMessage);
         }
       } catch (err) {
-        setError('Произошла ошибка при загрузке данных');
-        console.error('Ошибка загрузки хакатонов:', err);
+        const errorMessage = 'Произошла ошибка при загрузке данных';
+        console.error('❌ Error loading hackathons:', err);
+        setError(errorMessage);
       } finally {
         setLoading(false);
       }
     };
 
-    loadHackathons();
-  }, []);
+    // Загружаем данные при монтировании и при переходе на главную (pathname === '/')
+    if (location.pathname === '/') {
+      loadHackathons();
+    }
+  }, [location.pathname]);
 
   // Функция для определения, попадает ли дата хакатона в выбранный фильтр
   const matchesFilter = (hackathonDate: string, filterValue: string): boolean => {
@@ -160,7 +177,28 @@ export const Home = ({ onHackathonClick }: HomeProps) => {
           <ButtonSimple
             key={hackathon.id}
             type="glass-card-large"
-            onClick={() => onHackathonClick ? onHackathonClick(hackathon.id) : alert(`Открыть ${hackathon.name}`)}
+            onClick={async () => {
+              console.log('🎯 Hackathon clicked:', hackathon.name, 'ID:', hackathon.id);
+              
+              // Отправляем GET запрос на /api/v1/hackathons/{hackathon_id}/info
+              try {
+                const response = await getHackathonById(hackathon.id);
+                
+                if (response.success && response.data) {
+                  console.log('✅ Hackathon info loaded:', response.data);
+                  // Переходим на страницу хакатона после успешной загрузки
+                  if (onHackathonClick) {
+                    onHackathonClick(hackathon.id);
+                  }
+                } else {
+                  console.error('❌ Failed to load hackathon info:', response.message);
+                  alert('Не удалось загрузить информацию о хакатоне');
+                }
+              } catch (err) {
+                console.error('❌ Error loading hackathon info:', err);
+                alert('Произошла ошибка при загрузке информации о хакатоне');
+              }
+            }}
           >
             <div 
               className={styles.hackathonContent}
@@ -188,7 +226,7 @@ export const Home = ({ onHackathonClick }: HomeProps) => {
               >
                 {hackathon.name}
               </h2>
-              <p className={styles.hackathonDate}>{hackathon.date}</p>
+              <p className={styles.hackathonDate}>{formatDateToRussian(hackathon.date)}</p>
               <p className={styles.hackathonDescription}>
                 {hackathon.description}
               </p>

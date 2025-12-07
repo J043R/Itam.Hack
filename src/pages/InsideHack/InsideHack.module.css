@@ -295,6 +295,36 @@
     width: 100% !important;
     max-width: 335px !important;
   }
+  
+  .registerButtonContainer {
+    width: calc(100% - 5px) !important;
+    max-width: 335px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+  
+  .registerButton {
+    width: 100% !important;
+    max-width: 335px !important;
+  }
+}
+
+/* Контейнер для кнопки "Зарегистрироваться" */
+.registerButtonContainer {
+  width: 335px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Кнопка "Зарегистрироваться" */
+.registerButton {
+  width: 100% !important;
+  max-width: 335px !important;
 }
 
 /* Адаптивность для больших экранов */
@@ -307,5 +337,89 @@
     padding-right: 20px;
     box-sizing: border-box;
   }
+}
+
+/* Стили для модального окна создания команды */
+.createTeamModal {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 300px;
+  max-width: 400px;
+}
+
+.createTeamModalTitle {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #E7E3D8;
+  font-family: 'Inter', sans-serif;
+}
+
+.createTeamTextarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 12px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: #E7E3D8;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  resize: vertical;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.createTeamSelect {
+  width: 100%;
+  padding: 12px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: #E7E3D8;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.createTeamSelect option {
+  background-color: #1a1a1a;
+  color: #E7E3D8;
+}
+
+.createTeamFormLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: #E7E3D8;
+  font-family: 'Inter', sans-serif;
+}
+
+.createTeamFormGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.createTeamButtonsContainer {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.createTeamButtonWrapper {
+  flex: 1;
+}
+
+.createTeamError {
+  padding: 8px 12px;
+  background-color: rgba(255, 0, 0, 0.1);
+  border: 1px solid rgba(255, 0, 0, 0.3);
+  border-radius: 6px;
+  color: #ff6b6b;
+  font-size: 12px;
 }
 

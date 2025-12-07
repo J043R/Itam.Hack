@@ -11,23 +11,19 @@ export const ProtectedRoute = ({ children, requireAdmin = false }: ProtectedRout
   const { isAuthenticated, isAdmin } = useAuth();
   const location = useLocation();
 
-  // ВРЕМЕННО: Отключаем проверку авторизации для разработки
-  // TODO: Вернуть проверку авторизации перед продакшеном
-  if (false) { // Временно отключено
-    // Если требуется авторизация, но пользователь не авторизован
-    if (!isAuthenticated) {
-      // Если это админский роут, редиректим на страницу входа админа
-      if (requireAdmin) {
-        return <Navigate to="/admin/login" state={{ from: location }} replace />;
-      }
-      // Для обычных пользователей редиректим на главную
-      return <Navigate to="/" state={{ from: location }} replace />;
+  // Если требуется авторизация, но пользователь не авторизован
+  if (!isAuthenticated) {
+    // Если это админский роут, редиректим на страницу входа админа
+    if (requireAdmin) {
+      return <Navigate to="/admin/login" state={{ from: location }} replace />;
     }
+    // Для обычных пользователей редиректим на главную (там будет показано модальное окно входа)
+    return <Navigate to="/" state={{ from: location }} replace />;
+  }
 
-    // Если требуется админ, но пользователь не админ
-    if (requireAdmin && !isAdmin) {
-      return <Navigate to="/" replace />;
-    }
+  // Если требуется админ, но пользователь не админ
+  if (requireAdmin && !isAdmin) {
+    return <Navigate to="/" replace />;
   }
 
   return <>{children}</>;
