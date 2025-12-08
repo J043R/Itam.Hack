@@ -1,0 +1,136 @@
+/* ВРЕМЕННЫЙ ПРОСТОЙ CSS ДЛЯ ТЕСТА */
+
+/* Базовый класс */
+._button {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  outline: none;
+  user-select: none;
+  color: #E7E3D8;
+  font-size: 14px;
+  margin: 10px;
+}
+
+/* ПРОСТОЙ ТЕСТ - разные цвета для разных типов */
+._button-primary-M {
+  background-color: #4101F6 !important;
+  padding: 15px 30px !important;
+  border-radius: 10px !important;
+}
+
+._button-primary-S {
+  background-color: #4101F6 !important;
+  padding: 10px 20px !important;
+  border-radius: 10px !important;
+}
+
+._entry-primary-M {
+  background-color: rgba(56, 14, 174, 0.35) !important;
+  padding: 15px 30px !important;
+  border-radius: 5px !important;
+  font-weight: 600;
+}
+
+._entry-primary-S {
+  background-color: rgba(56, 14, 174, 0.35) !important;
+  padding: 10px 20px !important;
+  border-radius: 5px !important;
+  font-weight: 600;
+}
+
+._button-secondary-M {
+  background-color: #65626D !important;
+  padding: 15px 30px !important;
+  border-radius: 10px !important;
+}
+
+._button-secondary-S {
+  background-color: #65626D !important;
+  padding: 10px 20px !important;
+  border-radius: 10px !important;
+}
+
+._transparent-M {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  padding: 50px 100px !important;
+  border-radius: 10px !important;
+}
+
+._transparent-S {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  padding: 20px 40px !important;
+  border-radius: 10px !important;
+}
+
+/* components/ui/button/Button.css */
+
+/* Entry Primary адаптив */
+@media (max-width: 480px) {
+  .button-entry-primary-M {
+    padding: 0 50px !important;
+  }
+}
+
+@media (max-width: 375px) {
+  .button-entry-primary-M {
+    padding: 0 30px !important;
+  }
+}
+
+/* Button Primary/Secondary адаптив */
+@media (max-width: 480px) {
+  .button-primary-M,
+  .button-secondary-M {
+    width: 100% !important;
+    max-width: 163px !important;
+  }
+}
+
+@media (max-width: 375px) {
+  .button-primary-M,
+  .button-secondary-M {
+    width: 90% !important;
+  }
+}
+
+/* Transparent адаптив */
+@media (max-width: 480px) {
+  .button-transparent-M {
+    width: 100% !important;
+    max-width: 295px !important;
+    height: 250px !important;
+  }
+}
+
+@media (max-width: 375px) {
+  .button-transparent-M {
+    width: 90% !important;
+    height: 200px !important;
+  }
+}
+
+/* Glass эффект для всех glass-кнопок */
+.glassEffect {
+  background: rgba(255, 255, 255, 0.05) !important;
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-style: solid !important;
+  border-width: 1px !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 10px !important;
+  position: relative !important;
+  overflow: hidden !important;
+  isolation: isolate !important;
+  will-change: backdrop-filter !important;
+  transform: translateZ(0) !important; /* Принудительное создание слоя для GPU */
+}

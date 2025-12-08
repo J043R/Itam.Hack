@@ -1,0 +1,425 @@
+.container {
+  padding-top: 0px;
+  padding-left: 20px; /* Отступ слева 20px */
+  padding-right: 20px; /* Отступ справа 20px */
+  padding-bottom: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  margin-top: -10px; /* Поднимаем карточку на 10px вверх (было -15px, теперь на 5px ниже) */
+  display: flex;
+  flex-direction: column; /* Вертикальное расположение */
+  justify-content: flex-start; /* Выравнивание по верху */
+  align-items: center; /* Центрируем по умолчанию */
+  position: relative;
+}
+
+.hackathonCard {
+  width: 335px; /* Фиксированная ширина карточки */
+  height: 120px; /* Высота карточки */
+  background: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border-radius: 10px;
+  display: flex;
+  align-items: center !important; /* Выравнивание по центру вертикально */
+  justify-content: flex-start;
+  padding: 0;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  border: none;
+  isolation: isolate;
+  will-change: backdrop-filter;
+  transform: translateZ(0);
+  box-shadow: none;
+  margin-left: auto; /* Центрируем карточку */
+  margin-right: auto;
+  margin-top: 0;
+  margin-bottom: 0;
+  flex-shrink: 0; /* Не сжимается */
+}
+
+/* Обводка как у стеклянных кнопок */
+.hackathonCardBorderTop {
+  position: absolute;
+  top: 0;
+  left: 10px;
+  right: 10px;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.18);
+  pointer-events: none;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.hackathonCardBorderRight {
+  position: absolute;
+  top: 10px;
+  right: 0;
+  bottom: 10px;
+  width: 1px;
+  background-color: rgba(255, 255, 255, 0.18);
+  pointer-events: none;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.hackathonCardBorderBottom {
+  position: absolute;
+  bottom: 0;
+  left: 10px;
+  right: 10px;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.18);
+  pointer-events: none;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.hackathonCardBorderLeft {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  bottom: 10px;
+  width: 1px;
+  background-color: rgba(255, 255, 255, 0.18);
+  pointer-events: none;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+/* Контейнер для пустых карточек */
+.emptyCardsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 14px; /* Расстояние между карточками */
+  width: 335px; /* Фиксированная ширина, как у карточки */
+  margin-top: 40px; /* Отступ от главной карточки хакатона */
+  align-items: center;
+  margin-left: auto; /* Центрируем по умолчанию */
+  margin-right: auto;
+  box-sizing: border-box;
+}
+
+/* Контейнер для кнопки с изображением */
+.buttonWithImage {
+  position: relative;
+  width: 335px;
+  height: 129px;
+}
+
+/* Кнопка действия */
+.actionButton {
+  width: 335px !important; /* Ширина кнопки */
+  height: 129px !important; /* Высота кнопки */
+  position: relative !important;
+  flex-shrink: 0;
+  margin: 0 !important;
+  align-items: flex-start !important; /* Выравнивание по верху */
+  justify-content: flex-start !important; /* Выравнивание по левому краю */
+  overflow: visible !important; /* Позволяем изображениям выходить за границы */
+  z-index: 1 !important; /* Базовый z-index для кнопки */
+}
+
+/* Переопределяем overflow для glass-card-wide */
+.actionButton[style*="overflow"] {
+  overflow: visible !important;
+}
+
+/* Текст в пустой карточке */
+.emptyCardText {
+  font-size: 20px;
+  font-weight: 700; /* Bold */
+  color: #E7E3D8;
+  font-family: 'Inter', sans-serif;
+  position: absolute;
+  top: 20px; /* Отступ сверху 20px */
+  left: 20px; /* Отступ слева 20px */
+  right: 20px; /* Отступ справа для предотвращения переполнения */
+  text-align: left;
+  box-sizing: border-box;
+  margin: 0 !important;
+  padding: 0 !important;
+  white-space: nowrap; /* Не переносить текст на новую строку */
+  overflow: hidden; /* Скрываем переполнение */
+  text-overflow: ellipsis; /* Многоточие при переполнении */
+  max-width: calc(100% - 40px); /* Учитываем отступы слева и справа */
+  z-index: 5 !important; /* Под изображением (z-index изображения 10) */
+  pointer-events: none; /* Чтобы не мешало кликам */
+}
+
+/* Изображение внутри кнопки, правый край совпадает с правым краем кнопки */
+.buttonImage {
+  position: absolute !important;
+  right: 0 !important; /* Правый край картинки совпадает с правым краем кнопки */
+  bottom: 0 !important; /* Выравниваем по нижнему краю кнопки */
+  width: auto;
+  height: auto;
+  max-width: 130px !important;
+  max-height: 130px !important;
+  object-fit: contain;
+  object-position: bottom right; /* Выравниваем изображение по правому нижнему углу */
+  border-radius: 10px; /* Закругляем углы */
+  z-index: 10 !important; /* Поверх кнопки */
+  pointer-events: none; /* Чтобы не мешало кликам по кнопке */
+  margin: 0 !important;
+  padding: 0 !important;
+  transform: translateY(0) !important; /* Убираем любые трансформации */
+}
+
+.imageContainer {
+  flex-shrink: 0;
+  margin-right: 10px; /* Отступ справа от картинки */
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 15px; /* Отступ от левого края поля */
+  align-self: center; /* Выравниваем по центру вертикально */
+}
+
+.imagePlaceholder {
+  width: 100px;
+  height: 75px;
+  background-color: #939090;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  align-self: center;
+  padding: 0;
+  padding-right: 20px;
+  padding-top: 10px; /* Опускаем текст ниже */
+  min-width: 0; /* Позволяет сжиматься */
+  max-width: 100%; /* Ограничиваем максимальную ширину */
+  position: relative;
+  z-index: 2; /* Поверх обводки */
+}
+
+.name {
+  font-size: 16px;
+  font-weight: 700; /* Bold */
+  color: #E7E3D8;
+  margin: 0;
+  margin-bottom: 8px; /* Отступ снизу от названия */
+  font-family: 'Inter', sans-serif;
+  white-space: normal;
+  word-break: break-word;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  text-align: left;
+  width: 100%;
+  display: block;
+}
+
+.date {
+  font-size: 12px;
+  font-weight: 400; /* Regular */
+  color: #E7E3D8;
+  margin: 0;
+  margin-bottom: 8px; /* Отступ снизу от даты */
+  font-family: 'Inter', sans-serif;
+  opacity: 0.8;
+  text-align: left;
+  width: 100%;
+  white-space: normal;
+  word-break: break-word;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  display: block;
+}
+
+.description {
+  font-size: 14px;
+  font-weight: 500; /* Medium */
+  color: #E7E3D8;
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  opacity: 0.9;
+  white-space: normal;
+  overflow: hidden;
+  word-break: break-word;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* Адаптивность для экранов меньше 400px */
+@media (max-width: 400px) {
+  .container {
+    padding-left: 5px !important;
+    padding-right: 0px !important;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    box-sizing: border-box !important;
+    align-items: center !important;
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+  
+  .hackathonCard {
+    width: calc(100% - 5px) !important; /* Ширина минус padding слева (5px) */
+    max-width: 335px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+  }
+  
+  .emptyCardsContainer {
+    width: calc(100% - 5px) !important; /* Ширина минус padding слева (5px) */
+    max-width: 335px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    margin-top: 40px !important;
+  }
+  
+  .buttonWithImage {
+    width: 100% !important;
+    max-width: 335px !important;
+  }
+  
+  .actionButton {
+    width: 100% !important;
+    max-width: 335px !important;
+  }
+  
+  .registerButtonContainer {
+    width: calc(100% - 5px) !important;
+    max-width: 335px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+  
+  .registerButton {
+    width: 100% !important;
+    max-width: 335px !important;
+  }
+}
+
+/* Контейнер для кнопки "Зарегистрироваться" */
+.registerButtonContainer {
+  width: 335px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Кнопка "Зарегистрироваться" */
+.registerButton {
+  width: 100% !important;
+  max-width: 335px !important;
+}
+
+/* Адаптивность для больших экранов */
+@media (min-width: 769px) {
+  .container {
+    max-width: 375px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 20px;
+    padding-right: 20px;
+    box-sizing: border-box;
+  }
+}
+
+/* Стили для модального окна создания команды */
+.createTeamModal {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 300px;
+  max-width: 400px;
+}
+
+.createTeamModalTitle {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #E7E3D8;
+  font-family: 'Inter', sans-serif;
+}
+
+.createTeamTextarea {
+  width: 100%;
+  min-height: 100px;
+  padding: 12px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: #E7E3D8;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  resize: vertical;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.createTeamSelect {
+  width: 100%;
+  padding: 12px;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: #E7E3D8;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+
+.createTeamSelect option {
+  background-color: #1a1a1a;
+  color: #E7E3D8;
+}
+
+.createTeamFormLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: #E7E3D8;
+  font-family: 'Inter', sans-serif;
+}
+
+.createTeamFormGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.createTeamButtonsContainer {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.createTeamButtonWrapper {
+  flex: 1;
+}
+
+.createTeamError {
+  padding: 8px 12px;
+  background-color: rgba(255, 0, 0, 0.1);
+  border: 1px solid rgba(255, 0, 0, 0.3);
+  border-radius: 6px;
+  color: #ff6b6b;
+  font-size: 12px;
+}
+

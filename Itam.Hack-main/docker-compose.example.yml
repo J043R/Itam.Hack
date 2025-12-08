@@ -1,0 +1,41 @@
+# Пример добавления фронтенда в существующий docker-compose.yml бэкенда
+# Скопируйте эти сервисы в ваш существующий docker-compose.yml
+
+version: '3.8'
+
+services:
+  # Ваш существующий бэкенд сервис
+  # backend:
+  #   ...
+
+  # Фронтенд (production) - добавьте этот сервис
+  frontend:
+    build:
+      context: ./frontend  # Путь к папке с фронтендом относительно docker-compose.yml
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend  # Имя вашего бэкенд сервиса
+    networks:
+      - your-network-name  # Имя вашей сети
+    restart: unless-stopped
+
+  # Фронтенд для разработки (опционально)
+  frontend-dev:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    networks:
+      - your-network-name
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    restart: unless-stopped
+    profiles:
+      - dev  # Запускается только с флагом: docker-compose --profile dev up
+

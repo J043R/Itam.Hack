@@ -1,0 +1,225 @@
+.notificationCard {
+  width: 335px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 12px 5px;
+  box-sizing: border-box;
+  position: relative;
+  margin: 0;
+  flex-shrink: 0;
+  gap: 12px;
+  overflow: hidden;
+}
+
+.topSection {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 5px;
+  width: 100%;
+}
+
+.leftSection {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+
+.rightSection {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+  align-items: flex-start;
+}
+
+.avatarContainer {
+  flex-shrink: 0;
+  position: relative;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #E7E3D8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatarContainer :global(.avatarContainer) {
+  display: none;
+}
+
+.content {
+  width: 100%;
+  min-width: 0;
+}
+
+.text {
+  font-size: 14px;
+  font-weight: 400;
+  color: #E7E3D8;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  line-height: 1.5;
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.userName {
+  font-weight: 600;
+  color: #E7E3D8;
+}
+
+
+.acceptButton {
+  width: 154px;
+  height: 35px;
+  border-radius: 10px;
+  background-color: #3B44FA;
+  border: none;
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  outline: none;
+  transition: opacity 0.2s;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.acceptButton:hover {
+  opacity: 0.9;
+}
+
+.acceptButton:focus {
+  outline: none;
+  border: none;
+}
+
+.acceptButton:focus-visible {
+  outline: none;
+  border: none;
+}
+
+.buttonsRow {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 0;
+  padding-left: 0;
+  justify-content: center;
+}
+
+.rejectButton {
+  width: 154px;
+  height: 35px;
+  border-radius: 10px;
+  background-color: #65626D;
+  border: none;
+  color: #FFFFFF;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  outline: none;
+  transition: opacity 0.2s;
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+.rejectButton:hover {
+  opacity: 0.9;
+}
+
+.rejectButton:focus {
+  outline: none;
+  border: none;
+}
+
+.rejectButton:focus-visible {
+  outline: none;
+  border: none;
+}
+
+/* Обводка карточки уведомления */
+.notificationCardBorderTop {
+  position: absolute;
+  top: 0;
+  left: 10px;
+  right: 10px;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.18);
+  pointer-events: none;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.notificationCardBorderRight {
+  position: absolute;
+  top: 10px;
+  right: 0;
+  bottom: 10px;
+  width: 1px;
+  background-color: rgba(255, 255, 255, 0.18);
+  pointer-events: none;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.notificationCardBorderBottom {
+  position: absolute;
+  bottom: 0;
+  left: 10px;
+  right: 10px;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.18);
+  pointer-events: none;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.notificationCardBorderLeft {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  bottom: 10px;
+  width: 1px;
+  background-color: rgba(255, 255, 255, 0.18);
+  pointer-events: none;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+/* Адаптивность */
+@media (max-width: 400px) {
+  .notificationCard {
+    width: calc(100% - 5px);
+    max-width: 335px;
+  }
+}
+

@@ -1,4 +1,5 @@
 from typing import Optional, List
+from unittest import result
 from uuid import UUID
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, and_, func
@@ -12,10 +13,18 @@ class TeamRepository(BaseRepository[Team]):
     def __init__(self, session: AsyncSession):
         super().__init__(session, Team)
 
+    async def get_all(self, skip: int = 0, limit: int = 100) -> List[Team]:
+        result = await self.session.execute(
+            select(Team)
+            .options(selectinload(Team.members).selectinload(TeamMember.user))
+            .offset(skip)
+            .limit(limit)
+        )
+        return list(result.scalars().all())
+
     async def get_by_hackathon(
         self, hackathon_id: UUID, skip: int = 0, limit: int = 100
     ) -> List[Team]:
-        """Получить все команды хакатона"""
         result = await self.session.execute(
             select(Team)
             .where(Team.id_hackathon == hackathon_id)
@@ -28,7 +37,6 @@ class TeamRepository(BaseRepository[Team]):
     async def get_by_user_and_hackathon(
         self, user_id: UUID, hackathon_id: UUID
     ) -> Optional[Team]:
-        """Получить команду пользователя для конкретного хакатона"""
         result = await self.session.execute(
             select(Team)
             .join(TeamMember)
@@ -43,7 +51,6 @@ class TeamRepository(BaseRepository[Team]):
         return result.scalar_one_or_none()
 
     async def get_team_members_count(self, team_id: UUID) -> int:
-        """Получить количество участников команды"""
         result = await self.session.execute(
             select(func.count(TeamMember.user_id))
             .where(TeamMember.team_id == team_id)
@@ -51,7 +58,6 @@ class TeamRepository(BaseRepository[Team]):
         return result.scalar_one() or 0
 
     async def add_member(self, team_id: UUID, user_id: UUID) -> TeamMember:
-        """Добавить участника в команду"""
         member = TeamMember(team_id=team_id, user_id=user_id)
         self.session.add(member)
         await self.session.commit()
@@ -59,7 +65,6 @@ class TeamRepository(BaseRepository[Team]):
         return member
 
     async def remove_member(self, team_id: UUID, user_id: UUID) -> bool:
-        """Удалить участника из команды"""
         result = await self.session.execute(
             select(TeamMember).where(
                 and_(
@@ -75,3 +80,33 @@ class TeamRepository(BaseRepository[Team]):
             return True
         return False
 
+    async def is_user_in_team(self, team_id: UUID, user_id: UUID) -> bool:
+        result = await self.session.execute(
+            select(TeamMember).where(
+                TeamMember.team_id == team_id,
+                TeamMember.user_id == user_id
+            )
+        )
+        return result.scalar_one_or_none() is not None
+    
+    async def get_user_teams(self, user_id: UUID) -> List[Team]:
+        result = await self.session.execute(
+            select(Team)
+            .join(TeamMember, Team.id == TeamMember.team_id)
+            .where(
+                TeamMember.user_id == user_id,
+                Team.is_active == True
+            )
+            .options(selectinload(Team.members).selectinload(TeamMember.user))
+            .distinct()
+        )
+        return result.scalars().all()
+
+
+    async def get_team_members(self, team_id: UUID) -> List[TeamMember]:
+        result = await self.session.execute(
+            select(TeamMember)
+            .where(TeamMember.team_id == team_id)
+            .options(selectinload(TeamMember.user))  
+        )
+        return result.scalars().all()

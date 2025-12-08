@@ -26,7 +26,7 @@ class UserResponse(UserBase):
 
 
 class TelegramAuthRequest(BaseModel):
-    init_data: str  # initData string from Telegram Web App
+    init_data: str
 
 
 class TelegramAuthResponse(BaseModel):
@@ -34,3 +34,13 @@ class TelegramAuthResponse(BaseModel):
     token_type: str = "bearer"
     user: UserResponse
 
+
+class CodeLoginRequest(BaseModel):
+    code: str
+
+
+class CodeLoginResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    user: UserResponse
+    has_anketa: bool = False

@@ -1,0 +1,366 @@
+.container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  background: transparent;
+}
+
+.closeButton {
+  position: fixed;
+  top: 130px; /* 110px (высота хэдера) + 20px отступ */
+  right: 60px; /* Соответствует padding контейнера админ панели */
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: #E7E3D8;
+  font-size: 32px;
+  cursor: pointer;
+  z-index: 1000;
+  transition: opacity 0.2s ease;
+  padding: 0;
+}
+
+.closeButton:hover {
+  opacity: 0.7;
+}
+
+.closeButton:active {
+  opacity: 0.5;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .closeButton {
+    top: 110px; /* 90px (высота хэдера) + 20px отступ */
+    right: 40px;
+  }
+}
+
+@media (max-width: 375px) {
+  .closeButton {
+    top: 100px; /* 80px (высота хэдера) + 20px отступ */
+    right: 20px;
+  }
+}
+
+.contentWrapper {
+  display: flex;
+  gap: 56px;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+/* Левая боковая панель */
+.sidebar {
+  width: 390px;
+  min-width: 390px;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  box-sizing: border-box;
+}
+
+.avatarPlaceholder {
+  width: 390px;
+  height: 294px;
+  background-color: #939090;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.infoFields {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.infoField {
+  display: flex;
+  flex-direction: column;
+}
+
+.infoValue {
+  width: 390px;
+  height: 75px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background-color: rgba(101, 98, 109, 0.5);
+  color: #E7E3D8;
+  font-size: 16px;
+  font-weight: 400;
+  font-family: 'Inter', sans-serif;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+}
+
+/* Основная область контента */
+.mainContent {
+  flex: 1;
+  display: flex;
+  gap: 12px;
+  min-width: 0;
+  box-sizing: border-box;
+  margin-left: 70px;
+}
+
+/* Секции (команды и достижения) */
+.teamsSection,
+.achievementsSection {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.sectionTitle {
+  color: #E7E3D8;
+  font-size: 30px;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.cardsList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Карточки */
+.card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  box-sizing: border-box;
+  width: 429px;
+  height: 144px;
+  overflow: hidden;
+}
+
+/* Обводка карточки */
+.cardBorderTop,
+.cardBorderRight,
+.cardBorderBottom,
+.cardBorderLeft {
+  position: absolute;
+  background: rgba(255, 255, 255, 0.18);
+  z-index: 1;
+}
+
+.cardBorderTop {
+  top: 0;
+  left: 10px;
+  right: 10px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.cardBorderRight {
+  top: 10px;
+  right: 0;
+  bottom: 10px;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.cardBorderBottom {
+  bottom: 0;
+  left: 10px;
+  right: 10px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.cardBorderLeft {
+  top: 10px;
+  left: 0;
+  bottom: 10px;
+  width: 1px;
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.cardIcon {
+  width: 120px;
+  height: 100px;
+  min-width: 120px;
+  background-color: #939090;
+  border-radius: 10px;
+  flex-shrink: 0;
+  margin-top: 20px;
+  margin-left: 20px;
+  margin-bottom: 20px;
+}
+
+.cardContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.cardTitle {
+  color: #E7E3D8;
+  font-size: 20px;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cardDate {
+  color: #A6A6A6;
+  font-size: 14px;
+  font-weight: 400;
+  font-family: 'Inter', sans-serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.emptyMessage {
+  color: #A6A6A6;
+  font-size: 14px;
+  font-weight: 400;
+  font-family: 'Inter', sans-serif;
+  text-align: center;
+  padding: 20px;
+}
+
+/* Адаптивность */
+@media (max-width: 1024px) {
+  .contentWrapper {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    min-width: 100%;
+  }
+
+  .mainContent {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 12px;
+  }
+
+  .closeButton {
+    top: 12px;
+    right: 12px;
+  }
+
+  .contentWrapper {
+    gap: 16px;
+  }
+
+  .sidebar {
+    gap: 16px;
+    width: 100%;
+    min-width: 100%;
+  }
+
+  .avatarPlaceholder {
+    width: 100%;
+    max-width: 390px;
+  }
+
+  .infoValue {
+    width: 100% !important;
+    max-width: 390px;
+  }
+
+  .mainContent {
+    gap: 16px;
+    margin-left: 0;
+  }
+
+  .card {
+    width: 100% !important;
+    max-width: 100%;
+    min-height: 70px;
+    padding: 10px;
+  }
+
+  .cardIcon {
+    width: 50px;
+    height: 50px;
+    min-width: 50px;
+  }
+
+  .sectionTitle {
+    font-size: 24px;
+  }
+
+  .cardTitle {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 12px 8px;
+  }
+
+  .sidebar {
+    gap: 20px;
+  }
+
+  .avatarPlaceholder {
+    height: 200px;
+  }
+
+  .infoValue {
+    height: 60px !important;
+    font-size: 14px;
+  }
+
+  .mainContent {
+    gap: 12px;
+  }
+
+  .sectionTitle {
+    font-size: 20px;
+    margin-bottom: 12px;
+  }
+
+  .card {
+    min-height: 60px;
+    padding: 8px;
+  }
+
+  .cardIcon {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+  }
+
+  .cardTitle {
+    font-size: 14px;
+  }
+}
+

@@ -9,21 +9,12 @@ class AdminLogin(BaseModel):
     password: str
 
 
-class AdminTokenResponse(BaseModel):
-    access_token: str
-    token_type: str = "bearer"
-
-
 class AdminBase(BaseModel):
     email: EmailStr
-    first_name: str
-    last_name: str
-    role: str
-    permissions: str
-
-
-class AdminCreate(AdminBase):
-    password: str
+    first_name: str = ""
+    last_name: str = ""
+    role: str = "admin"
+    permissions: str = "basic"
 
 
 class AdminResponse(AdminBase):
@@ -34,3 +25,20 @@ class AdminResponse(AdminBase):
     class Config:
         from_attributes = True
 
+
+class AdminCreate(BaseModel):
+    email: EmailStr
+    password: str
+    first_name: str = ""
+    last_name: str = ""
+    role: str = "admin"
+    permissions: str = "basic"
+
+
+class AdminTokenResponse(BaseModel):
+    access_token: str
+    token_type: str = "bearer"
+    admin: Optional[AdminResponse] = None
+
+    class Config:
+        from_attributes = True

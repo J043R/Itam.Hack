@@ -1,0 +1,175 @@
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: visible;
+  pointer-events: none;
+  z-index: -1; /* Под всем контентом */
+  min-width: 100%;
+  min-height: 100%;
+  box-sizing: border-box;
+}
+
+.ellipseGroup {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 200%;
+  height: 200%;
+  transform: rotate(-20.25deg);
+  transform-origin: top left;
+  max-width: none;
+}
+
+.ellipseLarge {
+  width: 1200px;
+  height: 950px;
+  background-color: rgba(65, 1, 246, 0.4); /* Фиолетовый */
+  border-radius: 50%;
+  position: absolute;
+  top: -600px;
+  left: -700px;
+  filter: blur(200px);
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.ellipseSmall {
+  width: 600px;
+  height: 550px;
+  background-color: rgba(242, 56, 167, 0.4); /* Розовый - немного меньше */
+  border-radius: 50%;
+  position: absolute;
+  top: -350px; /* Еще чуть ближе к центру */
+  left: -350px; /* Еще чуть ближе к центру */
+  filter: blur(200px);
+  z-index: 1;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .ellipseLarge {
+    width: 900px;
+    height: 720px;
+    top: -550px;
+    left: -650px;
+    background-color: rgba(65, 1, 246, 0.45); /* Фиолетовый */
+    filter: blur(200px);
+  }
+
+  .ellipseSmall {
+    width: 500px;
+    height: 460px;
+    top: -250px; /* Еще чуть ближе к центру */
+    left: -250px; /* Еще чуть ближе к центру */
+    background-color: rgba(242, 56, 167, 0.45); /* Розовый - немного меньше */
+    filter: blur(200px);
+  }
+}
+
+@media (max-width: 375px) {
+  .ellipseLarge {
+    width: 600px;
+    height: 480px;
+    top: -400px;
+    left: -450px;
+    background-color: rgba(65, 1, 246, 0.5); /* Фиолетовый */
+    filter: blur(150px);
+  }
+
+  .ellipseSmall {
+    width: 400px;
+    height: 365px;
+    top: -150px; /* Еще чуть ближе к центру */
+    left: -150px; /* Еще чуть ближе к центру */
+    background-color: rgba(242, 56, 167, 0.4); /* Розовый - немного меньше */
+    filter: blur(150px);
+  }
+}
+
+/* Нижняя группа эллипсов (правый нижний угол) */
+.ellipseGroupBottom {
+  position: absolute;
+  bottom: 0;
+  right: -200px;
+  width: 200%;
+  height: 200%;
+  transform: rotate(1.82deg);
+  transform-origin: bottom right;
+  max-width: none;
+}
+
+.ellipseLargeBottom {
+  width: 1500px;
+  height: 1300px;
+  background-color: rgba(65, 1, 246, 0.5); /* Фиолетовый */
+  border-radius: 50%;
+  position: absolute;
+  bottom: -800px;
+  right: -900px;
+  filter: blur(200px);
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+.ellipseSmallBottom {
+  width: 700px;
+  height: 600px;
+  background-color: rgba(242, 56, 167, 0.6); /* Розовый - увеличил непрозрачность */
+  border-radius: 50%;
+  position: absolute;
+  bottom: -300px; /* Еще ближе к центру */
+  right: -350px; /* Еще ближе к центру */
+  filter: blur(200px);
+  z-index: 1;
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Адаптивность для нижней группы */
+@media (max-width: 768px) {
+  .ellipseLargeBottom {
+    width: 1200px;
+    height: 1050px;
+    bottom: -700px;
+    right: -800px;
+    background-color: rgba(65, 1, 246, 0.55); /* Фиолетовый */
+    filter: blur(200px);
+  }
+
+  .ellipseSmallBottom {
+    width: 550px;
+    height: 480px;
+    bottom: -250px; /* Еще ближе к центру */
+    right: -300px; /* Еще ближе к центру */
+    background-color: rgba(242, 56, 167, 0.7); /* Розовый - увеличил непрозрачность */
+    filter: blur(200px);
+  }
+}
+
+@media (max-width: 375px) {
+  .ellipseLargeBottom {
+    width: 750px;
+    height: 660px;
+    bottom: -500px;
+    right: -550px;
+    background-color: rgba(65, 1, 246, 0.6); /* Фиолетовый */
+    filter: blur(150px);
+  }
+
+  .ellipseSmallBottom {
+    width: 450px;
+    height: 390px;
+    bottom: -150px; /* Еще ближе к центру */
+    right: -200px; /* Еще ближе к центру */
+    background-color: rgba(242, 56, 167, 0.6); /* Розовый - увеличил непрозрачность */
+    filter: blur(150px);
+  }
+}
+

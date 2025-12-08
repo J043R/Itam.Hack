@@ -1,5 +1,4 @@
-version: '3.8'
-
+# docker-compose.yml - Backend + Frontend + PostgreSQL
 services:
   postgres:
     image: postgres:15-alpine
@@ -17,6 +16,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - hackathon-network
 
   backend:
     build: .
@@ -24,6 +25,7 @@ services:
     ports:
       - "${HACKATHON_UVICORN__PORT:-8000}:8000"
     environment:
+      ENVIRONMENT: development
       HACKATHON_PG__HOST: postgres
       HACKATHON_PG__PORT: 5432
       HACKATHON_PG__DATABASE: ${HACKATHON_PG__DATABASE:-hackathon}
@@ -37,6 +39,25 @@ services:
     volumes:
       - .:/app
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    networks:
+      - hackathon-network
+
+  frontend:
+    build:
+      context: ./Itam.Hack-main
+      dockerfile: Dockerfile
+    container_name: hackathon_frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - hackathon-network
+    restart: unless-stopped
+
+networks:
+  hackathon-network:
+    driver: bridge
 
 volumes:
   postgres_data:

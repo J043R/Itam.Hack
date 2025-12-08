@@ -20,23 +20,12 @@ class AuthService:
         self.admin_repo = AdminRepository(db)
 
     async def authenticate_telegram(self, init_data: str) -> dict:
-        """
-        Аутентификация пользователя через Telegram
-        
-        Args:
-            init_data: Строка initData от Telegram Web App
-            
-        Returns:
-            Словарь с access_token и данными пользователя
-        """
-        # Проверяем подпись Telegram
         if not verify_telegram_webapp_data(init_data, settings.telegram.bot_token):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid Telegram signature"
             )
         
-        # Извлекаем данные пользователя
         user_data = extract_user_data(init_data)
         if not user_data:
             raise HTTPException(
@@ -49,21 +38,18 @@ class AuthService:
         first_name = user_data.get("first_name", "")
         last_name = user_data.get("last_name")
         
-        # Получаем фото профиля если есть
         photos = user_data.get("photo_url")
         avatar_url = photos if photos else None
         
-        # Создаем или обновляем пользователя
         user = await self.user_repo.create_or_update_from_telegram(
             telegram_id=telegram_id,
             telegram_username=telegram_username,
-            telegram_hash=init_data,  # Сохраняем хеш для проверки
+            telegram_hash=init_data, 
             first_name=first_name,
             last_name=last_name,
             avatar_url=avatar_url
         )
         
-        # Создаем JWT токен
         access_token = create_access_token(
             data={"sub": str(user.id), "type": "user"}
         )
@@ -75,16 +61,6 @@ class AuthService:
         }
 
     async def authenticate_admin(self, email: str, password: str) -> dict:
-        """
-        Аутентификация администратора
-        
-        Args:
-            email: Email администратора
-            password: Пароль
-            
-        Returns:
-            Словарь с access_token
-        """
         admin = await self.admin_repo.get_by_email(email)
         if not admin or not admin.is_active:
             raise HTTPException(
@@ -104,6 +80,7 @@ class AuthService:
         
         return {
             "access_token": access_token,
-            "token_type": "bearer"
+            "token_type": "bearer",
+            "admin": admin
         }
 

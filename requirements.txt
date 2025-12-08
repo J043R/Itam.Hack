@@ -1,26 +1,23 @@
-# Ядро FastAPI (ОБЯЗАТЕЛЬНО)
+
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
 
-# База данных (ОБЯЗАТЕЛЬНО)
 sqlalchemy==2.0.23
 asyncpg==0.29.0
 psycopg2-binary==2.9.9
 alembic==1.12.1
 
-# Аутентификация (ОБЯЗАТЕЛЬНО для JWT)
 python-jose[cryptography]==3.3.0
 passlib[bcrypt]==1.7.4
-
-# Конфигурация (ОБЯЗАТЕЛЬНО)
 pydantic==2.5.0
 pydantic-settings==2.1.0
 python-dotenv==1.0.0
 email-validator==2.3.0
 
-
-# Логирование (РЕКОМЕНДУЕТСЯ)
 loguru==0.7.2
+httpx>=0.27.0,<0.29.0
 
-# HTTP клиент (ОПЦИОНАЛЬНО, но полезно)
-httpx==0.25.1
+argon2-cffi>=23.1.0
+passlib[argon2]>=1.7.4
+python-jose[cryptography]>=3.3.0
+python-telegram-bot>=20.7

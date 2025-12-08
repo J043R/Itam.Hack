@@ -1,0 +1,65 @@
+.iconsContainer {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.iconButton {
+  background: none;
+  border: none;
+  color: #E7E3D8;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  font-size: 34px;
+  transition: opacity 0.2s;
+  outline: none;
+}
+
+.iconButton:hover {
+  opacity: 0.7;
+}
+
+.iconButton:active {
+  opacity: 0.5;
+}
+
+.iconButton:focus {
+  outline: none;
+  border: none;
+}
+
+.iconButton:focus-visible {
+  outline: none;
+  border: none;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .iconsContainer {
+    gap: 30px;
+  }
+
+  .iconButton {
+    width: 28px;
+    height: 28px;
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 375px) {
+  .iconsContainer {
+    gap: 20px;
+  }
+
+  .iconButton {
+    width: 24px;
+    height: 24px;
+    font-size: 24px;
+  }
+}
+

@@ -1,0 +1,67 @@
+/* Базовые стили карточки */
+.card {
+  border-radius: 12px;
+  background-color: white;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+/* Варианты */
+.default {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.outline {
+  border: 1px solid #e5e7eb;
+  box-shadow: none;
+}
+
+.filled {
+  background-color: #f9fafb;
+  border: 1px solid #f3f4f6;
+  box-shadow: none;
+}
+
+/* Отступы */
+.padding-none {
+  padding: 0;
+}
+
+.padding-sm {
+  padding: 12px;
+}
+
+.padding-md {
+  padding: 20px;
+}
+
+.padding-lg {
+  padding: 32px;
+}
+
+/* Эффекты */
+.hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.clickable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.clickable:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Для мобильных */
+@media (max-width: 640px) {
+  .padding-md {
+    padding: 16px;
+  }
+  
+  .padding-lg {
+    padding: 24px;
+  }
+}

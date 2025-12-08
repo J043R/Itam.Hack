@@ -1,0 +1,198 @@
+.editHackathon {
+  width: 100%;
+  min-height: calc(100vh - 80px);
+  padding: 60px;
+  padding-right: 0;
+  margin-top: -40px;
+  margin-left: -40px; /* Компенсируем padding-left: 40px из main */
+  margin-right: -40px; /* Компенсируем padding-right: 40px из main */
+  box-sizing: border-box;
+}
+
+.title {
+  font-size: 40px;
+  font-weight: 800; /* ExtraBold */
+  color: #E7E3D8;
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  margin-bottom: 16px; /* От заголовка до изображения */
+}
+
+.content {
+  display: flex;
+  gap: 128px; /* Расстояние между изображением и полями ввода */
+  width: 100%;
+  position: relative;
+  align-items: flex-start; /* Выравниваем по верху */
+  margin-top: 0; /* Убираем отступ сверху */
+}
+
+.leftSection {
+  display: flex;
+  flex-direction: column;
+  gap: 50px; /* Расстояние от изображения до кнопки */
+  flex-shrink: 0;
+}
+
+.imagePlaceholder {
+  width: 429px;
+  height: 258px;
+  border-radius: 20px;
+  overflow: hidden;
+  background-color: #939090;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.placeholderBox {
+  width: 100%;
+  height: 100%;
+  background-color: #939090;
+}
+
+.previewImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 20px;
+}
+
+.imageButtonLabel {
+  display: flex;
+  cursor: pointer;
+  width: 429px;
+  align-items: flex-start;
+}
+
+.fileInput {
+  display: none;
+}
+
+.addImageButton {
+  width: 429px !important;
+  height: 80px !important;
+  border-radius: 10px !important;
+  font-size: 24px !important;
+  font-weight: 500 !important; /* Medium */
+  white-space: nowrap !important;
+  margin: 0 !important;
+}
+
+.rightSection {
+  flex: 1 1 auto; /* Растягиваем на всю доступную ширину */
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* Расстояние между полем и следующим названием */
+  align-self: flex-start; /* Выравниваем по верху */
+  margin-top: -10px; /* Поднимаем выше для выравнивания с верхом изображения */
+  min-width: 0; /* Позволяет flex-элементу сжиматься и растягиваться */
+  max-width: none; /* Убираем ограничение максимальной ширины */
+  width: calc(100% + 15px); /* Еще немного уменьшаем ширину */
+  margin-right: -15px; /* Компенсируем уменьшение ширины */
+}
+
+.formField {
+  display: flex;
+  flex-direction: column;
+  gap: 10px; /* Расстояние между названием и соответствующим полем */
+}
+
+.label {
+  font-size: 36px;
+  font-weight: 700; /* Bold */
+  color: #E7E3D8;
+  font-family: 'Inter', sans-serif;
+}
+
+.input {
+  width: 100% !important; /* Растягиваем до правого края с отступом 60px (padding-right createHackathon) */
+  height: 75px !important;
+  border-radius: 10px !important;
+  font-size: 20px !important;
+  font-weight: 400 !important; /* Regular */
+}
+
+.input::placeholder {
+  font-size: 20px !important;
+  font-weight: 400 !important; /* Regular */
+}
+
+.submitButtonContainer {
+  display: flex;
+  justify-content: flex-end; /* Выравниваем по правому краю */
+  margin-top: auto;
+  padding-top: 32px; /* Расстояние от кнопки до поля ввода */
+}
+
+.submitButton {
+  width: 429px !important;
+  height: 80px !important;
+  font-size: 24px !important;
+  font-weight: 500 !important; /* Medium */
+  border-radius: 10px !important;
+  background-color: #3B44FA !important;
+  color: #E7E3D8 !important;
+  transition: background-color 0.2s ease;
+  margin-left: auto !important; /* Сдвигаем кнопку вправо */
+  margin-right: 0 !important; /* Убираем отрицательный margin */
+}
+
+.submitButton:hover {
+  background-color: #2F36AA !important;
+}
+
+/* Адаптивность */
+@media (max-width: 1024px) {
+  .content {
+    flex-direction: column;
+  }
+
+  .imagePlaceholder {
+    width: 100%;
+    max-width: 400px;
+  }
+}
+
+
+.loading {
+  color: #E7E3D8;
+  font-size: 18px;
+  font-family: 'Inter', sans-serif;
+  text-align: center;
+  padding: 40px;
+}
+
+.formRow {
+  display: flex;
+  gap: 20px;
+}
+
+.formRow .formField {
+  flex: 1;
+}
+
+.errorMessage {
+  color: #ff6b6b;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  padding: 10px;
+  background: rgba(255, 107, 107, 0.1);
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.buttonsContainer {
+  display: flex;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.deleteButton {
+  background: rgba(255, 107, 107, 0.2) !important;
+  border: 1px solid #ff6b6b !important;
+}
+
+.deleteButton:hover {
+  background: rgba(255, 107, 107, 0.3) !important;
+}

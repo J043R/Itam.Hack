@@ -1,0 +1,496 @@
+.container {
+  padding-top: 0px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 100px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  margin-top: -10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  position: relative;
+}
+
+.usersList {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+  align-items: center;
+  max-width: 335px;
+}
+
+.userCard {
+  width: 335px;
+  height: 120px;
+  background: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  padding: 0;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  border: none;
+  isolation: isolate;
+  will-change: backdrop-filter;
+  transform: translateZ(0);
+  box-shadow: none;
+  margin: 0;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.userCard:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.userCard:active {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Обводка как у стеклянных кнопок */
+.userCardBorderTop {
+  position: absolute;
+  top: 0;
+  left: 10px;
+  right: 10px;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.18);
+  pointer-events: none;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.userCardBorderRight {
+  position: absolute;
+  top: 10px;
+  right: 0;
+  bottom: 10px;
+  width: 1px;
+  background-color: rgba(255, 255, 255, 0.18);
+  pointer-events: none;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.userCardBorderBottom {
+  position: absolute;
+  bottom: 0;
+  left: 10px;
+  right: 10px;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.18);
+  pointer-events: none;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.userCardBorderLeft {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  bottom: 10px;
+  width: 1px;
+  background-color: rgba(255, 255, 255, 0.18);
+  pointer-events: none;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.imageContainer {
+  flex-shrink: 0;
+  margin-right: 15px;
+  margin-top: 0;
+  margin-bottom: 0;
+  margin-left: 15px;
+  align-self: center; /* Выравниваем по центру вертикально */
+}
+
+.imagePlaceholder {
+  width: 100px;
+  height: 75px;
+  background-color: #939090;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  align-self: center;
+  gap: 5px;
+  min-width: 0;
+  padding-right: 20px;
+  overflow: hidden; /* Скрываем переполнение */
+  max-width: 100%; /* Ограничиваем максимальную ширину */
+}
+
+.name {
+  color: #E7E3D8;
+  font-size: 16px;
+  font-weight: 700; /* Bold */
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  width: 100%;
+  overflow: hidden;
+  white-space: normal;
+  word-break: break-word;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.role {
+  color: #E7E3D8;
+  font-size: 12px;
+  font-weight: 400; /* Regular */
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  width: 100%;
+  overflow: hidden;
+  white-space: normal;
+  word-break: break-word;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.description {
+  color: #E7E3D8;
+  font-size: 14px;
+  font-weight: 400;
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.titleWithFilter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 335px;
+  margin-top: 20px !important;
+}
+
+.participantsTitle {
+  color: #E7E3D8;
+  font-size: 24px;
+  font-weight: 800; /* ExtraBold */
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+  flex: 1;
+}
+
+.filterButton {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.participantsList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 12px;
+  width: 100%;
+  max-width: 335px;
+  margin-top: 18px;
+  align-items: flex-start;
+  justify-content: flex-start;
+  box-sizing: border-box;
+}
+
+.participantCard {
+  flex: 1 1 150px;
+  min-width: 150px;
+  max-width: none;
+  width: auto;
+  height: 166px;
+  background: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 0 0 0;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  border: none;
+  isolation: isolate;
+  will-change: backdrop-filter;
+  transform: translateZ(0);
+  box-shadow: none;
+  margin: 0 !important;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  gap: 12px;
+}
+
+.participantCard:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.participantCard:active {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Обводка как у стеклянных кнопок */
+.participantCardBorderTop {
+  position: absolute;
+  top: 0;
+  left: 10px;
+  right: 10px;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.18);
+  pointer-events: none;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.participantCardBorderRight {
+  position: absolute;
+  top: 10px;
+  right: 0;
+  bottom: 10px;
+  width: 1px;
+  background-color: rgba(255, 255, 255, 0.18);
+  pointer-events: none;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.participantCardBorderBottom {
+  position: absolute;
+  bottom: 0;
+  left: 10px;
+  right: 10px;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.18);
+  pointer-events: none;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.participantCardBorderLeft {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  bottom: 10px;
+  width: 1px;
+  background-color: rgba(255, 255, 255, 0.18);
+  pointer-events: none;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.participantAvatar {
+  width: 75px;
+  height: 75px;
+  border-radius: 50%;
+  background-color: #939090;
+  flex-shrink: 0;
+  margin-top: 0;
+}
+
+.participantNameContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  padding: 0 20px;
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0; /* Позволяет сжиматься */
+}
+
+.participantFirstName {
+  color: #E7E3D8;
+  font-size: 14px;
+  font-weight: 500; /* Medium */
+  font-family: 'Inter', sans-serif;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.participantLastName {
+  color: #E7E3D8;
+  font-size: 14px;
+  font-weight: 500; /* Medium */
+  font-family: 'Inter', sans-serif;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  margin-top: 2px;
+}
+
+.participantRole {
+  color: #E7E3D8;
+  font-size: 14px;
+  font-weight: 500; /* Medium */
+  font-family: 'Inter', sans-serif;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  margin-top: 2px;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .container {
+    padding-top: 0px;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-top: -10px;
+    align-items: flex-start;
+  }
+  
+  .usersList {
+    align-items: flex-start;
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .userCard {
+    width: 100%;
+    max-width: 100%;
+    height: 120px;
+  }
+
+  .titleWithFilter {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .participantsList {
+    gap: 8px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    justify-content: flex-start !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+  }
+
+  .participantsList > * {
+    flex: 0 0 calc((100% - 8px) / 2) !important;
+    width: calc((100% - 8px) / 2) !important;
+    min-width: 0 !important;
+    max-width: calc((100% - 8px) / 2) !important;
+    box-sizing: border-box !important;
+    flex-shrink: 0 !important;
+    flex-grow: 0 !important;
+  }
+
+  .participantCard {
+    flex: 0 0 calc((100% - 8px) / 2) !important;
+    width: calc((100% - 8px) / 2) !important;
+    min-width: 0 !important;
+    max-width: calc((100% - 8px) / 2) !important;
+    box-sizing: border-box !important;
+    flex-shrink: 0 !important;
+    flex-grow: 0 !important;
+  }
+}
+
+@media (max-width: 375px) {
+  .container {
+    padding-top: 0px;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-top: -10px;
+    align-items: flex-start;
+  }
+  
+  .usersList {
+    align-items: flex-start;
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .userCard {
+    width: 100%;
+    max-width: 100%;
+    height: 120px;
+  }
+
+  .titleWithFilter {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .participantsList {
+    gap: 8px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    flex-direction: row !important;
+    box-sizing: border-box !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+  }
+
+  .participantsList > * {
+    flex: 0 0 calc((100% - 8px) / 2) !important;
+    width: calc((100% - 8px) / 2) !important;
+    min-width: 0 !important;
+    max-width: calc((100% - 8px) / 2) !important;
+    box-sizing: border-box !important;
+    flex-shrink: 0 !important;
+    flex-grow: 0 !important;
+    margin: 0 !important;
+  }
+
+  .participantCard {
+    flex: 0 0 calc((100% - 8px) / 2) !important;
+    width: calc((100% - 8px) / 2) !important;
+    min-width: 0 !important;
+    max-width: calc((100% - 8px) / 2) !important;
+    box-sizing: border-box !important;
+    flex-shrink: 0 !important;
+    flex-grow: 0 !important;
+    margin: 0 !important;
+  }
+}
+

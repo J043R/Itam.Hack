@@ -1,0 +1,116 @@
+.formModal {
+  width: 335px !important;
+  max-width: 335px !important;
+  min-width: 335px !important;
+}
+
+/* Увеличиваем z-index для overlay анкеты, чтобы она была поверх Login */
+:global(.formModal) :global(.overlay),
+.formModal :global(.overlay) {
+  z-index: 10001 !important; /* Выше, чем Login (10000) */
+}
+
+.modalContainer {
+  position: relative;
+  width: 100%;
+  padding: 40px 20px 30px 20px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 800; /* ExtraBold */
+  color: #E7E3D8;
+  margin: 0;
+  margin-bottom: 24px;
+  text-align: left;
+  font-family: 'Inter', sans-serif;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+}
+
+.formField {
+  width: 100%;
+}
+
+.formField label {
+  color: #E7E3D8 !important;
+  font-size: 18px !important;
+  font-weight: 600 !important; /* Semibold */
+  margin-bottom: 8px !important;
+  display: block !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+.input {
+  width: 100% !important;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.submitButton {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  box-sizing: border-box !important;
+  background-color: #3B44FA !important;
+  color: #FFFFFF !important;
+  border-radius: 10px !important;
+}
+
+.submitButton:hover:not(:disabled) {
+  background-color: #3B44FA !important;
+  opacity: 0.9;
+}
+
+.submitButton:active:not(:disabled) {
+  background-color: #3B44FA !important;
+  opacity: 0.8;
+}
+
+/* Адаптивность для мобильных устройств */
+@media (max-width: 768px) {
+  .container {
+    padding: 20px;
+  }
+
+  .title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  .form {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 375px) {
+  .container {
+    padding: 16px;
+  }
+
+  .title {
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+
+  .form {
+    gap: 16px;
+  }
+}
+

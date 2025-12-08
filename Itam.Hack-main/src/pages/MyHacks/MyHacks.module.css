@@ -1,0 +1,324 @@
+.container {
+  padding-top: 0px;
+  padding-left: 5px;
+  padding-right: 0px;
+  margin-right: -5px;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.contentWrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Выравниваем заголовок по левому краю */
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 800; /* ExtraBold */
+  color: #E7E3D8;
+  margin: 0;
+  padding-left: 0;
+  text-align: left;
+  font-family: 'Inter', sans-serif;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.hackathonsList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-start; /* Карточки начинаются с левого края, как заголовок */
+  gap: 12px !important; /* Расстояние между карточками */
+  margin-top: 20px; /* Отступ от заголовка */
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.hackathonCard {
+  width: 325px; /* Фиксированная ширина карточки */
+  height: 120px; /* Высота карточки */
+  background: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border-radius: 10px;
+  display: flex;
+  align-items: center !important; /* Выравнивание по центру вертикально */
+  justify-content: flex-start;
+  padding: 0;
+  box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
+  border: none;
+  isolation: isolate;
+  will-change: backdrop-filter;
+  transform: translateZ(0);
+  box-shadow: none;
+  margin: 0;
+  margin-right: -5px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.hackathonCard:hover {
+  background: rgba(255, 255, 255, 0.07) !important;
+}
+
+/* Обводка как у стеклянных кнопок */
+.hackathonCardBorderTop {
+  position: absolute;
+  top: 0;
+  left: 10px;
+  right: 10px;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.18);
+  pointer-events: none;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.hackathonCardBorderRight {
+  position: absolute;
+  top: 10px;
+  right: 0;
+  bottom: 10px;
+  width: 1px;
+  background-color: rgba(255, 255, 255, 0.18);
+  pointer-events: none;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.hackathonCardBorderBottom {
+  position: absolute;
+  bottom: 0;
+  left: 10px;
+  right: 10px;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.18);
+  pointer-events: none;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.hackathonCardBorderLeft {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  bottom: 10px;
+  width: 1px;
+  background-color: rgba(255, 255, 255, 0.18);
+  pointer-events: none;
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+.imageContainer {
+  width: 120px;
+  height: 120px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+  margin-left: 15px;
+  margin-top: 0;
+  margin-bottom: 0;
+  align-self: center;
+  position: relative;
+}
+
+.imagePlaceholder {
+  width: 100px;
+  height: 75px;
+  background-color: #939090;
+  border-radius: 10px;
+  flex-shrink: 0;
+  position: absolute;
+}
+
+.hackathonImage {
+  width: 100px;
+  height: 75px;
+  object-fit: cover;
+  border-radius: 10px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding-right: 20px;
+  align-self: center;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden; /* Скрываем переполнение */
+  max-width: 100%; /* Ограничиваем максимальную ширину */
+}
+
+.name {
+  font-size: 16px;
+  font-weight: 700; /* Bold */
+  color: #E7E3D8;
+  margin: 0;
+  margin-bottom: 4px;
+  text-align: left;
+  font-family: 'Inter', sans-serif;
+  width: 100%;
+  white-space: normal;
+  overflow: hidden;
+  word-break: break-word;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.date {
+  font-size: 12px;
+  font-weight: 400; /* Regular */
+  color: #E7E3D8;
+  margin: 0;
+  text-align: left;
+  font-family: 'Inter', sans-serif;
+  width: 100%;
+  white-space: normal;
+  overflow: hidden;
+  word-break: break-word;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .container {
+    padding-top: 0px;
+    padding-left: 5px;
+    padding-right: 0px;
+    margin-right: -5px;
+  }
+
+  .title {
+    font-size: 22px;
+  }
+
+  .hackathonsList {
+    gap: 12px !important;
+  }
+}
+
+@media (max-width: 375px) {
+  .container {
+    padding-top: 0px;
+    padding-left: 5px;
+    padding-right: 0px;
+    margin-right: -5px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .hackathonsList {
+    gap: 12px !important;
+  }
+
+  .hackathonCard {
+    width: 100%;
+    max-width: 335px;
+  }
+
+  .editButtonContainer {
+    width: 100%;
+    max-width: 335px;
+    margin-right: 0;
+  }
+}
+
+/* Контейнер для кнопки редактировать */
+.editButtonContainer {
+  width: 325px;
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 40px;
+  margin-right: -5px;
+}
+
+/* Кнопка редактировать */
+.editButton {
+  width: 154px;
+  height: 35px;
+  border-radius: 10px;
+  background-color: #3B44FA;
+  border: none;
+  outline: none;
+  color: #FFFFFF;
+  font-size: 16px;
+  font-weight: 500; /* Medium */
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  margin: 0;
+  transition: opacity 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.editButton:focus {
+  outline: none;
+  border: none;
+}
+
+.editButton:focus-visible {
+  outline: none;
+  border: none;
+}
+
+.editButton:hover {
+  opacity: 0.9;
+}
+
+/* Кнопка удаления (иконка корзины) */
+.deleteButton {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+  background-color: transparent;
+  border: none;
+  color: #E7E3D8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 20;
+  transition: all 0.2s ease;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.deleteButton:hover {
+  color: #E7E3D8;
+  opacity: 0.8;
+  transform: scale(1.1);
+}
+
+.deleteButton:active {
+  color: #E7E3D8;
+  opacity: 0.6;
+  transform: scale(0.95);
+}
+
+.deleteButton svg {
+  width: 16px;
+  height: 16px;
+}
