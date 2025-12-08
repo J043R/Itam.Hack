@@ -59,12 +59,12 @@
 /* Адаптивность для мобильных устройств */
 @media (max-width: 768px) {
   .header {
-    height: 70px;
-    padding-bottom: 15px;
+    height: 52px;
+    padding-bottom: 10px;
   }
 
   .logo {
-    font-size: 18px;
+    font-size: 16px;
   }
 
   .container {
@@ -74,12 +74,12 @@
 
 @media (max-width: 375px) {
   .header {
-    height: 60px;
-    padding-bottom: 15px;
+    height: 45px;
+    padding-bottom: 8px;
   }
 
   .logo {
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .container {

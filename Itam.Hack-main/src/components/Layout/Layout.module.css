@@ -28,7 +28,7 @@
 @media (max-width: 768px) {
   .main {
     padding: 20px;
-    padding-top: 100px;
+    padding-top: 72px;
     padding-bottom: 70px;
   }
 }
@@ -36,7 +36,7 @@
 @media (max-width: 375px) {
   .main {
     padding: 16px;
-    padding-top: 90px;
+    padding-top: 60px;
     padding-bottom: 70px;
   }
 }
