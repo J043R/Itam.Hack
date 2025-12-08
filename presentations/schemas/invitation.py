@@ -25,6 +25,19 @@ class InvitationResponse(InvitationBase):
         from_attributes = True
 
 
+class InvitationWithDetailsResponse(BaseModel):
+    id: UUID
+    type: str
+    status: str
+    created_at: datetime
+    fromUser: dict
+    team: dict
+    hackathon: dict
+
+    class Config:
+        from_attributes = True
+
+
 class InvitationUpdate(BaseModel):
     status: str 
 

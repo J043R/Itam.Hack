@@ -344,82 +344,232 @@
   padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  min-width: 300px;
-  max-width: 400px;
+  gap: 14px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .createTeamModalTitle {
-  margin: 0;
-  font-size: 20px;
-  font-weight: 700;
-  color: #E7E3D8;
+  margin: 0 0 8px 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: #fff;
   font-family: 'Inter', sans-serif;
-}
-
-.createTeamTextarea {
-  width: 100%;
-  min-height: 100px;
-  padding: 12px;
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  color: #E7E3D8;
-  font-size: 14px;
-  font-family: 'Inter', sans-serif;
-  resize: vertical;
-  outline: none;
-  box-sizing: border-box;
-}
-
-.createTeamSelect {
-  width: 100%;
-  padding: 12px;
-  background-color: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-  color: #E7E3D8;
-  font-size: 14px;
-  font-family: 'Inter', sans-serif;
-  outline: none;
-  box-sizing: border-box;
-  cursor: pointer;
-}
-
-.createTeamSelect option {
-  background-color: #1a1a1a;
-  color: #E7E3D8;
-}
-
-.createTeamFormLabel {
-  font-size: 14px;
-  font-weight: 500;
-  color: #E7E3D8;
-  font-family: 'Inter', sans-serif;
+  text-align: center;
+  letter-spacing: -0.3px;
 }
 
 .createTeamFormGroup {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
+}
+
+.createTeamFormLabel {
+  font-size: 13px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Inter', sans-serif;
+  margin-left: 2px;
+}
+
+.createTeamTextarea {
+  width: 100%;
+  min-height: 80px;
+  max-height: 120px;
+  padding: 12px 14px;
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  color: #fff;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  resize: none;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.createTeamTextarea:focus {
+  border-color: rgba(99, 102, 241, 0.6);
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.createTeamTextarea::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.createTeamSelect {
+  width: 100%;
+  padding: 12px 14px;
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  color: #fff;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' fill-opacity='0.5' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  padding-right: 36px;
+}
+
+.createTeamSelect:focus {
+  border-color: rgba(99, 102, 241, 0.6);
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.createTeamSelect option {
+  background-color: #1e1e23;
+  color: #fff;
+  padding: 8px;
 }
 
 .createTeamButtonsContainer {
   display: flex;
   gap: 12px;
-  margin-top: 10px;
+  margin-top: 8px;
+  width: 100%;
+  margin-left: -10px;
 }
 
 .createTeamButtonWrapper {
   flex: 1;
+  min-width: 0;
+}
+
+.createTeamButtonWrapper button,
+.createTeamButtonWrapper > div {
+  width: 100% !important;
+  min-width: 0 !important;
+  height: 40px !important;
+  padding: 0 12px !important;
+  border-radius: 10px !important;
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Кнопка Создать - синяя */
+.createTeamButtonWrapper:last-child button {
+  background: #4F46E5 !important;
+  background-color: #4F46E5 !important;
+  border: none !important;
+  color: #fff !important;
+}
+
+.createTeamButtonWrapper:last-child button:hover {
+  background: #4338CA !important;
+  background-color: #4338CA !important;
+}
+
+.createTeamButtonWrapper:last-child button:disabled {
+  background: rgba(79, 70, 229, 0.5) !important;
+  background-color: rgba(79, 70, 229, 0.5) !important;
+  cursor: not-allowed !important;
 }
 
 .createTeamError {
-  padding: 8px 12px;
-  background-color: rgba(255, 0, 0, 0.1);
-  border: 1px solid rgba(255, 0, 0, 0.3);
-  border-radius: 6px;
-  color: #ff6b6b;
-  font-size: 12px;
+  padding: 10px 14px;
+  background-color: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: 10px;
+  color: #f87171;
+  font-size: 13px;
+  text-align: center;
+}
+
+/* Стили для инпутов внутри модалки */
+.createTeamModal input {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  border-radius: 12px !important;
+  color: #fff !important;
+  font-size: 14px !important;
+  padding: 12px 14px !important;
+  transition: border-color 0.2s ease, background-color 0.2s ease !important;
+}
+
+.createTeamModal input:focus {
+  border-color: rgba(99, 102, 241, 0.6) !important;
+  background-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+.createTeamModal input::placeholder {
+  color: rgba(255, 255, 255, 0.35) !important;
+}
+
+/* Инпут для формы */
+.createTeamInput {
+  width: 100%;
+  padding: 12px 14px;
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  color: #fff;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.createTeamInput:focus {
+  border-color: rgba(99, 102, 241, 0.6);
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.createTeamInput::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* Ряд с двумя полями */
+.createTeamRow {
+  display: flex;
+  gap: 12px;
+}
+
+.createTeamRow .createTeamFormGroup {
+  flex: 1;
+  min-width: 0;
+}
+
+.createTeamRow .createTeamInput,
+.createTeamRow .createTeamSelect {
+  width: 100%;
+}
+
+/* Адаптивность модалки для мобилки */
+@media (max-width: 400px) {
+  .createTeamModal {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .createTeamModalTitle {
+    font-size: 20px;
+    margin-bottom: 4px;
+  }
+
+  .createTeamTextarea {
+    min-height: 70px;
+  }
+
+  .createTeamRow {
+    gap: 8px;
+  }
+
+  .createTeamButtonsContainer {
+    gap: 8px;
+    margin-top: 4px;
+  }
 }
 

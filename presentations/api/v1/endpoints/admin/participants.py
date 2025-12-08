@@ -359,60 +359,6 @@ class TeamWithRegistrationDate(BaseModel):
         from_attributes = True
 
 
-@router.get("/{user_id}", response_model=ProfileResponse)
-async def get_participant_profile(
-    user_id: UUID,
-    current_admin: Administrator = Depends(get_current_admin),
-    db: AsyncSession = Depends(get_db)
-):
-    """
-    Получить профиль участника по ID (для админов).
-    """
-    user_repo = UserRepository(db)
-    anketa_repo = AnketaRepository(db)
-    
-    # Получаем пользователя
-    user = await user_repo.get_by_id(user_id)
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail="Пользователь не найден"
-        )
-    
-    # Получаем анкету пользователя
-    anketa = await anketa_repo.get_by_user_id(user_id)
-    
-    # Получаем достижения пользователя
-    result = await db.execute(
-        select(UserAchievement)
-        .where(UserAchievement.user_id == user_id)
-        .options(selectinload(UserAchievement.hackathon))
-    )
-    achievements = result.scalars().all()
-    
-    # Формируем список достижений
-    achievements_list = []
-    for achievement in achievements:
-        achievements_list.append(AchievementResponse(
-            hackathon_id=achievement.hackathon_id,
-            hackathon_name=achievement.hackathon.name,
-            result=achievement.result,
-            role=achievement.role,
-            date=achievement.hackathon.date_end
-        ))
-    
-    return ProfileResponse(
-        user_id=user.id,
-        first_name=user.first_name,
-        last_name=user.last_name,
-        avatar_url=user.avatar_url,
-        role=anketa.role if anketa else None,
-        university=anketa.university if anketa else None,
-        bio=anketa.bio if anketa else None,
-        achievements=achievements_list
-    )
-
-
 @router.get("/{user_id}/achievements", response_model=List[AchievementResponse])
 async def get_participant_achievements(
     user_id: UUID,
@@ -497,3 +443,57 @@ async def get_participant_teams(
             ))
     
     return teams_list
+
+
+@router.get("/{user_id}", response_model=ProfileResponse)
+async def get_participant_profile(
+    user_id: UUID,
+    current_admin: Administrator = Depends(get_current_admin),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Получить профиль участника по ID (для админов).
+    """
+    user_repo = UserRepository(db)
+    anketa_repo = AnketaRepository(db)
+    
+    # Получаем пользователя
+    user = await user_repo.get_by_id(user_id)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Пользователь не найден"
+        )
+    
+    # Получаем анкету пользователя
+    anketa = await anketa_repo.get_by_user_id(user_id)
+    
+    # Получаем достижения пользователя
+    result = await db.execute(
+        select(UserAchievement)
+        .where(UserAchievement.user_id == user_id)
+        .options(selectinload(UserAchievement.hackathon))
+    )
+    achievements = result.scalars().all()
+    
+    # Формируем список достижений
+    achievements_list = []
+    for achievement in achievements:
+        achievements_list.append(AchievementResponse(
+            hackathon_id=achievement.hackathon_id,
+            hackathon_name=achievement.hackathon.name,
+            result=achievement.result,
+            role=achievement.role,
+            date=achievement.hackathon.date_end
+        ))
+    
+    return ProfileResponse(
+        user_id=user.id,
+        first_name=user.first_name,
+        last_name=user.last_name,
+        avatar_url=user.avatar_url,
+        role=anketa.role if anketa else None,
+        university=anketa.university if anketa else None,
+        bio=anketa.bio if anketa else None,
+        achievements=achievements_list
+    )

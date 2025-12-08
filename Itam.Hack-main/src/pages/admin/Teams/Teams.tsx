@@ -88,11 +88,7 @@ export const Teams = () => {
                 <div className={styles.registrationDateDetail}>
                   {getRegistrationDate(selectedTeam)}
                 </div>
-                {selectedTeam.hackathonName && (
-                  <div className={styles.hackathonName}>
-                    🏆 {selectedTeam.hackathonName}
-                  </div>
-                )}
+
               </div>
             </div>
 

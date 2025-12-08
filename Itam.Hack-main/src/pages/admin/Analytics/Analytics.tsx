@@ -35,9 +35,36 @@ interface AnalyticsResponse {
   team_compositions: TeamComposition[];
 }
 
+const MONTH_NAMES = [
+  'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
+  'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'
+];
+
+// Генерируем список месяцев с годами (последние 12 месяцев + текущий)
+const generateMonthYearOptions = () => {
+  const options: { id: string; name: string }[] = [];
+  const now = new Date();
+  
+  for (let i = 0; i < 12; i++) {
+    const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const monthName = MONTH_NAMES[date.getMonth()];
+    const year = date.getFullYear();
+    options.push({
+      id: `${date.getMonth() + 1}-${year}`,
+      name: `${monthName} ${year}`
+    });
+  }
+  
+  return options;
+};
+
+const MONTH_YEAR_OPTIONS = generateMonthYearOptions();
+
 export const Analytics = () => {
   const [hackathons, setHackathons] = useState<Hackathon[]>([]);
-  const [selectedHackathon, setSelectedHackathon] = useState<Hackathon | null>(null);
+  const [selectedMonth, setSelectedMonth] = useState<{ id: string; name: string }>(
+    MONTH_YEAR_OPTIONS[0]
+  );
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [analyticsData, setAnalyticsData] = useState<AnalyticsResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -52,7 +79,6 @@ export const Analytics = () => {
         const response = await getHackathons();
         if (response.success && response.data.length > 0) {
           setHackathons(response.data);
-          setSelectedHackathon(response.data[0]);
         }
       } catch (err) {
         console.error('Ошибка загрузки хакатонов:', err);
@@ -64,14 +90,35 @@ export const Analytics = () => {
   }, []);
 
 
-  // Загружаем аналитику при выборе хакатона
+  // Загружаем аналитику при выборе месяца
   useEffect(() => {
     const loadAnalytics = async () => {
-      if (!selectedHackathon) return;
+      if (hackathons.length === 0) return;
+      
+      // Парсим выбранный месяц и год
+      const [monthStr, yearStr] = selectedMonth.id.split('-');
+      const selectedMonthNum = parseInt(monthStr, 10);
+      const selectedYear = parseInt(yearStr, 10);
+      
+      // Фильтруем хакатоны по выбранному месяцу
+      const filteredHackathons = hackathons.filter(h => {
+        if (!h.date_starts) return false;
+        const hackathonDate = new Date(h.date_starts);
+        return hackathonDate.getMonth() + 1 === selectedMonthNum && 
+               hackathonDate.getFullYear() === selectedYear;
+      });
+      
+      if (filteredHackathons.length === 0) {
+        setAnalyticsData(null);
+        return;
+      }
+      
+      // Берём первый хакатон из отфильтрованных
+      const hackathon = filteredHackathons[0];
       
       try {
         setLoadingAnalytics(true);
-        const response = await getHackathonAnalytics(selectedHackathon.id);
+        const response = await getHackathonAnalytics(hackathon.id);
         if (response.success) {
           setAnalyticsData(response.data);
         } else {
@@ -87,7 +134,7 @@ export const Analytics = () => {
     };
 
     loadAnalytics();
-  }, [selectedHackathon]);
+  }, [hackathons, selectedMonth]);
 
   // Закрытие dropdown при клике вне его
   useEffect(() => {
@@ -106,8 +153,8 @@ export const Analytics = () => {
     };
   }, [isDropdownOpen]);
 
-  const handleHackathonSelect = (hackathon: Hackathon) => {
-    setSelectedHackathon(hackathon);
+  const handleMonthSelect = (month: { id: string; name: string }) => {
+    setSelectedMonth(month);
     setIsDropdownOpen(false);
   };
 
@@ -139,7 +186,7 @@ export const Analytics = () => {
       <div className={styles.mainContent}>
         <h1 className={styles.title}>Аналитика</h1>
         
-        {/* Селектор хакатона */}
+        {/* Селектор месяца */}
         <div className={styles.dateSelectorContainer} ref={dropdownRef}>
           <button
             type="button"
@@ -147,19 +194,19 @@ export const Analytics = () => {
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
           >
             <IoChevronDown className={`${styles.chevronIcon} ${isDropdownOpen ? styles.chevronIconOpen : ''}`} />
-            <span className={styles.dateText}>{selectedHackathon?.name || 'Выберите хакатон'}</span>
+            <span className={styles.dateText}>{selectedMonth.name}</span>
           </button>
           
           {isDropdownOpen && (
             <div className={styles.dateDropdown}>
-              {hackathons.map((hackathon) => (
+              {MONTH_YEAR_OPTIONS.map((month) => (
                 <button
-                  key={hackathon.id}
+                  key={month.id}
                   type="button"
-                  className={`${styles.dateOption} ${selectedHackathon?.id === hackathon.id ? styles.dateOptionActive : ''}`}
-                  onClick={() => handleHackathonSelect(hackathon)}
+                  className={`${styles.dateOption} ${selectedMonth.id === month.id ? styles.dateOptionActive : ''}`}
+                  onClick={() => handleMonthSelect(month)}
                 >
-                  {hackathon.name}
+                  {month.name}
                 </button>
               ))}
             </div>

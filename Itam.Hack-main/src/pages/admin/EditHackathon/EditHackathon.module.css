@@ -99,7 +99,7 @@
 }
 
 .label {
-  font-size: 36px;
+  font-size: 32px;
   font-weight: 700; /* Bold */
   color: #E7E3D8;
   font-family: 'Inter', sans-serif;
@@ -120,26 +120,9 @@
 
 .submitButtonContainer {
   display: flex;
-  justify-content: flex-end; /* Выравниваем по правому краю */
+  justify-content: flex-end;
   margin-top: auto;
-  padding-top: 32px; /* Расстояние от кнопки до поля ввода */
-}
-
-.submitButton {
-  width: 429px !important;
-  height: 80px !important;
-  font-size: 24px !important;
-  font-weight: 500 !important; /* Medium */
-  border-radius: 10px !important;
-  background-color: #3B44FA !important;
-  color: #E7E3D8 !important;
-  transition: background-color 0.2s ease;
-  margin-left: auto !important; /* Сдвигаем кнопку вправо */
-  margin-right: 0 !important; /* Убираем отрицательный margin */
-}
-
-.submitButton:hover {
-  background-color: #2F36AA !important;
+  padding-top: 32px;
 }
 
 /* Адаптивность */
@@ -184,15 +167,79 @@
 
 .buttonsContainer {
   display: flex;
-  gap: 16px;
-  margin-top: 20px;
+  gap: 5px;
+  justify-content: flex-end;
+  width: calc(50% - 10px);
+}
+
+.submitButton {
+  flex: 1 !important;
+  margin-left: -1px !important;
+  height: 50px !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  border-radius: 10px !important;
+  background-color: #3B44FA !important;
+  color: #E7E3D8 !important;
+  transition: background-color 0.2s ease;
+}
+
+.submitButton:hover {
+  background-color: #2F36AA !important;
 }
 
 .deleteButton {
-  background: rgba(255, 107, 107, 0.2) !important;
-  border: 1px solid #ff6b6b !important;
+  flex: 1 !important;
+  margin-right: -4px !important;
+  height: 50px !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  border-radius: 10px !important;
+  background: #6B6B6B !important;
+  border: none !important;
+  color: #E7E3D8 !important;
 }
 
 .deleteButton:hover {
-  background: rgba(255, 107, 107, 0.3) !important;
+  background: #5A5A5A !important;
+}
+
+
+.buttonsRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+  width: 100%;
+}
+
+.finishButton {
+  width: calc(50% - 14px) !important;
+  height: 50px !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  border-radius: 10px !important;
+  background-color: #3B44FA !important;
+  color: #E7E3D8 !important;
+  transition: background-color 0.2s ease;
+  margin-left: 1px !important;
+}
+
+.finishButton:hover {
+  background-color: #2F36AA !important;
+}
+
+.finishButton:disabled {
+  background-color: #6c757d !important;
+  cursor: not-allowed;
+}
+
+.successMessage {
+  color: #28a745;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  padding: 10px;
+  background: rgba(40, 167, 69, 0.1);
+  border-radius: 8px;
+  margin-top: 10px;
 }

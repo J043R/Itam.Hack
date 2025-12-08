@@ -105,6 +105,7 @@ async def create_admin(
         last_name=admin_data.last_name,
         role=admin_data.role,
         permissions=admin_data.permissions,
+        company=admin_data.company,
         is_active=True,
         created_at=datetime.utcnow(),
         updated_at=datetime.utcnow()

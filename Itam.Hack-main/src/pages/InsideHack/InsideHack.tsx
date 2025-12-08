@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ButtonSimple } from '../../components/ui/Button/button';
 import { Modal } from '../../components/ui/Modal/Modal';
-import { Input } from '../../components/ui/Input/input';
 import { getHackathonById, registerForHackathon, createTeam, getMyTeam } from '../../api/api';
 import type { Hackathon } from '../../api/types';
 import { formatDateToRussian } from '../../utils/dateFormat';
@@ -292,53 +291,55 @@ export const InsideHack = () => {
       >
         <div className={styles.createTeamModal}>
           <h2 className={styles.createTeamModalTitle}>
-            Создать команду
+            Новая команда
           </h2>
 
-          <Input
-            label="Название команды"
-            placeholder="Введите название команды"
-            value={teamFormData.name}
-            onChange={(e) => setTeamFormData({ ...teamFormData, name: e.target.value })}
-            variant="form"
-            required
-          />
+          <div className={styles.createTeamFormGroup}>
+            <label className={styles.createTeamFormLabel}>Название</label>
+            <input
+              type="text"
+              placeholder="Введите название"
+              value={teamFormData.name}
+              onChange={(e) => setTeamFormData({ ...teamFormData, name: e.target.value })}
+              className={styles.createTeamInput}
+            />
+          </div>
 
           <div className={styles.createTeamFormGroup}>
-            <label className={styles.createTeamFormLabel}>
-              Описание
-            </label>
+            <label className={styles.createTeamFormLabel}>Описание</label>
             <textarea
-              placeholder="Введите описание команды"
+              placeholder="Расскажите о команде"
               value={teamFormData.description}
               onChange={(e) => setTeamFormData({ ...teamFormData, description: e.target.value })}
               className={styles.createTeamTextarea}
             />
           </div>
 
-          <Input
-            label="Максимальный размер команды"
-            type="number"
-            placeholder="Введите максимальное количество участников"
-            value={teamFormData.maxSize}
-            onChange={(e) => setTeamFormData({ ...teamFormData, maxSize: e.target.value })}
-            variant="form"
-            min="1"
-          />
+          <div className={styles.createTeamRow}>
+            <div className={styles.createTeamFormGroup}>
+              <label className={styles.createTeamFormLabel}>Размер</label>
+              <input
+                type="number"
+                placeholder="Макс."
+                value={teamFormData.maxSize}
+                onChange={(e) => setTeamFormData({ ...teamFormData, maxSize: e.target.value })}
+                className={styles.createTeamInput}
+                min="1"
+                max="20"
+              />
+            </div>
 
-          <div className={styles.createTeamFormGroup}>
-            <label className={styles.createTeamFormLabel}>
-              Статус
-            </label>
-            <select
-              value={teamFormData.status}
-              onChange={(e) => setTeamFormData({ ...teamFormData, status: e.target.value })}
-              className={styles.createTeamSelect}
-            >
-              <option value="open">Открыта</option>
-              <option value="closed">Закрыта</option>
-              <option value="full">Заполнена</option>
-            </select>
+            <div className={styles.createTeamFormGroup}>
+              <label className={styles.createTeamFormLabel}>Статус</label>
+              <select
+                value={teamFormData.status}
+                onChange={(e) => setTeamFormData({ ...teamFormData, status: e.target.value })}
+                className={styles.createTeamSelect}
+              >
+                <option value="open">Открыта</option>
+                <option value="closed">Закрыта</option>
+              </select>
+            </div>
           </div>
 
           {createTeamError && (

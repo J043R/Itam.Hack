@@ -1,22 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useSearchParams, useNavigate, useLocation } from 'react-router-dom';
+import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { GoTrash } from 'react-icons/go';
 import { Input } from '../../components/ui/Input/input';
-import { getHackathonById, getMyTeam, leaveTeam } from '../../api/api';
+import { getHackathonById, getMyTeam, leaveTeam, removeMemberFromTeam } from '../../api/api';
 import type { Hackathon, Team } from '../../api/types';
 import { formatDateToRussian } from '../../utils/dateFormat';
 import styles from './MyTeam.module.css';
 
 export const MyTeam = () => {
   const { id } = useParams<{ id: string }>();
-  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const location = useLocation();
   
-  // Получаем роль из query параметров
-  const role = searchParams.get('role') || 'member'; // По умолчанию участник
-  
-  const isCaptain = role === 'captain';
+  // Получаем текущего пользователя из localStorage
+  const currentUserData = localStorage.getItem('currentUser');
+  const currentUserId = currentUserData ? JSON.parse(currentUserData).id : null;
   
   const [hackathonData, setHackathonData] = useState<Hackathon | null>(null);
   const [team, setTeam] = useState<Team | null>(null);
@@ -59,8 +57,8 @@ export const MyTeam = () => {
         }
         
         if (!hasTeamInState) {
-          // Запрашиваем команду только если её нет в state
-          promises.push(getMyTeam());
+          // Запрашиваем команду для конкретного хакатона
+          promises.push(getMyTeam(id));
         }
         
         // Если все данные есть в state, используем их
@@ -234,6 +232,14 @@ export const MyTeam = () => {
     return formatted;
   }, [team]);
   
+  // Определяем, является ли текущий пользователь капитаном
+  const isCaptain = React.useMemo(() => {
+    if (!team || !currentUserId) return false;
+    // Проверяем по id_capitan или по первому участнику
+    const captainId = (team as any).id_capitan || (team.members?.[0]?.id);
+    return captainId === currentUserId;
+  }, [team, currentUserId]);
+  
   // Логируем данные команды для отладки
   useEffect(() => {
     if (team) {
@@ -242,8 +248,9 @@ export const MyTeam = () => {
       console.log('👥 Team members count:', team.members?.length || 0);
       console.log('👥 Team members formatted:', teamMembers);
       console.log('👥 Team members length:', teamMembers.length);
+      console.log('👥 Is captain:', isCaptain);
     }
-  }, [team, teamMembers]);
+  }, [team, teamMembers, isCaptain]);
 
   // Обработчик выхода из команды
   const handleLeaveTeam = async () => {
@@ -269,21 +276,27 @@ export const MyTeam = () => {
 
   // Обработчик удаления участника
   const handleRemoveMember = async (memberId: string) => {
+    if (!team?.id) {
+      console.error('ID команды не указан');
+      return;
+    }
+    
     if (!window.confirm('Вы уверены, что хотите удалить этого участника из команды?')) {
       return;
     }
 
     try {
-      // Здесь будет вызов API для удаления участника
-      // const response = await removeMemberFromTeam(team?.id || '', memberId);
-      console.log('Удалить участника:', memberId);
+      const response = await removeMemberFromTeam(team.id, memberId);
       
-      // Временно обновляем список участников локально
-      if (team) {
+      if (response.success) {
+        // Обновляем список участников локально после успешного удаления
         setTeam({
           ...team,
           members: team.members.filter(m => m.id !== memberId)
         });
+        alert('Участник удалён из команды');
+      } else {
+        alert(response.message || 'Не удалось удалить участника');
       }
     } catch (error) {
       console.error('Ошибка при удалении участника:', error);
@@ -427,8 +440,8 @@ export const MyTeam = () => {
           </>
         )}
 
-        {/* Кнопка "Покинуть" для обычных участников */}
-        {!isCaptain && (
+        {/* Кнопка "Покинуть" (только если есть команда) */}
+        {team && (
           <div className={styles.leaveButtonContainer}>
             <button 
               className={styles.leaveButton}

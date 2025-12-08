@@ -36,11 +36,14 @@ class TeamMemberResponse(BaseModel):
     @classmethod
     def from_team_member(cls, member, anketa=None) -> "TeamMemberResponse":
         user = member.user
+        # Приоритет: анкета > пользователь
+        first_name = (anketa.name if anketa and anketa.name else None) or (user.first_name if user else None)
+        last_name = (anketa.last_name if anketa and anketa.last_name else None) or (user.last_name if user else None)
         return cls(
             user_id=member.user_id,
             joined_at=member.joined_at,
-            first_name=user.first_name if user else None,
-            last_name=user.last_name if user else None,
+            first_name=first_name,
+            last_name=last_name,
             user_avatar=user.avatar_url if user else None,
             role=anketa.role if anketa else None
         )

@@ -1,17 +1,25 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { getUsers, getUsersWithoutTeam, getHackathons, getRoles, getStacks, addUserToTeam } from '../../../api/api';
-import type { User, Hackathon, FilterOption } from '../../../api/types';
+import { getUsers, getUsersWithoutTeam, getHackathons, getRoles, addUserToTeam } from '../../../api/api';
+import type { Hackathon, FilterOption } from '../../../api/types';
 import { AdminParticipantFilterPanel, type AdminFilterState } from '../../../components/FilterPanel/AdminParticipantFilterPanel';
 import styles from './Participants.module.css';
+
+interface ParticipantUser {
+  id: string;
+  name: string;
+  surname: string;
+  role: string;
+  skills: string[];
+  avatar?: string;
+}
 
 export const Participants = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [users, setUsers] = useState<User[]>([]);
+  const [users, setUsers] = useState<ParticipantUser[]>([]);
   const [hackathons, setHackathons] = useState<Hackathon[]>([]);
   const [roles, setRoles] = useState<FilterOption[]>([]);
-  const [stacks, setStacks] = useState<FilterOption[]>([]);
   const [loading, setLoading] = useState(true);
   const [addingUserId, setAddingUserId] = useState<string | null>(null);
   
@@ -42,18 +50,28 @@ export const Participants = () => {
           : getUsers();
         
         // Используем Promise.allSettled для более надежной обработки ошибок
-        const [usersResult, hackathonsResult, rolesResult, stacksResult] = await Promise.allSettled([
+        const [usersResult, hackathonsResult, rolesResult] = await Promise.allSettled([
           usersPromise,
           getHackathons(),
-          getRoles(),
-          getStacks()
+          getRoles()
         ]);
 
         // Обрабатываем результат загрузки пользователей
         if (usersResult.status === 'fulfilled') {
           const usersResponse = usersResult.value;
           if (usersResponse.success) {
-            setUsers(usersResponse.data);
+            // Преобразуем данные в нужный формат
+            // Бэкенд возвращает AnketaWithUser с полями: name (firstName), last_name (lastName), role
+            // А также вложенный user с first_name, last_name
+            const formattedUsers: ParticipantUser[] = (usersResponse.data as any[]).map((u: any) => ({
+              id: u.user_id || u.id,
+              name: u.name || u.firstName || u.user?.first_name || '',
+              surname: u.last_name || u.lastName || u.user?.last_name || '',
+              role: u.role || '',
+              skills: u.skills ? (typeof u.skills === 'string' ? u.skills.split(',').map((s: string) => s.trim()) : u.skills) : [],
+              avatar: u.avatar || u.user?.avatar_url
+            }));
+            setUsers(formattedUsers);
           } else {
             console.error('Ошибка загрузки пользователей:', usersResponse.message);
           }
@@ -76,26 +94,36 @@ export const Participants = () => {
         // Обрабатываем результат загрузки ролей
         if (rolesResult.status === 'fulfilled') {
           const rolesResponse = rolesResult.value;
-          if (rolesResponse.success) {
+          if (rolesResponse.success && rolesResponse.data && rolesResponse.data.length > 0) {
             setRoles(rolesResponse.data);
           } else {
-            console.error('Ошибка загрузки ролей:', rolesResponse.message);
+            // Если API не вернул роли, извлекаем уникальные роли из пользователей
+            if (usersResult.status === 'fulfilled' && usersResult.value.success) {
+              const usersData = usersResult.value.data as any[];
+              const uniqueRoles = [...new Set(usersData.map((u: any) => u.role).filter(Boolean))];
+              const rolesFromUsers: FilterOption[] = uniqueRoles.map((role, index) => ({
+                id: String(index + 1),
+                label: role,
+                value: role
+              }));
+              setRoles(rolesFromUsers);
+            }
           }
         } else {
           console.error('Ошибка загрузки ролей:', rolesResult.reason);
+          // Извлекаем роли из пользователей как fallback
+          if (usersResult.status === 'fulfilled' && usersResult.value.success) {
+            const usersData = usersResult.value.data as any[];
+            const uniqueRoles = [...new Set(usersData.map((u: any) => u.role).filter(Boolean))];
+            const rolesFromUsers: FilterOption[] = uniqueRoles.map((role, index) => ({
+              id: String(index + 1),
+              label: role,
+              value: role
+            }));
+            setRoles(rolesFromUsers);
+          }
         }
 
-        // Обрабатываем результат загрузки стеков
-        if (stacksResult.status === 'fulfilled') {
-          const stacksResponse = stacksResult.value;
-          if (stacksResponse.success) {
-            setStacks(stacksResponse.data);
-          } else {
-            console.error('Ошибка загрузки стеков:', stacksResponse.message);
-          }
-        } else {
-          console.error('Ошибка загрузки стеков:', stacksResult.reason);
-        }
       } catch (err) {
         console.error('Ошибка загрузки данных:', err);
       } finally {
@@ -161,9 +189,9 @@ export const Participants = () => {
     
     setAddingUserId(userId);
     try {
-      const response = await addUserToTeam(hackathonId, teamId, userId);
+      const response = await addUserToTeam(teamId, userId, hackathonId);
       if (response.success) {
-        alert(response.data.message || 'Участник добавлен в команду');
+        alert(response.data?.message || 'Участник добавлен в команду');
         // Убираем добавленного пользователя из списка
         setUsers(prev => prev.filter(u => u.id !== userId));
       } else {
@@ -198,7 +226,6 @@ export const Participants = () => {
           <AdminParticipantFilterPanel
             hackathons={hackathons.map(h => h.name)}
             roles={roles}
-            stacks={stacks}
             selectedFilters={selectedFilters}
             onFilterChange={setSelectedFilters}
           />
@@ -229,6 +256,8 @@ export const Participants = () => {
             <div
               key={user.id}
               className={styles.participantCard}
+              onClick={() => !isAddToTeamMode && navigate(`/admin/users/${user.id}`)}
+              style={{ cursor: isAddToTeamMode ? 'default' : 'pointer' }}
             >
               {/* Обводка как у стеклянных кнопок */}
               <div className={styles.cardBorderTop}></div>
@@ -254,27 +283,22 @@ export const Participants = () => {
                 <div className={styles.participantRole}>{user.role}</div>
               </div>
               
-              {/* Кнопки действий */}
-              <div className={styles.cardActions}>
-                {isAddToTeamMode ? (
+              {/* Кнопка добавления в команду (только в режиме добавления) */}
+              {isAddToTeamMode && (
+                <div className={styles.cardActions}>
                   <button
                     className={styles.addToTeamBtn}
-                    onClick={() => handleAddToTeam(user.id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleAddToTeam(user.id);
+                    }}
                     disabled={addingUserId === user.id}
                     type="button"
                   >
                     {addingUserId === user.id ? '...' : '+'}
                   </button>
-                ) : (
-                  <button
-                    className={styles.viewProfileBtn}
-                    onClick={() => navigate(`/admin/users/${user.id}`)}
-                    type="button"
-                  >
-                    →
-                  </button>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           ))}
         </div>
@@ -284,7 +308,6 @@ export const Participants = () => {
         <AdminParticipantFilterPanel
           hackathons={hackathons.map(h => h.name)}
           roles={roles}
-          stacks={stacks}
           selectedFilters={selectedFilters}
           onFilterChange={setSelectedFilters}
         />

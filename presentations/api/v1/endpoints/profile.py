@@ -241,3 +241,33 @@ async def get_user_achievements(
         ))
     
     return achievements_list
+
+
+@router.get("/{user_id}/teams")
+async def get_user_teams(
+    user_id: UUID,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Получить команды пользователя по ID"""
+    user_repo = UserRepository(db)
+    team_repo = TeamRepository(db)
+    
+    user = await user_repo.get_by_id(user_id)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Пользователь не найден"
+        )
+    
+    teams = await team_repo.get_user_teams(user_id)
+    
+    return [
+        {
+            "id": team.id,
+            "name": team.name,
+            "hackathon_id": team.id_hackathon,
+            "created_at": team.created_at
+        }
+        for team in teams
+    ]

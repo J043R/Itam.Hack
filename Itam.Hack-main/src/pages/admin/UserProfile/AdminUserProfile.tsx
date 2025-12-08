@@ -11,7 +11,7 @@ export const AdminUserProfile = () => {
 
   const [participantData, setParticipantData] = useState<User | null>(null);
   const [achievements, setAchievements] = useState<Achievement[]>([]);
-  const [userTeams, setUserTeams] = useState<Array<Team & { registrationDate: string }>>([]);
+  const [userTeams, setUserTeams] = useState<Array<Team & { registrationDate?: string }>>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -30,9 +30,9 @@ export const AdminUserProfile = () => {
         // Загружаем данные о пользователе, достижениях и командах параллельно
         // Используем Promise.allSettled для более надежной обработки ошибок
         const [userResult, achievementsResult, teamsResult] = await Promise.allSettled([
-          getUserById(userId),
-          getUserAchievements(userId),
-          getUserTeams(userId)
+          getUserById(userId, true),
+          getUserAchievements(userId, true),
+          getUserTeams(userId, true)
         ]);
         
         // Обрабатываем результат загрузки пользователя
@@ -64,7 +64,12 @@ export const AdminUserProfile = () => {
         if (teamsResult.status === 'fulfilled') {
           const teamsResponse = teamsResult.value;
           if (teamsResponse.success) {
-            setUserTeams(teamsResponse.data);
+            // Добавляем registrationDate если его нет
+            const teamsWithDate = teamsResponse.data.map((team: any) => ({
+              ...team,
+              registrationDate: team.registrationDate || team.created_at || ''
+            }));
+            setUserTeams(teamsWithDate);
           } else {
             console.error('Ошибка загрузки команд:', teamsResponse.message);
           }
@@ -153,7 +158,7 @@ export const AdminUserProfile = () => {
                     {/* Информация о команде */}
                     <div className={styles.cardContent}>
                       <div className={styles.cardTitle}>{team.name}</div>
-                      <div className={styles.cardDate}>{team.registrationDate}</div>
+                      <div className={styles.cardDate}>{team.registrationDate || ''}</div>
                     </div>
                   </div>
                 ))

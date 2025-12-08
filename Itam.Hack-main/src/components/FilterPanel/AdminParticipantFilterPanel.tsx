@@ -12,7 +12,6 @@ export interface AdminFilterState {
 interface AdminParticipantFilterPanelProps {
   hackathons: string[];
   roles: FilterOption[];
-  stacks: FilterOption[];
   selectedFilters: AdminFilterState;
   onFilterChange: (filters: AdminFilterState) => void;
 }
@@ -25,7 +24,6 @@ const statusOptions = [
 export const AdminParticipantFilterPanel = ({
   hackathons,
   roles,
-  stacks,
   selectedFilters,
   onFilterChange
 }: AdminParticipantFilterPanelProps) => {
@@ -57,14 +55,6 @@ export const AdminParticipantFilterPanel = ({
       : [...localFilters.statuses, value];
     setLocalFilters({ ...localFilters, statuses: newStatuses });
     onFilterChange({ ...localFilters, statuses: newStatuses });
-  };
-
-  const handleStackToggle = (value: string) => {
-    const newStacks = localFilters.stacks.includes(value)
-      ? localFilters.stacks.filter(s => s !== value)
-      : [...localFilters.stacks, value];
-    setLocalFilters({ ...localFilters, stacks: newStacks });
-    onFilterChange({ ...localFilters, stacks: newStacks });
   };
 
   return (
@@ -134,28 +124,6 @@ export const AdminParticipantFilterPanel = ({
         </div>
       </div>
 
-      {/* Секция Стек */}
-      <div className={styles.section}>
-        <h3 className={styles.sectionTitle}>Стек</h3>
-        <div className={styles.optionsList}>
-          {stacks.map((option) => (
-            <div
-              key={option.id}
-              className={styles.optionItem}
-              onClick={() => handleStackToggle(option.value)}
-            >
-              <div
-                className={`${styles.checkbox} ${localFilters.stacks.includes(option.value) ? styles.checkboxChecked : ''}`}
-              >
-                {localFilters.stacks.includes(option.value) && (
-                  <div className={styles.checkmark}></div>
-                )}
-              </div>
-              <span className={styles.optionLabel}>{option.label}</span>
-            </div>
-          ))}
-        </div>
-      </div>
     </div>
   );
 };

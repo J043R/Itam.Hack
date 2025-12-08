@@ -120,8 +120,8 @@
 }
 
 .avatarPlaceholder {
-  width: 98px;
-  height: 98px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
   background-color: #939090;
   flex-shrink: 0;
@@ -129,8 +129,8 @@
 }
 
 .avatar {
-  width: 98px;
-  height: 98px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
   object-fit: cover;
   flex-shrink: 0;

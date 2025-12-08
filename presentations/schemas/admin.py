@@ -15,6 +15,7 @@ class AdminBase(BaseModel):
     last_name: str = ""
     role: str = "admin"
     permissions: str = "basic"
+    company: Optional[str] = None
 
 
 class AdminResponse(AdminBase):
@@ -33,6 +34,7 @@ class AdminCreate(BaseModel):
     last_name: str = ""
     role: str = "admin"
     permissions: str = "basic"
+    company: Optional[str] = None
 
 
 class AdminTokenResponse(BaseModel):

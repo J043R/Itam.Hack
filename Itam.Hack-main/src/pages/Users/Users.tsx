@@ -1,10 +1,9 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { IoFilterSharp } from "react-icons/io5";
-import { getHackathonById, addMemberToTeam, getMyTeam } from '../../api/api';
+import { getHackathonById, getMyTeam } from '../../api/api';
 import type { Hackathon, Participant, Team, FilterOption } from '../../api/types';
 import { ParticipantFilterPanel, type FilterSection } from '../../components/FilterPanel/ParticipantFilterPanel';
-import { useAuth } from '../../contexts/AuthContext';
 import { formatDateToRussian } from '../../utils/dateFormat';
 import styles from './Users.module.css';
 
@@ -35,7 +34,6 @@ const staticFilterSections: FilterSection[] = [
 export const Users = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { user } = useAuth();
   const [hackathonData, setHackathonData] = useState<Hackathon | null>(null);
   const [participants, setParticipants] = useState<Participant[]>([]);
   const [team, setTeam] = useState<Team | null>(null);
@@ -187,81 +185,18 @@ export const Users = () => {
     return filtered;
   }, [freeParticipants, selectedFilters]);
 
-  // Проверяем, является ли текущий пользователь капитаном команды
-  const isCaptain = useMemo(() => {
-    if (!team || !user) return false;
-    // Капитан - это первый участник команды
-    return team.members.length > 0 && team.members[0].id === user.id;
-  }, [team, user]);
+
 
   const handleUserClick = () => {
     // Обработчик клика - пока ничего не делаем
     console.log('Клик по карточке хакатона');
   };
 
-  // Обработчик клика на участника
-  const handleParticipantClick = async (participant: Participant) => {
+  // Обработчик клика на участника - всегда переходим на профиль
+  const handleParticipantClick = (participant: Participant) => {
     console.log('Клик на участника:', participant);
-    console.log('Текущий пользователь:', user);
-    console.log('Команда:', team);
-    console.log('Является ли капитаном:', isCaptain);
-    
-    // Если пользователь не авторизован, переходим на профиль участника
-    if (!user) {
-      console.log('Пользователь не авторизован, переходим на профиль');
-      navigate(`/hackathon/${id}/users/${participant.id}`);
-      return;
-    }
-
-    // Если у пользователя нет команды или он не капитан, переходим на профиль участника
-    if (!team) {
-      console.log('У пользователя нет команды, переходим на профиль');
-      navigate(`/hackathon/${id}/users/${participant.id}`);
-      return;
-    }
-
-    if (!isCaptain) {
-      console.log('Пользователь не является капитаном, переходим на профиль');
-      navigate(`/hackathon/${id}/users/${participant.id}`);
-      return;
-    }
-
-    // В моковых данных ID участника совпадает с ID пользователя
-    const participantUserId = participant.id;
-    console.log('ID участника для добавления:', participantUserId);
-
-    // Проверяем, не состоит ли уже участник в команде
-    const isAlreadyMember = team.members.some(m => m.id === participantUserId);
-    if (isAlreadyMember) {
-      alert('Участник уже состоит в вашей команде');
-      return;
-    }
-
-    // Добавляем участника в команду
-    try {
-      console.log('Вызываем addMemberToTeam с teamId:', team.id, 'userId:', participantUserId);
-      const response = await addMemberToTeam(team.id, participantUserId);
-      console.log('Ответ от addMemberToTeam:', response);
-      
-      if (response.success) {
-        // Обновляем команду
-        setTeam(response.data);
-        alert(`${participant.name} добавлен в команду`);
-        // Обновляем данные хакатона для пересчета свободных участников
-        if (id) {
-          const hackathonResponse = await getHackathonById(id);
-          if (hackathonResponse.success) {
-            setHackathonData(hackathonResponse.data);
-          }
-        }
-      } else {
-        console.error('Ошибка добавления участника:', response.message);
-        alert(response.message || 'Не удалось добавить участника в команду');
-      }
-    } catch (error) {
-      console.error('Ошибка при добавлении участника в команду:', error);
-      alert('Произошла ошибка при добавлении участника в команду');
-    }
+    // Всегда переходим на профиль участника
+    navigate(`/hackathon/${id}/users/${participant.id}`);
   };
 
   if (loading) {
@@ -346,7 +281,7 @@ export const Users = () => {
                 className={styles.participantCard}
                 onClick={() => handleParticipantClick(participant)}
                 type="button"
-                title={isCaptain && team ? 'Нажмите, чтобы добавить в команду' : 'Просмотр профиля'}
+                title="Просмотр профиля"
               >
                 {/* Обводка как у стеклянных кнопок */}
                 <div className={styles.participantCardBorderTop}></div>

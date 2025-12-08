@@ -4,6 +4,7 @@ services:
     image: postgres:15-alpine
     container_name: hackathon_postgres
     environment:
+      TZ: Europe/Moscow
       POSTGRES_DB: ${HACKATHON_PG__DATABASE:-hackathon}
       POSTGRES_USER: ${HACKATHON_PG__USERNAME:-hackathon_user}
       POSTGRES_PASSWORD: ${HACKATHON_PG__PASSWORD:-hackathon_pass}
@@ -25,6 +26,7 @@ services:
     ports:
       - "${HACKATHON_UVICORN__PORT:-8000}:8000"
     environment:
+      TZ: Europe/Moscow
       ENVIRONMENT: development
       HACKATHON_PG__HOST: postgres
       HACKATHON_PG__PORT: 5432

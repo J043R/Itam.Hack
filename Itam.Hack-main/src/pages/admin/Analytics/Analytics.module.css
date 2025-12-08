@@ -326,6 +326,7 @@
 .progressSection {
   margin-top: 30px;
   margin-bottom: 30px;
+  width: 1390px;
 }
 
 .progressLabel {
@@ -353,6 +354,7 @@
 /* Roles section */
 .rolesSection {
   margin-top: 30px;
+  width: 1390px;
 }
 
 .sectionTitle {
@@ -366,6 +368,7 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
+  width: 100%;
 }
 
 .roleItem {
@@ -375,6 +378,8 @@
   padding: 16px 20px;
   background: rgba(255, 255, 255, 0.05);
   border-radius: 10px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .roleName {

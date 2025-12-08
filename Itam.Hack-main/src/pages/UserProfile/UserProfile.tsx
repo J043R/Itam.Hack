@@ -16,6 +16,13 @@ export const UserProfile = () => {
   const [myTeam, setMyTeam] = useState<Team | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
+  // Получаем текущего пользователя
+  const currentUserData = localStorage.getItem('currentUser');
+  const currentUserId = currentUserData ? JSON.parse(currentUserData).id : null;
+  
+  // Проверяем, является ли текущий пользователь капитаном команды
+  const isCaptain = myTeam && currentUserId && (myTeam as any).id_capitan === currentUserId;
 
   useEffect(() => {
     // Загружаем данные о пользователе и его достижениях при монтировании компонента
@@ -101,7 +108,7 @@ export const UserProfile = () => {
     
     try {
       // Отправка приглашения участнику в команду
-      const response = await inviteUserToTeam(userId, myTeam.id);
+      const response = await inviteUserToTeam(myTeam.id, userId);
       
       if (response.success) {
         alert('Приглашение отправлено!');
@@ -235,21 +242,23 @@ export const UserProfile = () => {
 
       {/* Кнопки действий */}
       <div className={styles.actionButtons}>
-        <ButtonSimple
-          type="entry-primary"
-          size="S"
-          onClick={handleInvite}
-          className={styles.inviteButton}
-        >
-          Пригласить
-        </ButtonSimple>
+        {isCaptain && (
+          <ButtonSimple
+            type="entry-primary"
+            size="S"
+            onClick={handleInvite}
+            className={styles.inviteButton}
+          >
+            Пригласить
+          </ButtonSimple>
+        )}
         <ButtonSimple
           type="button-secondary"
           size="S"
           onClick={handleHide}
           className={styles.hideButton}
         >
-          Скрыть
+          Назад
         </ButtonSimple>
       </div>
     </div>

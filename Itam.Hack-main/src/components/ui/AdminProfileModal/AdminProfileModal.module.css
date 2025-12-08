@@ -116,7 +116,7 @@
   align-items: center !important;
   justify-content: center !important;
   box-sizing: border-box !important;
-  background-color: #4CAF50 !important;
+  background-color: #3B44FA !important;
   color: #FFFFFF !important;
   border: none !important;
   cursor: pointer !important;
@@ -124,7 +124,7 @@
 }
 
 .saveButton:hover:not(:disabled) {
-  background-color: #45a049 !important;
+  background-color: #2B34E0 !important;
 }
 
 .saveButton:disabled {

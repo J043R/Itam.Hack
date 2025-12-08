@@ -152,8 +152,8 @@
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
   box-sizing: border-box;
-  width: 429px;
-  height: 144px;
+  width: 419px;
+  height: 134px;
   overflow: hidden;
 }
 
@@ -200,15 +200,13 @@
 }
 
 .cardIcon {
-  width: 120px;
-  height: 100px;
-  min-width: 120px;
+  width: 80px;
+  height: 80px;
+  min-width: 80px;
   background-color: #939090;
   border-radius: 10px;
   flex-shrink: 0;
-  margin-top: 20px;
-  margin-left: 20px;
-  margin-bottom: 20px;
+  margin: 20px;
 }
 
 .cardContent {

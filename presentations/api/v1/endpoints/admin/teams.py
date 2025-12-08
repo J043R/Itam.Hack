@@ -27,7 +27,8 @@ async def get_all_teams(
     anketa_repo = AnketaRepository(db)
     
     teams = await team_repo.get_all(skip=skip, limit=limit)
-    active_teams = [t for t in teams if t.is_active]
+    # Фильтруем только активные команды с участниками
+    active_teams = [t for t in teams if t.is_active and len(t.members) > 0]
     
     hackathon_repo = HackathonRepository(db)
     
@@ -87,7 +88,8 @@ async def get_hackathon_teams(
         )
     
     teams = await team_repo.get_by_hackathon(hackathon_id, skip, limit)
-    active_teams = [t for t in teams if t.is_active]
+    # Фильтруем только активные команды с участниками
+    active_teams = [t for t in teams if t.is_active and len(t.members) > 0]
     
     result = []
     for team in active_teams:

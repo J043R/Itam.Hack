@@ -95,6 +95,7 @@ class Administrator(Base):
     last_name = Column(String, nullable=False)
     role = Column(String, nullable=False)
     permissions = Column(String, nullable=False)
+    company = Column(String, nullable=True)
 
     is_active = Column(Boolean, default=True, nullable=False)
     created_at = Column(DateTime, default=func.now(), nullable=False)

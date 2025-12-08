@@ -131,8 +131,8 @@ export const MyProfile = ({ onLogout }: MyProfileProps) => {
     setIsSaving(true);
     try {
       const response = await updateMyAnketa({
-        name: profileData.firstName,
-        last_name: profileData.lastName,
+        firstName: profileData.firstName,
+        lastName: profileData.lastName,
         role: profileData.role,
         contacts: profileData.about,
         university: profileData.university

@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Input } from '../../../components/ui/Input/input';
 import { ButtonSimple } from '../../../components/ui/Button/button';
-import { getAdminHackathonById, updateHackathon, deleteHackathon } from '../../../api/api';
+import { getAdminHackathonById, updateHackathon, deleteHackathon, finishHackathon } from '../../../api/api';
 import styles from './EditHackathon.module.css';
 
 export const EditHackathon = () => {
@@ -11,7 +11,9 @@ export const EditHackathon = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [isFinishing, setIsFinishing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     name: '',
     describe: '',
@@ -149,6 +151,32 @@ export const EditHackathon = () => {
     }
   };
 
+  const handleFinish = async () => {
+    if (!hackathonId) return;
+    
+    if (!confirm('Вы уверены, что хотите завершить хакатон? Всем участникам будут созданы достижения.')) {
+      return;
+    }
+
+    setIsFinishing(true);
+    setError(null);
+    setSuccessMessage(null);
+
+    try {
+      const response = await finishHackathon(hackathonId);
+      if (response.success && response.data) {
+        setSuccessMessage(`${response.data.message}. Создано достижений: ${response.data.achievements_created}`);
+      } else {
+        setError(response.message || 'Ошибка при завершении хакатона');
+      }
+    } catch (err) {
+      console.error('Ошибка завершения:', err);
+      setError('Произошла ошибка при завершении хакатона');
+    } finally {
+      setIsFinishing(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className={styles.editHackathon}>
@@ -199,7 +227,7 @@ export const EditHackathon = () => {
 
         <div className={styles.rightSection}>
           <div className={styles.formField}>
-            <label className={styles.label}>Название *</label>
+            <label className={styles.label}>Название</label>
             <Input
               type="text"
               placeholder="Название хакатона"
@@ -272,24 +300,39 @@ export const EditHackathon = () => {
             <div className={styles.errorMessage}>{error}</div>
           )}
 
-          <div className={styles.buttonsContainer}>
+          {successMessage && (
+            <div className={styles.successMessage}>{successMessage}</div>
+          )}
+
+          <div className={styles.buttonsRow}>
             <ButtonSimple
               type="button-primary"
               size="M"
-              className={styles.submitButton}
-              onClick={handleSubmit}
-              disabled={isSaving}
+              className={styles.finishButton}
+              onClick={handleFinish}
+              disabled={isFinishing}
             >
-              {isSaving ? 'Сохранение...' : 'Сохранить изменения'}
+              {isFinishing ? 'Завершение...' : 'Завершить хакатон'}
             </ButtonSimple>
-            <ButtonSimple
-              type="button-secondary"
-              size="M"
-              className={styles.deleteButton}
-              onClick={handleDelete}
-            >
-              Удалить хакатон
-            </ButtonSimple>
+            <div className={styles.buttonsContainer}>
+              <ButtonSimple
+                type="button-primary"
+                size="M"
+                className={styles.submitButton}
+                onClick={handleSubmit}
+                disabled={isSaving}
+              >
+                {isSaving ? 'Сохранение...' : 'Сохранить'}
+              </ButtonSimple>
+              <ButtonSimple
+                type="button-secondary"
+                size="M"
+                className={styles.deleteButton}
+                onClick={handleDelete}
+              >
+                Удалить
+              </ButtonSimple>
+            </div>
           </div>
         </div>
       </div>

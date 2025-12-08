@@ -107,6 +107,82 @@ async def delete_hackathon(
         )
 
 
+@router.post("/{hackathon_id}/finish")
+async def finish_hackathon(
+    hackathon_id: UUID,
+    current_admin: Administrator = Depends(get_current_admin),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Завершить хакатон и создать достижения всем участникам.
+    Каждый участник получает достижение с результатом "Участник".
+    """
+    from persistent.db.models import UserAchievement
+    from repositories.hackathon_registration_repository import HackathonRegistrationRepository
+    from sqlalchemy import select
+    
+    hackathon_repo = HackathonRepository(db)
+    registration_repo = HackathonRegistrationRepository(db)
+    anketa_repo = AnketaRepository(db)
+    
+    hackathon = await hackathon_repo.get_by_id(hackathon_id)
+    if not hackathon:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Хакатон не найден"
+        )
+    
+    # Сохраняем имя до коммита (после коммита объект станет expired)
+    hackathon_name = hackathon.name
+    
+    # Получаем всех зарегистрированных участников
+    registrations = await registration_repo.get_by_hackathon(hackathon_id)
+    
+    if not registrations:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="На хакатон никто не зарегистрирован"
+        )
+    
+    created_count = 0
+    skipped_count = 0
+    
+    for reg in registrations:
+        # Проверяем, есть ли уже достижение для этого пользователя и хакатона
+        existing = await db.execute(
+            select(UserAchievement).where(
+                UserAchievement.hackathon_id == hackathon_id,
+                UserAchievement.user_id == reg.user_id
+            )
+        )
+        if existing.scalar_one_or_none():
+            skipped_count += 1
+            continue
+        
+        # Получаем роль из анкеты
+        anketa = await anketa_repo.get_by_user_id(reg.user_id)
+        role = anketa.role if anketa else "Участник"
+        
+        # Создаём достижение
+        achievement = UserAchievement(
+            hackathon_id=hackathon_id,
+            user_id=reg.user_id,
+            result="Участник",
+            role=role
+        )
+        db.add(achievement)
+        created_count += 1
+    
+    await db.commit()
+    
+    return {
+        "message": f"Хакатон '{hackathon_name}' завершён",
+        "achievements_created": created_count,
+        "achievements_skipped": skipped_count,
+        "total_participants": len(registrations)
+    }
+
+
 @router.get("/{hackathon_id}/export")
 async def export_hackathon_teams_csv(
     hackathon_id: UUID,

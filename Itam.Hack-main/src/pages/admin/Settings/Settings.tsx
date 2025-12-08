@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Input } from '../../../components/ui/Input/input';
 import { ButtonSimple } from '../../../components/ui/Button/button';
-import { getAdmins, createAdmin, deactivateAdmin, activateAdmin, deleteAdmin } from '../../../api/api';
+import { getAdmins, createAdmin } from '../../../api/api';
 import type { AdminData } from '../../../api/api';
 import styles from './Settings.module.css';
 
@@ -13,7 +13,8 @@ export const Settings = () => {
     password: '',
     first_name: '',
     last_name: '',
-    role: 'admin'
+    role: 'admin',
+    company: ''
   });
 
   useEffect(() => {
@@ -53,10 +54,11 @@ export const Settings = () => {
         password: formData.password,
         first_name: formData.first_name || undefined,
         last_name: formData.last_name || undefined,
-        role: formData.role || 'admin'
+        role: formData.role || 'admin',
+        company: formData.company || undefined
       });
       if (response.success) {
-        setFormData({ email: '', password: '', first_name: '', last_name: '', role: 'admin' });
+        setFormData({ email: '', password: '', first_name: '', last_name: '', role: 'admin', company: '' });
         loadAdmins();
       } else {
         alert(response.message || 'Не удалось добавить администратора');
@@ -67,49 +69,20 @@ export const Settings = () => {
     }
   };
 
-  const handleToggleActive = async (admin: AdminData) => {
-    try {
-      const response = admin.is_active 
-        ? await deactivateAdmin(admin.id)
-        : await activateAdmin(admin.id);
-      
-      if (response.success) {
-        loadAdmins();
-      } else {
-        alert(response.message || 'Не удалось изменить статус');
-      }
-    } catch (error) {
-      console.error('Ошибка изменения статуса:', error);
-    }
-  };
 
-  const handleDelete = async (admin: AdminData) => {
-    if (!confirm(`Удалить администратора ${admin.email}?`)) return;
-    
-    try {
-      const response = await deleteAdmin(admin.id);
-      if (response.success) {
-        loadAdmins();
-      } else {
-        alert(response.message || 'Не удалось удалить администратора');
-      }
-    } catch (error) {
-      console.error('Ошибка удаления:', error);
-    }
-  };
 
   return (
     <div className={styles.settings}>
       <div className={styles.container}>
-        {/* Левая секция - Форма добавления администратора */}
+        {/* Левая секция - Форма добавления организатора */}
         <div className={styles.leftSection}>
-          <h1 className={styles.mainTitle}>Управление администраторами</h1>
+          <h1 className={styles.mainTitle}>Список организаторов</h1>
           <div className={styles.formPanel}>
-            <h2 className={styles.formTitle}>Добавить администратора</h2>
+            <h2 className={styles.formTitle}>Добавить организатора</h2>
             <div className={styles.formFields}>
               <div className={styles.formField}>
                 <Input
-                  label="Email *"
+                  label="Email"
                   variant="form"
                   type="email"
                   value={formData.email}
@@ -120,7 +93,7 @@ export const Settings = () => {
               </div>
               <div className={styles.formField}>
                 <Input
-                  label="Пароль *"
+                  label="Пароль"
                   variant="form"
                   type="password"
                   value={formData.password}
@@ -148,6 +121,17 @@ export const Settings = () => {
                   value={formData.last_name}
                   onChange={handleInputChange('last_name')}
                   placeholder="Иванов"
+                  className={styles.input}
+                />
+              </div>
+              <div className={styles.formField}>
+                <Input
+                  label="Компания"
+                  variant="form"
+                  type="text"
+                  value={formData.company}
+                  onChange={handleInputChange('company')}
+                  placeholder="Название компании"
                   className={styles.input}
                 />
               </div>
@@ -194,30 +178,7 @@ export const Settings = () => {
                       {admin.first_name || admin.email.split('@')[0]}
                     </div>
                     <div className={styles.organizerSurname}>{admin.last_name}</div>
-                    <div className={styles.organizerCompany}>{admin.email}</div>
-                    <div className={styles.adminRole}>
-                      {admin.role === 'super_admin' ? '👑 Супер-админ' : '👤 Админ'}
-                    </div>
-                    <div className={styles.adminStatus}>
-                      {admin.is_active ? '✅ Активен' : '❌ Неактивен'}
-                    </div>
-                  </div>
-                  
-                  <div className={styles.adminActions}>
-                    <button 
-                      className={styles.actionBtn}
-                      onClick={() => handleToggleActive(admin)}
-                      title={admin.is_active ? 'Деактивировать' : 'Активировать'}
-                    >
-                      {admin.is_active ? '🔒' : '🔓'}
-                    </button>
-                    <button 
-                      className={styles.actionBtn}
-                      onClick={() => handleDelete(admin)}
-                      title="Удалить"
-                    >
-                      🗑️
-                    </button>
+                    <div className={styles.organizerCompany}>{admin.company || ''}</div>
                   </div>
                 </div>
               ))}

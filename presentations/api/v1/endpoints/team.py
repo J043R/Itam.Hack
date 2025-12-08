@@ -173,13 +173,35 @@ async def get_my_teams(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db)
 ):
+    from presentations.schemas.team import TeamMemberResponse
+    
     team_repo = TeamRepository(db)
+    anketa_repo = AnketaRepository(db)
     
     teams = await team_repo.get_user_teams(current_user.id)
-    
     active_teams = [t for t in teams if t.is_active]
     
-    return [TeamResponse.from_team(t) for t in active_teams]
+    result = []
+    for team in active_teams:
+        members_response = []
+        for member in team.members:
+            anketa = await anketa_repo.get_by_user_id(member.user_id)
+            members_response.append(TeamMemberResponse.from_team_member(member, anketa))
+        
+        result.append(TeamResponse(
+            id=team.id,
+            name=team.name,
+            id_hackathon=team.id_hackathon,
+            id_capitan=team.id_capitan,
+            max_size=team.max_size,
+            status=team.status,
+            description=team.description,
+            created_at=team.created_at,
+            is_active=team.is_active,
+            members=members_response
+        ))
+    
+    return result
 
 
 @router.get("/{team_id}", response_model=TeamWithMembers)
@@ -237,7 +259,7 @@ async def delete_team(
         detail="Ты не капитан этой команды")
 
 
-@router.post("/{team_id}", status_code=status.HTTP_200_OK)
+@router.post("/{team_id}/leave", status_code=status.HTTP_200_OK)
 async def leave_team(
     team_id: UUID,
     current_user: User = Depends(get_current_user),
@@ -318,19 +340,171 @@ async def remove_from_team(
             detail="Нельзя исключить самого себя. Используйте /leave чтобы покинуть команду"
         )
     
+    # Сохраняем имя команды до удаления (чтобы избежать lazy loading после commit)
+    team_name = team.name
 
     is_member_user = await team_repo.is_user_in_team(team_id, user_id)
 
     if is_member_user:
         await team_repo.remove_member(team_id, user_id)
     else:
-        raise HTTPException(400, "Участник не состоит в вашей команде")
+        raise HTTPException(400, detail="Участник не состоит в вашей команде")
     
     return {
         "message": "Участник успешно исключен из команды",
         "team_id": str(team_id),
-        "team_name": team.name,
+        "team_name": team_name,
         "removed_user_id": str(user_id),
         "removed_by": str(current_user.id),
         "timestamp": datetime.utcnow().isoformat()
+    }
+
+
+@router.post("/{team_id}/members", status_code=status.HTTP_200_OK)
+async def add_member_to_team(
+    team_id: UUID,
+    user_data: dict,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Добавить участника в команду (только капитан)"""
+    from repositories.user_repository import UserRepository
+    
+    team_repo = TeamRepository(db)
+    user_repo = UserRepository(db)
+    registration_repo = HackathonRegistrationRepository(db)
+    
+    user_id = user_data.get("user_id")
+    if not user_id:
+        raise HTTPException(400, detail="user_id обязателен")
+    
+    try:
+        user_id = UUID(user_id) if isinstance(user_id, str) else user_id
+    except ValueError:
+        raise HTTPException(400, detail="Неверный формат user_id")
+    
+    team = await team_repo.get_by_id(team_id)
+    if not team:
+        raise HTTPException(404, detail="Команда не найдена")
+    
+    if not team.is_active:
+        raise HTTPException(400, detail="Команда распущена")
+    
+    if team.id_capitan != current_user.id:
+        raise HTTPException(403, detail="Только капитан может добавлять участников")
+    
+    user = await user_repo.get_by_id(user_id)
+    if not user:
+        raise HTTPException(404, detail="Пользователь не найден")
+    
+    # Проверяем регистрацию на хакатон
+    registration = await registration_repo.get_by_user_and_hackathon(user_id, team.id_hackathon)
+    if not registration:
+        raise HTTPException(400, detail="Пользователь не зарегистрирован на этот хакатон")
+    
+    # Проверяем, не в команде ли уже
+    is_member = await team_repo.is_user_in_team(team_id, user_id)
+    if is_member:
+        raise HTTPException(400, detail="Пользователь уже в команде")
+    
+    # Проверяем, не в другой ли команде на этом хакатоне
+    existing_team = await team_repo.get_by_user_and_hackathon(user_id, team.id_hackathon)
+    if existing_team:
+        raise HTTPException(400, detail="Пользователь уже в другой команде на этом хакатоне")
+    
+    # Проверяем лимит участников
+    members = await team_repo.get_team_members(team_id)
+    if team.max_size and len(members) >= team.max_size:
+        raise HTTPException(400, detail="Команда заполнена")
+    
+    # Добавляем участника
+    team_member = TeamMember(
+        team_id=team_id,
+        user_id=user_id,
+        joined_at=datetime.utcnow()
+    )
+    db.add(team_member)
+    await db.commit()
+    
+    return {
+        "message": "Участник добавлен в команду",
+        "team_id": str(team_id),
+        "user_id": str(user_id)
+    }
+
+
+@router.post("/{team_id}/invite", status_code=status.HTTP_201_CREATED)
+async def invite_user_to_team(
+    team_id: UUID,
+    user_data: dict,
+    current_user: User = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """Пригласить пользователя в команду (только капитан)"""
+    from repositories.invitation_repository import InvitationRepository
+    from persistent.db.models import Invitation
+    
+    team_repo = TeamRepository(db)
+    invitation_repo = InvitationRepository(db)
+    registration_repo = HackathonRegistrationRepository(db)
+    anketa_repo = AnketaRepository(db)
+    
+    user_id = user_data.get("user_id")
+    if not user_id:
+        raise HTTPException(400, detail="user_id обязателен")
+    
+    try:
+        user_id = UUID(user_id) if isinstance(user_id, str) else user_id
+    except ValueError:
+        raise HTTPException(400, detail="Неверный формат user_id")
+    
+    team = await team_repo.get_by_id(team_id)
+    if not team:
+        raise HTTPException(404, detail="Команда не найдена")
+    
+    if not team.is_active:
+        raise HTTPException(400, detail="Команда распущена")
+    
+    if team.id_capitan != current_user.id:
+        raise HTTPException(403, detail="Только капитан может приглашать участников")
+    
+    if user_id == current_user.id:
+        raise HTTPException(400, detail="Нельзя пригласить самого себя")
+    
+    # Проверяем анкету
+    anketa = await anketa_repo.get_by_user_id(user_id)
+    if not anketa:
+        raise HTTPException(400, detail="У пользователя нет анкеты")
+    
+    # Проверяем, не в команде ли уже на этом хакатоне
+    existing_team = await team_repo.get_by_user_and_hackathon(user_id, team.id_hackathon)
+    if existing_team:
+        raise HTTPException(400, detail="Пользователь уже в команде на этом хакатоне")
+    
+    # Проверяем существующее приглашение
+    existing_invitation = await invitation_repo.get_by_team_and_receiver(team_id, user_id)
+    if existing_invitation and existing_invitation.status == "pending":
+        raise HTTPException(400, detail="Приглашение уже отправлено")
+    
+    # Проверяем лимит участников
+    members_count = await team_repo.get_team_members_count(team_id)
+    if team.max_size and members_count >= team.max_size:
+        raise HTTPException(400, detail="Команда заполнена")
+    
+    # Создаём приглашение
+    invitation = Invitation(
+        team_id=team_id,
+        sender_id=current_user.id,
+        receiver_id=user_id,
+        invitation_type="team_invite",
+        status="pending"
+    )
+    
+    created = await invitation_repo.create(invitation)
+    
+    return {
+        "message": "Приглашение отправлено",
+        "invitation_id": str(created.id),
+        "team_id": str(team_id),
+        "user_id": str(user_id)
     }
